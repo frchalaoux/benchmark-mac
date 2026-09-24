@@ -6,12 +6,11 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.2.0.dev2` — développement actuel
+### `v0.2.0` — stable actuelle
 
-[Consulter le code source de `v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2)
+[Consulter le code source de `v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0)
 
-Cette version est destinée aux essais de la prochaine version stable. Elle
-ajoute notamment :
+Cette version stable ajoute notamment :
 
 - trois passages par benchmark par défaut, réglables de un à neuf ;
 - médiane, valeurs brutes, minimum, maximum et dispersion dans le rapport JSON ;
@@ -21,13 +20,19 @@ ajoute notamment :
 - comparaison de deux machines ou davantage ;
 - rapport HTML autonome avec barres, carte thermique et chronologies.
 
-Les formats JSON et l'interface peuvent encore évoluer. Tous les rapports à
-comparer doivent employer la même version de la suite, le même profil et la
-même version de Python.
+Tous les rapports à comparer doivent employer la même version de la suite, le
+même profil et la même version de Python.
 
 Cette révision corrige la comparaison `cpu.multicore` : le nombre de processus
 peut varier selon les processeurs logiques disponibles sur chaque machine, sans
 relâcher la vérification des autres paramètres du protocole.
+
+### `v0.2.0.dev2` — développement archivé
+
+[Consulter le code source de `v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2)
+
+Cette préversion contient les fonctions et la correction multicœur reprises
+dans `v0.2.0`. Préférer la version stable pour toute nouvelle campagne.
 
 ### `v0.2.0.dev1` — développement antérieur
 
@@ -35,7 +40,7 @@ relâcher la vérification des autres paramètres du protocole.
 
 Cette version corrige les installateurs de `dev0`, mais refuse la comparaison
 `cpu.multicore` lorsque les machines possèdent un nombre différent de
-processeurs logiques. Préférer `v0.2.0.dev2` pour une nouvelle campagne.
+processeurs logiques. Préférer `v0.2.0` pour une nouvelle campagne.
 
 ### `v0.2.0.dev0` — développement obsolète
 
@@ -44,9 +49,9 @@ processeurs logiques. Préférer `v0.2.0.dev2` pour une nouvelle campagne.
 Cette version contient les mêmes grandes fonctions expérimentales, mais son
 README et ses installateurs ciblent `v0.1.0` par défaut. Elle reste disponible
 pour reproduire une ancienne campagne ; toute nouvelle installation doit
-préférer `v0.2.0.dev2`.
+préférer `v0.2.0`.
 
-### `v0.1.0` — stable
+### `v0.1.0` — stable antérieure
 
 [Consulter le code source de `v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0)
 
@@ -59,9 +64,9 @@ Cette première version stable fournit :
 - une comparaison tabulaire simple en valeurs et pourcentages.
 
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
-pondérés ni le rapport HTML de `v0.2.0.dev2`.
+pondérés ni le rapport HTML de `v0.2.0`.
 
-## Installer `v0.2.0.dev2`
+## Installer `v0.2.0`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, puis
 `uv` gère CPython 3.14.4 et l'outil isolé.
@@ -69,6 +74,23 @@ Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, pui
 ### macOS et Linux
 
 Copier la commande entière, sans crochets ni parenthèses Markdown :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.sh | sh
+```
+
+### Windows PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.ps1 | iex
+```
+
+## Installer l'ancienne `v0.2.0.dev2`
+
+Ces commandes servent uniquement à reproduire une campagne de préversion. Pour
+une nouvelle comparaison, utiliser `v0.2.0`.
+
+### macOS et Linux
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.sh | sh
@@ -83,7 +105,7 @@ irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/insta
 ## Installer l'ancienne `v0.2.0.dev1`
 
 Ces commandes servent à reproduire une campagne existante. Pour une nouvelle
-comparaison entre machines, utiliser `v0.2.0.dev2`.
+comparaison entre machines, utiliser `v0.2.0`.
 
 ### macOS et Linux
 

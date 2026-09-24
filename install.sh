@@ -3,7 +3,7 @@
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 set -eu
 
-release_version="${BENCHMARK_MAC_VERSION:-v0.2.0.dev2}"
+release_version="${BENCHMARK_MAC_VERSION:-v0.2.0}"
 python_version="3.14.4"
 source_url="${BENCHMARK_MAC_SOURCE:-https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/${release_version}.tar.gz}"
 script_dir=""

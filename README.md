@@ -11,14 +11,15 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement | Comparer des machines différentes avec les rapports visuels | Version de développement actuelle |
-| [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement antérieur | Reproduire une campagne existante | Comparaison multicœur trop stricte ; préférer `dev2` |
-| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement obsolète | Reproduire une ancienne campagne | Installateur incorrect par défaut ; préférer `dev2` |
-| [`v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0) | Stable | Exécuter les 12 benchmarks et produire des JSON simples | Première version stable |
+| [`v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0) | Stable | Comparer des machines différentes avec les rapports visuels | Version recommandée |
+| [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement archivé | Reproduire une campagne de préversion | Base fonctionnelle de `v0.2.0` |
+| [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement archivé | Reproduire une campagne existante | Comparaison multicœur trop stricte |
+| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement obsolète | Reproduire une ancienne campagne | Installateur incorrect par défaut |
+| [`v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0) | Stable antérieure | Reproduire les premiers rapports simples | Remplacée par `v0.2.0` |
 
 La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
-jour. Le reste de ce README décrit la version de développement actuelle.
+jour. Le reste de ce README décrit la version stable actuelle.
 
 ## Couverture actuelle
 
@@ -36,32 +37,18 @@ Metal, DirectX, CUDA et autres API nécessitera un moteur commun tel que Blender
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`
 télécharge et gère CPython 3.14.4 avant d'installer l'application.
 
-### Version stable `v0.1.0`
+### Version stable `v0.2.0`
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps1 | iex
-```
-
-### Version de développement `v0.2.0.dev2`
-
-Sur macOS ou Linux :
-
-```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.sh | sh
-```
-
-Sous Windows, dans PowerShell :
-
-```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.ps1 | iex
 ```
 
 `v0.2.0.dev0` reste téléchargeable pour la reproductibilité, mais son

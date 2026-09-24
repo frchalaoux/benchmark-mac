@@ -14,6 +14,7 @@
   des tests de non-régression.
 - Version `0.2.0.dev2` : corrige la comparaison `cpu.multicore` entre
   machines ayant un nombre différent de processeurs logiques.
+- Version stable `0.2.0` préparée pour intégration dans `main`.
 
 ## Prochaine action possible
 
