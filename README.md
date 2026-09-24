@@ -6,10 +6,17 @@ Windows et Linux, puis produit des rapports JSON portables.
 
 ## Versions publiées
 
-Consulter la page GitHub [Tags — toutes les versions disponibles](https://github.com/frchalaoux/benchmark-mac/tags).
+Consulter [tous les tags disponibles](https://github.com/frchalaoux/benchmark-mac/tags)
+ou choisir une version ci-dessous.
 
-- [v0.2.0.dev0 — version de développement](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0)
-- [v0.1.0 — version stable](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0)
+| Version | Canal | À choisir pour | État |
+| --- | --- | --- | --- |
+| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement | Tester les répétitions, les scénarios et le rapport HTML | Fonctionnelle, interface susceptible d'évoluer |
+| [`v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0) | Stable | Exécuter les 12 benchmarks et produire des JSON simples | Première version stable |
+
+La [fiche détaillée des versions](docs/versions.md) indique les différences,
+les commandes d'installation pour chaque système et les précautions de mise à
+jour. Le reste de ce README décrit la version de développement actuelle.
 
 ## Couverture actuelle
 
@@ -27,6 +34,8 @@ Metal, DirectX, CUDA et autres API nécessitera un moteur commun tel que Blender
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`
 télécharge et gère CPython 3.14.4 avant d'installer l'application.
 
+### Version stable `v0.1.0`
+
 Sur macOS ou Linux :
 
 ```bash
@@ -39,8 +48,32 @@ Sous Windows, dans PowerShell :
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps1 | iex
 ```
 
-Ces commandes installent la version publique stable `v0.1.0`. Les fonctions de
-comparaison visuelle de cette branche seront incluses dans une version ultérieure.
+### Version de développement `v0.2.0.dev0`
+
+Sur macOS ou Linux, utiliser cette commande complète. La variable est
+nécessaire car l'installateur livré dans ce premier tag de développement cible
+encore `v0.1.0` par défaut :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev0/install.sh \
+  | BENCHMARK_MAC_SOURCE="https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/v0.2.0.dev0.tar.gz" sh
+```
+
+Sous Windows, dans PowerShell :
+
+```powershell
+$env:BENCHMARK_MAC_SOURCE = "https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/v0.2.0.dev0.tar.gz"
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev0/install.ps1 | iex
+Remove-Item Env:BENCHMARK_MAC_SOURCE
+```
+
+Vérifier ensuite l'installation :
+
+```bash
+uv tool list
+benchmark-mac list
+benchmark-mac compare --help
+```
 
 ## Installation depuis le dossier de développement
 
