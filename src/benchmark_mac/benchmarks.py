@@ -12,6 +12,7 @@ import tempfile
 import zlib
 from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
@@ -571,7 +572,7 @@ def application_sqlite(context: BenchmarkContext) -> BenchmarkResult:
     rows = context.profile.sqlite_rows
     try:
         started = perf_counter()
-        with sqlite3.connect(path) as connection:
+        with closing(sqlite3.connect(path)) as connection:
             connection.execute("PRAGMA journal_mode=WAL")
             connection.execute(
                 "CREATE TABLE scores (id INTEGER PRIMARY KEY, name TEXT, score REAL)"
