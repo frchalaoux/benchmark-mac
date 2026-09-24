@@ -13,6 +13,8 @@ entre deux machines ou plus.
 - Rapport HTML autonome avec barres, dumbbell, carte thermique et chronologies.
 - Candidate `0.2.0.dev1` préparée avec des installateurs alignés sur leur propre
   version et des tests de non-régression dédiés.
+- Candidate `0.2.0.dev2` : comparaison multicœur autorisée entre machines dont
+  le nombre de processeurs logiques diffère.
 
 # Next Concrete Action
 
@@ -22,8 +24,8 @@ Tester la comparaison avec des rapports complets issus de deux machines réelles
 
 - CPython 3.14.4 géré par `uv`.
 - `ruff check` et `ruff format --check` réussis.
-- 34 tests réussis.
-- Source distribution et wheel `0.2.0.dev1` construits avec succès.
+- 35 tests réussis.
+- Source distribution et wheel `0.2.0.dev2` construites avec succès.
 - Syntaxe de l'installateur POSIX validée.
 
 # Watchouts

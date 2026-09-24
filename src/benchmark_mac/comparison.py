@@ -70,6 +70,7 @@ CATEGORY_LABELS = {
 }
 
 REFERENCE_DURATIONS = (10, 120, 1_800, 14_400)
+MACHINE_DEPENDENT_PARAMETERS = {"cpu.multicore": frozenset({"workers"})}
 
 
 @dataclass(frozen=True)
@@ -165,7 +166,14 @@ def performance_ratio(result: BenchmarkResult, baseline: BenchmarkResult) -> flo
         raise ValueError(f"Sens de métrique incohérent pour {result.benchmark_id}.")
     if result.unit != baseline.unit:
         raise ValueError(f"Unité incohérente pour {result.benchmark_id}.")
-    if result.parameters != baseline.parameters:
+    ignored = MACHINE_DEPENDENT_PARAMETERS.get(result.benchmark_id, frozenset())
+    result_parameters = {
+        name: value for name, value in result.parameters.items() if name not in ignored
+    }
+    baseline_parameters = {
+        name: value for name, value in baseline.parameters.items() if name not in ignored
+    }
+    if result_parameters != baseline_parameters:
         raise ValueError(f"Paramètres incohérents pour {result.benchmark_id}.")
     if result.higher_is_better:
         return result.value / baseline.value
@@ -298,6 +306,17 @@ def analyze_reports(
             f"La comparaison utilise seulement {len(common)} benchmark(s) commun(s) sur "
             f"{len(union)} présent(s) dans les rapports."
         )
+    if "cpu.multicore" in common:
+        worker_counts = [items["cpu.multicore"].parameters.get("workers") for items in maps]
+        if len(set(worker_counts)) > 1:
+            details = ", ".join(
+                f"{report_label(report)} : {workers} processus"
+                for report, workers in zip(reports, worker_counts, strict=True)
+            )
+            warnings.append(
+                "cpu.multicore mesure le débit total avec le parallélisme propre à chaque "
+                f"machine ({details})."
+            )
     for report in reports:
         unstable = [
             result

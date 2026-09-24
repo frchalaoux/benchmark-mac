@@ -4,6 +4,10 @@ La page GitHub [Tags](https://github.com/frchalaoux/benchmark-mac/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.
 
+La correction `v0.2.0.dev2` est en préparation. Elle autorise le nombre de
+processus de `cpu.multicore` à varier entre les machines, comme le protocole le
+prévoit. Elle n'est pas encore publiée.
+
 ## Choisir une version
 
 ### `v0.2.0.dev1` — développement actuel

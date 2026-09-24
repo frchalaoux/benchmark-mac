@@ -99,11 +99,46 @@ def test_human_thresholds_cover_all_proposed_levels() -> None:
 def test_comparison_rejects_different_benchmark_parameters() -> None:
     baseline = complete_report("Référence", 1)
     candidate = complete_report("Candidate", 1.2)
-    changed = candidate.results[0].model_copy(update={"parameters": {"size": 42}})
-    candidate = candidate.model_copy(update={"results": [changed, *candidate.results[1:]]})
+    changed = next(item for item in candidate.results if item.benchmark_id == "cpu.hash")
+    changed = changed.model_copy(update={"parameters": {"block_size_bytes": 42}})
+    candidate = candidate.model_copy(
+        update={
+            "results": [
+                changed if item.benchmark_id == changed.benchmark_id else item
+                for item in candidate.results
+            ]
+        }
+    )
 
     with pytest.raises(ValueError, match="Paramètres incohérents"):
         analyze_reports([baseline, candidate], parse_scenario_weights(None))
+
+
+def test_multicore_workers_can_differ_between_machines() -> None:
+    baseline = complete_report("Référence", 1)
+    candidate = complete_report("Candidate", 1.2)
+
+    def with_workers(report, workers: int):
+        return report.model_copy(
+            update={
+                "results": [
+                    item.model_copy(update={"parameters": {"workers": workers}})
+                    if item.benchmark_id == "cpu.multicore"
+                    else item
+                    for item in report.results
+                ]
+            }
+        )
+
+    analysis = analyze_reports(
+        [with_workers(baseline, 4), with_workers(candidate, 12)],
+        parse_scenario_weights(None),
+    )
+
+    assert analysis.machines[1].metrics["cpu.multicore"].index == pytest.approx(120)
+    assert any(
+        "4 processus" in warning and "12 processus" in warning for warning in analysis.warnings
+    )
 
 
 def test_html_report_is_autonomous_and_contains_all_visual_sections() -> None:

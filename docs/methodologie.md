@@ -18,6 +18,11 @@ Elle avertit en cas de batterie, changement d'alimentation, limitation de
 fréquence, hausse d'au moins 10 °C ou température finale d'au moins 85 °C. Ces
 informations restent indisponibles sur certaines machines.
 
+Le benchmark `cpu.multicore` mesure volontairement le débit agrégé avec un
+processus par processeur logique disponible. Son paramètre `workers` décrit donc
+la machine et peut différer entre deux rapports. Les autres paramètres de
+protocole doivent rester identiques.
+
 Une différence est déclarée non concluante lorsque les plages min–max de deux
 machines se chevauchent. Les termes « équivalent », « légère », « nette »,
 « importante » et « changement de catégorie » correspondent respectivement aux

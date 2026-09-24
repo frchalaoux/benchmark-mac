@@ -19,6 +19,10 @@ La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
 jour. Le reste de ce README décrit la version de développement actuelle.
 
+> La correction `v0.2.0.dev2` est en préparation. Elle permettra de comparer
+> `cpu.multicore` entre des machines ayant un nombre différent de processeurs
+> logiques. Elle n'est pas encore publiée.
+
 ## Couverture actuelle
 
 - **CPU** : entiers et flottants mono-cœur, SHA-256, compression zlib et calcul multicœur ;
