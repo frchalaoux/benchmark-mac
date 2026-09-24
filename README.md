@@ -32,6 +32,9 @@ Sous Windows, dans PowerShell :
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps1 | iex
 ```
 
+Ces commandes installent la version publique stable `v0.1.0`. Les fonctions de
+comparaison visuelle de cette branche seront incluses dans une version ultérieure.
+
 ## Installation depuis le dossier de développement
 
 ```bash
@@ -51,6 +54,13 @@ Toute la suite, avec le profil standard :
 
 ```bash
 benchmark-mac run --label "MacBook Pro M4 Pro"
+```
+
+Chaque test est exécuté trois fois par défaut et le rapport conserve la médiane,
+le minimum, le maximum et la dispersion. Le nombre de passages est réglable :
+
+```bash
+benchmark-mac run --repeat 5 --profile thorough
 ```
 
 Un groupe ou plusieurs groupes :
@@ -81,8 +91,25 @@ référence :
 benchmark-mac compare mac-m4.json pc-ryzen.json
 ```
 
+Pour obtenir le rapport visuel autonome et adapter le résultat à ses usages :
+
+```bash
+benchmark-mac compare mac-m4.json pc-ryzen.json pc-intel.json \
+  --weight developpement=50 \
+  --weight creation=30 \
+  --weight quotidien=20 \
+  --html comparaison.html
+```
+
+Le premier rapport est la référence 100. Le HTML traduit les rapports en
+indices, écarts qualitatifs et temps équivalents. Il contient des barres, un
+graphique d'écart pour deux machines, une carte thermique pour plusieurs
+machines, des chronologies et un résumé en langage courant.
+
 La comparaison exige la même version de la suite, le même profil et la même
 version de Python. Les rapports sont enregistrés dans `data/results/` par défaut.
+Une différence dont les plages min–max se chevauchent est signalée comme non
+concluante.
 
 ## Développement
 

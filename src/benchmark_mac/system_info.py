@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-from .models import SystemSnapshot
+from .models import EnvironmentSnapshot, SystemSnapshot
 
 
 def _command(*command: str, timeout: float = 10) -> str:
@@ -155,3 +156,52 @@ def system_snapshot(work_dir: Path | str = ".") -> SystemSnapshot:
         disk_total_bytes=usage.total,
         disk_free_bytes=usage.free,
     )
+
+
+def _linux_temperature() -> float | None:
+    temperatures: list[float] = []
+    for path in Path("/sys/class/thermal").glob("thermal_zone*/temp"):
+        try:
+            value = float(path.read_text(encoding="utf-8").strip())
+        except OSError, ValueError:
+            continue
+        celsius = value / 1_000 if value > 1_000 else value
+        if -20 <= celsius <= 150:
+            temperatures.append(celsius)
+    return max(temperatures) if temperatures else None
+
+
+def environment_snapshot() -> EnvironmentSnapshot:
+    """Capture au mieux alimentation et pression thermique sans privilège."""
+    if sys.platform == "darwin":
+        battery = _command("pmset", "-g", "batt")
+        thermal = _command("pmset", "-g", "therm")
+        power_match = re.search(r"Now drawing from '([^']+)'", battery)
+        limit_match = re.search(r"CPU_Speed_Limit\s*=\s*(\d+)", thermal)
+        return EnvironmentSnapshot(
+            power_source=power_match.group(1) if power_match else None,
+            thermal_limit_percent=int(limit_match.group(1)) if limit_match else None,
+        )
+    if sys.platform.startswith("linux"):
+        power_source = None
+        for path in Path("/sys/class/power_supply").glob("*/online"):
+            try:
+                if path.read_text(encoding="utf-8").strip() == "1":
+                    power_source = path.parent.name
+                    break
+            except OSError:
+                continue
+        return EnvironmentSnapshot(
+            power_source=power_source,
+            temperature_celsius=_linux_temperature(),
+        )
+    if sys.platform == "win32":
+        battery = _command(
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "$b=Get-CimInstance Win32_Battery; "
+            "if ($b -and $b.BatteryStatus -eq 1) {'Battery Power'} else {'AC Power'}",
+        )
+        return EnvironmentSnapshot(power_source=battery or None)
+    return EnvironmentSnapshot()

@@ -7,11 +7,14 @@
 - Rapports JSON portables avec inventaire matériel et comparaison en pourcentage.
 - CPython 3.14.4 figé ; installateurs autonomes `uv` pour macOS/Linux et Windows.
 - Publication initiale publique `v0.1.0` sur `frchalaoux/benchmark-mac`.
+- Branche locale `feat/human-comparison-report` : répétitions, médiane,
+  dispersion, indices base 100, scénarios pondérables, temps équivalents,
+  conclusions prudentes et rapport HTML autonome.
 
 ## Prochaine action possible
 
-Ajouter un scénario GPU commun, probablement fondé sur une version figée de
-Blender, puis agréger plusieurs passages par médiane.
+Valider le rapport HTML avec les mesures réelles d'une deuxième machine, puis
+ajouter un scénario GPU commun fondé sur une version figée de Blender.
 
 ## Point de vigilance
 

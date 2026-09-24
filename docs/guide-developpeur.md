@@ -7,12 +7,18 @@ Le paquet sépare les responsabilités :
 - `benchmarks.py` contient profils, catalogue et charges ;
 - `service.py` résout une sélection et isole les échecs ;
 - `repository.py` persiste les rapports atomiquement ;
-- `cli.py` expose les commandes et la comparaison.
+- `comparison.py` calcule indices, scénarios, incertitudes et formulations ;
+- `html_report.py` produit un document autonome sans ressource distante ;
+- `cli.py` expose les commandes, pondérations et formats de comparaison.
 
 Un benchmark reçoit un `BenchmarkContext` et retourne un `BenchmarkResult`. Il
 doit employer des données déterministes, exclure sa préparation du chronométrage,
 borner ses ressources avec le profil et nettoyer ses fichiers temporaires. Son
 identifiant reste stable afin que les rapports puissent être comparés.
+
+Le service répète chaque runner séparément, puis stocke la médiane comme
+`value`. Les valeurs brutes ne doivent jamais être supprimées : l'analyse en a
+besoin pour signaler les plages min–max chevauchantes.
 
 Chaque identifiant possède aussi une entrée dans `BENCHMARK_DOCUMENTATION`.
 Méthode, limites et références sont embarquées dans le rapport JSON et exposées
