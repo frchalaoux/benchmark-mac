@@ -12,7 +12,7 @@
   conclusions prudentes et rapport HTML autonome.
 - Version `0.2.0.dev1` : installateurs alignés sur leur version et protégés par
   des tests de non-régression.
-- Candidate locale `0.2.0.dev2` : corrige la comparaison `cpu.multicore` entre
+- Version `0.2.0.dev2` : corrige la comparaison `cpu.multicore` entre
   machines ayant un nombre différent de processeurs logiques.
 
 ## Prochaine action possible

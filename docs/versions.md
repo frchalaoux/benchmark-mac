@@ -4,15 +4,11 @@ La page GitHub [Tags](https://github.com/frchalaoux/benchmark-mac/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.
 
-La correction `v0.2.0.dev2` est en préparation. Elle autorise le nombre de
-processus de `cpu.multicore` à varier entre les machines, comme le protocole le
-prévoit. Elle n'est pas encore publiée.
-
 ## Choisir une version
 
-### `v0.2.0.dev1` — développement actuel
+### `v0.2.0.dev2` — développement actuel
 
-[Consulter le code source de `v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1)
+[Consulter le code source de `v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2)
 
 Cette version est destinée aux essais de la prochaine version stable. Elle
 ajoute notamment :
@@ -29,6 +25,18 @@ Les formats JSON et l'interface peuvent encore évoluer. Tous les rapports à
 comparer doivent employer la même version de la suite, le même profil et la
 même version de Python.
 
+Cette révision corrige la comparaison `cpu.multicore` : le nombre de processus
+peut varier selon les processeurs logiques disponibles sur chaque machine, sans
+relâcher la vérification des autres paramètres du protocole.
+
+### `v0.2.0.dev1` — développement antérieur
+
+[Consulter le code source de `v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1)
+
+Cette version corrige les installateurs de `dev0`, mais refuse la comparaison
+`cpu.multicore` lorsque les machines possèdent un nombre différent de
+processeurs logiques. Préférer `v0.2.0.dev2` pour une nouvelle campagne.
+
 ### `v0.2.0.dev0` — développement obsolète
 
 [Consulter le code source de `v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0)
@@ -36,7 +44,7 @@ même version de Python.
 Cette version contient les mêmes grandes fonctions expérimentales, mais son
 README et ses installateurs ciblent `v0.1.0` par défaut. Elle reste disponible
 pour reproduire une ancienne campagne ; toute nouvelle installation doit
-préférer `v0.2.0.dev1`.
+préférer `v0.2.0.dev2`.
 
 ### `v0.1.0` — stable
 
@@ -51,9 +59,9 @@ Cette première version stable fournit :
 - une comparaison tabulaire simple en valeurs et pourcentages.
 
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
-pondérés ni le rapport HTML de `v0.2.0.dev1`.
+pondérés ni le rapport HTML de `v0.2.0.dev2`.
 
-## Installer `v0.2.0.dev1`
+## Installer `v0.2.0.dev2`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, puis
 `uv` gère CPython 3.14.4 et l'outil isolé.
@@ -61,6 +69,23 @@ Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, pui
 ### macOS et Linux
 
 Copier la commande entière, sans crochets ni parenthèses Markdown :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.sh | sh
+```
+
+### Windows PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.ps1 | iex
+```
+
+## Installer l'ancienne `v0.2.0.dev1`
+
+Ces commandes servent à reproduire une campagne existante. Pour une nouvelle
+comparaison entre machines, utiliser `v0.2.0.dev2`.
+
+### macOS et Linux
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev1/install.sh | sh

@@ -13,7 +13,7 @@ entre deux machines ou plus.
 - Rapport HTML autonome avec barres, dumbbell, carte thermique et chronologies.
 - Candidate `0.2.0.dev1` préparée avec des installateurs alignés sur leur propre
   version et des tests de non-régression dédiés.
-- Candidate `0.2.0.dev2` : comparaison multicœur autorisée entre machines dont
+- Version `0.2.0.dev2` : comparaison multicœur autorisée entre machines dont
   le nombre de processeurs logiques diffère.
 
 # Next Concrete Action

@@ -11,17 +11,14 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement | Tester les répétitions, les scénarios et le rapport HTML | Version de développement actuelle |
-| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement obsolète | Reproduire une ancienne campagne | Installateur incorrect par défaut ; préférer `dev1` |
+| [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement | Comparer des machines différentes avec les rapports visuels | Version de développement actuelle |
+| [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement antérieur | Reproduire une campagne existante | Comparaison multicœur trop stricte ; préférer `dev2` |
+| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement obsolète | Reproduire une ancienne campagne | Installateur incorrect par défaut ; préférer `dev2` |
 | [`v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0) | Stable | Exécuter les 12 benchmarks et produire des JSON simples | Première version stable |
 
 La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
 jour. Le reste de ce README décrit la version de développement actuelle.
-
-> La correction `v0.2.0.dev2` est en préparation. Elle permettra de comparer
-> `cpu.multicore` entre des machines ayant un nombre différent de processeurs
-> logiques. Elle n'est pas encore publiée.
 
 ## Couverture actuelle
 
@@ -53,18 +50,18 @@ Sous Windows, dans PowerShell :
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps1 | iex
 ```
 
-### Version de développement `v0.2.0.dev1`
+### Version de développement `v0.2.0.dev2`
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev1/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev1/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev2/install.ps1 | iex
 ```
 
 `v0.2.0.dev0` reste téléchargeable pour la reproductibilité, mais son
