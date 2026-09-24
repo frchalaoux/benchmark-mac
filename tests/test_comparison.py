@@ -48,7 +48,7 @@ def complete_report(label: str, multiplier: float):
     ]
     return report.model_copy(
         update={
-            "suite_version": "0.2.0.dev0",
+            "suite_version": "0.2.0.dev1",
             "repetitions": 3,
             "requested_benchmarks": [item.benchmark_id for item in results],
             "results": results,

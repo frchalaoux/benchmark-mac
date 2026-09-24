@@ -10,6 +10,8 @@
 - Branche locale `feat/human-comparison-report` : répétitions, médiane,
   dispersion, indices base 100, scénarios pondérables, temps équivalents,
   conclusions prudentes et rapport HTML autonome.
+- Candidate locale `0.2.0.dev1` : installateurs alignés sur leur version et
+  protégés par des tests de non-régression ; aucun tag `dev1` encore publié.
 
 ## Prochaine action possible
 

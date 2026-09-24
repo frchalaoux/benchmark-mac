@@ -4,6 +4,10 @@ La page GitHub [Tags](https://github.com/frchalaoux/benchmark-mac/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.
 
+La correction `v0.2.0.dev1` est actuellement en préparation. Elle rend les
+installateurs cohérents avec leur propre version, mais elle ne doit pas être
+considérée comme disponible avant d'apparaître dans la page **Tags**.
+
 ## Choisir une version
 
 ### `v0.2.0.dev0` — développement

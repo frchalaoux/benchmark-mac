@@ -18,6 +18,10 @@ La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
 jour. Le reste de ce README décrit la version de développement actuelle.
 
+> La correction `v0.2.0.dev1` est en préparation sur la branche de
+> développement, mais n'est pas encore un tag publié. Ne pas employer une URL
+> `v0.2.0.dev1` avant son apparition dans la page **Tags**.
+
 ## Couverture actuelle
 
 - **CPU** : entiers et flottants mono-cœur, SHA-256, compression zlib et calcul multicœur ;
