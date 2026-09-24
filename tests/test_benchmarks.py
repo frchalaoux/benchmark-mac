@@ -1,7 +1,9 @@
+import sqlite3
 from pathlib import Path
 
 import pytest
 
+import benchmark_mac.benchmarks as benchmark_module
 from benchmark_mac.benchmarks import (
     CATALOG,
     DEFINITIONS,
@@ -53,3 +55,34 @@ def test_resolve_benchmarks_defaults_to_the_complete_catalog() -> None:
 def test_resolve_benchmarks_rejects_unknown_names() -> None:
     with pytest.raises(ValueError, match="inconnu"):
         resolve_benchmarks(["gpu.magic"], None)
+
+
+def test_sqlite_connection_is_closed_before_temporary_directory_cleanup(
+    monkeypatch: pytest.MonkeyPatch, tiny_context: BenchmarkContext
+) -> None:
+    original_connect = sqlite3.connect
+    connections: list[TrackingConnection] = []
+
+    class TrackingConnection(sqlite3.Connection):
+        was_closed = False
+
+        def close(self) -> None:
+            self.was_closed = True
+            super().close()
+
+    def tracked_connect(*args, **kwargs):
+        connection = original_connect(*args, **kwargs, factory=TrackingConnection)
+        connections.append(connection)
+        return connection
+
+    monkeypatch.setattr(benchmark_module.sqlite3, "connect", tracked_connect)
+
+    try:
+        result = benchmark_module.application_sqlite(tiny_context)
+        assert result.value > 0
+        assert len(connections) == 1
+        assert connections[0].was_closed
+    finally:
+        for connection in connections:
+            if not connection.was_closed:
+                connection.close()

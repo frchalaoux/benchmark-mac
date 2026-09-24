@@ -15,11 +15,14 @@
 - Version `0.2.0.dev2` : corrige la comparaison `cpu.multicore` entre
   machines ayant un nombre différent de processeurs logiques.
 - Version stable `0.2.0` préparée pour intégration dans `main`.
+- Branche locale `fix/windows-sqlite-cleanup` : fermeture explicite de la
+  connexion SQLite avant suppression du répertoire temporaire, avec test de
+  non-régression multiplateforme.
 
 ## Prochaine action possible
 
-Valider le rapport HTML avec les mesures réelles d'une deuxième machine, puis
-ajouter un scénario GPU commun fondé sur une version figée de Blender.
+Confirmer le correctif SQLite sur Windows, puis examiner le rapport HTML produit
+à partir de deux machines réelles.
 
 ## Point de vigilance
 
