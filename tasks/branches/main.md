@@ -16,8 +16,8 @@ Valider le protocole sur une deuxième machine, puis choisir un moteur GPU commu
 # Validation Snapshot
 
 - CPython cible : 3.14.4 géré par `uv`.
-- Version initiale : `v0.1.0`.
-- Ruff, format, 21 tests et construction du paquet au vert avant publication.
+- Versions stables : `v0.1.0`, puis `v0.2.0`.
+- Ruff, format, 35 tests et construction du paquet au vert avant `v0.2.0`.
 
 # Watchouts
 

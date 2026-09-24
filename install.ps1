@@ -2,7 +2,12 @@
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 $ErrorActionPreference = "Stop"
 
-$releaseVersion = "v0.1.0"
+$releaseVersion = if ($env:BENCHMARK_MAC_VERSION) {
+    $env:BENCHMARK_MAC_VERSION
+}
+else {
+    "v0.2.0"
+}
 $pythonVersion = "3.14.4"
 $sourceUrl = if ($env:BENCHMARK_MAC_SOURCE) {
     $env:BENCHMARK_MAC_SOURCE
@@ -34,6 +39,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "L'installation de Python $pythonVersion a échoué (code $LASTEXITCODE)."
 }
 
+Write-Host "Installation de benchmark-mac $releaseVersion..."
 & $uvCommand tool install --managed-python --python $pythonVersion --reinstall $sourceUrl
 if ($LASTEXITCODE -ne 0) {
     throw "L'installation de benchmark-mac a échoué (code $LASTEXITCODE)."

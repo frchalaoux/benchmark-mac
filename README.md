@@ -4,6 +4,23 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
+## Versions publiées
+
+Consulter [tous les tags disponibles](https://github.com/frchalaoux/benchmark-mac/tags)
+ou choisir une version ci-dessous.
+
+| Version | Canal | À choisir pour | État |
+| --- | --- | --- | --- |
+| [`v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0) | Stable | Comparer des machines différentes avec les rapports visuels | Version recommandée |
+| [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement archivé | Reproduire une campagne de préversion | Base fonctionnelle de `v0.2.0` |
+| [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement archivé | Reproduire une campagne existante | Comparaison multicœur trop stricte |
+| [`v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0) | Développement obsolète | Reproduire une ancienne campagne | Installateur incorrect par défaut |
+| [`v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0) | Stable antérieure | Reproduire les premiers rapports simples | Remplacée par `v0.2.0` |
+
+La [fiche détaillée des versions](docs/versions.md) indique les différences,
+les commandes d'installation pour chaque système et les précautions de mise à
+jour. Le reste de ce README décrit la version stable actuelle.
+
 ## Couverture actuelle
 
 - **CPU** : entiers et flottants mono-cœur, SHA-256, compression zlib et calcul multicœur ;
@@ -20,16 +37,30 @@ Metal, DirectX, CUDA et autres API nécessitera un moteur commun tel que Blender
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`
 télécharge et gère CPython 3.14.4 avant d'installer l'application.
 
+### Version stable `v0.2.0`
+
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0/install.ps1 | iex
+```
+
+`v0.2.0.dev0` reste téléchargeable pour la reproductibilité, mais son
+installateur nécessite un contournement détaillé dans la
+[fiche des versions](docs/versions.md#installer-lancienne-v020dev0).
+
+Vérifier ensuite l'installation :
+
+```bash
+uv tool list
+benchmark-mac list
+benchmark-mac compare --help
 ```
 
 ## Installation depuis le dossier de développement
@@ -51,6 +82,13 @@ Toute la suite, avec le profil standard :
 
 ```bash
 benchmark-mac run --label "MacBook Pro M4 Pro"
+```
+
+Chaque test est exécuté trois fois par défaut et le rapport conserve la médiane,
+le minimum, le maximum et la dispersion. Le nombre de passages est réglable :
+
+```bash
+benchmark-mac run --repeat 5 --profile thorough
 ```
 
 Un groupe ou plusieurs groupes :
@@ -81,8 +119,25 @@ référence :
 benchmark-mac compare mac-m4.json pc-ryzen.json
 ```
 
+Pour obtenir le rapport visuel autonome et adapter le résultat à ses usages :
+
+```bash
+benchmark-mac compare mac-m4.json pc-ryzen.json pc-intel.json \
+  --weight developpement=50 \
+  --weight creation=30 \
+  --weight quotidien=20 \
+  --html comparaison.html
+```
+
+Le premier rapport est la référence 100. Le HTML traduit les rapports en
+indices, écarts qualitatifs et temps équivalents. Il contient des barres, un
+graphique d'écart pour deux machines, une carte thermique pour plusieurs
+machines, des chronologies et un résumé en langage courant.
+
 La comparaison exige la même version de la suite, le même profil et la même
 version de Python. Les rapports sont enregistrés dans `data/results/` par défaut.
+Une différence dont les plages min–max se chevauchent est signalée comme non
+concluante.
 
 ## Développement
 

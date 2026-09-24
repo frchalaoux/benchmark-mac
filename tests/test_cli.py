@@ -49,3 +49,29 @@ def test_compare_uses_first_report_as_baseline(tmp_path: Path) -> None:
     assert "Mac test" in result.stdout
     assert "PC test" in result.stdout
     assert "+50.0 %" in result.stdout
+
+
+def test_compare_writes_a_weighted_autonomous_html_report(tmp_path: Path) -> None:
+    first = JsonReportRepository(tmp_path / "first").save(sample_report())
+    second = JsonReportRepository(tmp_path / "second").save(
+        sample_report(value=12, label="PC test")
+    )
+    output = tmp_path / "comparaison.html"
+
+    result = runner.invoke(
+        app,
+        [
+            "compare",
+            str(first),
+            str(second),
+            "--weight",
+            "quotidien=1",
+            "--html",
+            str(output),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Rapport HTML" in result.stdout
+    assert output.exists()
+    assert "Carte thermique" in output.read_text(encoding="utf-8")
