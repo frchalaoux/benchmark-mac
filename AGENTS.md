@@ -25,6 +25,19 @@ d'une pull request. Annoncer précisément la branche et le tag concernés avant
 l'opération. Cette règle de cohérence ne remplace jamais l'obligation d'obtenir
 la confirmation explicite préalable.
 
+## Documentation des versions
+
+Le `README.md` à la racine doit contenir, dans une section visible près du
+début, un lien permanent vers la page GitHub qui liste tous les tags du dépôt.
+Il doit aussi fournir des liens directs vers les versions stable et de
+développement actuellement publiées, lorsqu'elles existent.
+
+À chaque préparation de tag, vérifier et mettre à jour ces liens. Vérifier aussi
+que les commandes d'installation documentées installent réellement la version
+annoncée : récupérer un installateur depuis un tag ne doit jamais installer en
+silence une autre version. Un tag ne doit être présenté comme disponible que si
+son code source est effectivement accessible depuis GitHub.
+
 ## Intégration entre branches
 
 Privilégier une pull request documentée pour intégrer une branche de travail,
