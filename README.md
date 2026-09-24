@@ -4,6 +4,13 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
+## Versions publiées
+
+Consulter la page GitHub [Tags — toutes les versions disponibles](https://github.com/frchalaoux/benchmark-mac/tags).
+
+- [v0.2.0.dev0 — version de développement](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0)
+- [v0.1.0 — version stable](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0)
+
 ## Couverture actuelle
 
 - **CPU** : entiers et flottants mono-cœur, SHA-256, compression zlib et calcul multicœur ;
