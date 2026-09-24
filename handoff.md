@@ -14,10 +14,11 @@
   des tests de non-régression.
 - Version `0.2.0.dev2` : corrige la comparaison `cpu.multicore` entre
   machines ayant un nombre différent de processeurs logiques.
-- Version stable `0.2.0` préparée pour intégration dans `main`.
+- Version stable `0.2.0` publiée sur `main`.
 - Branche locale `fix/windows-sqlite-cleanup` : fermeture explicite de la
   connexion SQLite avant suppression du répertoire temporaire, avec test de
   non-régression multiplateforme.
+- Version corrective `0.2.1` préparée localement pour publication.
 
 ## Prochaine action possible
 

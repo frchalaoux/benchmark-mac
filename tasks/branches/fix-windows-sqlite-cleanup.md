@@ -8,6 +8,7 @@
   temporaire.
 - Un test de non-régression vérifie l'appel à `close()`.
 - Ruff, formatage, 36 tests et construction du paquet sont validés.
+- La version corrective préparée est `0.2.1`.
 
 # Next Concrete Action
 
