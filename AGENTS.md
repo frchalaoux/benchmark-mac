@@ -18,6 +18,13 @@ publication est autorisé ; s'arrêter immédiatement avant toute opération
 distante, décrire exactement celle-ci et attendre une confirmation explicite
 telle que « publie maintenant » ou « pousse ce tag ».
 
+Lorsqu'une publication distante a été explicitement confirmée, toujours
+publier également la branche contenant le commit concerné avant ou avec le tag,
+afin que le commit appartienne à une branche distante et puisse faire l'objet
+d'une pull request. Annoncer précisément la branche et le tag concernés avant
+l'opération. Cette règle de cohérence ne remplace jamais l'obligation d'obtenir
+la confirmation explicite préalable.
+
 ## Intégration entre branches
 
 Privilégier une pull request documentée pour intégrer une branche de travail,
