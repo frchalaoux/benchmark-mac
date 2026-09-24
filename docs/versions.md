@@ -4,15 +4,11 @@ La page GitHub [Tags](https://github.com/frchalaoux/benchmark-mac/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.
 
-La correction `v0.2.0.dev1` est actuellement en préparation. Elle rend les
-installateurs cohérents avec leur propre version, mais elle ne doit pas être
-considérée comme disponible avant d'apparaître dans la page **Tags**.
-
 ## Choisir une version
 
-### `v0.2.0.dev0` — développement
+### `v0.2.0.dev1` — développement actuel
 
-[Consulter le code source de `v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0)
+[Consulter le code source de `v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1)
 
 Cette version est destinée aux essais de la prochaine version stable. Elle
 ajoute notamment :
@@ -29,6 +25,15 @@ Les formats JSON et l'interface peuvent encore évoluer. Tous les rapports à
 comparer doivent employer la même version de la suite, le même profil et la
 même version de Python.
 
+### `v0.2.0.dev0` — développement obsolète
+
+[Consulter le code source de `v0.2.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev0)
+
+Cette version contient les mêmes grandes fonctions expérimentales, mais son
+README et ses installateurs ciblent `v0.1.0` par défaut. Elle reste disponible
+pour reproduire une ancienne campagne ; toute nouvelle installation doit
+préférer `v0.2.0.dev1`.
+
 ### `v0.1.0` — stable
 
 [Consulter le code source de `v0.1.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.1.0)
@@ -42,9 +47,9 @@ Cette première version stable fournit :
 - une comparaison tabulaire simple en valeurs et pourcentages.
 
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
-pondérés ni le rapport HTML de `v0.2.0.dev0`.
+pondérés ni le rapport HTML de `v0.2.0.dev1`.
 
-## Installer `v0.2.0.dev0`
+## Installer `v0.2.0.dev1`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, puis
 `uv` gère CPython 3.14.4 et l'outil isolé.
@@ -54,12 +59,26 @@ Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, pui
 Copier la commande entière, sans crochets ni parenthèses Markdown :
 
 ```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev1/install.sh | sh
+```
+
+### Windows PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev1/install.ps1 | iex
+```
+
+## Installer l'ancienne `v0.2.0.dev0`
+
+Cette procédure sert uniquement à reproduire une campagne existante. La source
+doit être imposée explicitement pour contourner l'erreur de son installateur.
+
+### macOS et Linux
+
+```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev0/install.sh \
   | BENCHMARK_MAC_SOURCE="https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/v0.2.0.dev0.tar.gz" sh
 ```
-
-La variable `BENCHMARK_MAC_SOURCE` est indispensable pour ce tag : son
-installateur cible encore `v0.1.0` lorsqu'aucune source n'est précisée.
 
 ### Windows PowerShell
 
@@ -68,8 +87,6 @@ $env:BENCHMARK_MAC_SOURCE = "https://github.com/frchalaoux/benchmark-mac/archive
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.0.dev0/install.ps1 | iex
 Remove-Item Env:BENCHMARK_MAC_SOURCE
 ```
-
-La dernière ligne retire la variable temporaire après l'installation.
 
 ## Installer `v0.1.0`
 
@@ -113,6 +130,6 @@ de versions différentes.
 
 ## Portée des versions actuelles
 
-Les deux versions utilisent CPython 3.14.4 afin de rendre les résultats plus
+Les versions actuelles utilisent CPython 3.14.4 afin de rendre les résultats plus
 comparables. Elles prennent en charge macOS, Windows et Linux. Le GPU est
 inventorié, mais n'est pas encore mesuré par un benchmark commun.
