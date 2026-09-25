@@ -27,7 +27,9 @@ de reproductibilité, pas une définition scientifique universelle du repos.
 Le contrôle est non bloquant, ponctuel et limité aux informations accessibles
 sans privilège. Ses résultats sont conservés dans `readiness` et réaffichés
 comme avertissements lors d'une comparaison. La collecte multiplateforme repose
-sur l'API documentée de [psutil](https://psutil.readthedocs.io/).
+sur l'API documentée de [psutil](https://psutil.readthedocs.io/). Le PID 0 de
+Windows est un pseudo-processus représentant l'inactivité du CPU ; il est exclu
+de la liste des tâches concurrentes.
 
 Le benchmark `cpu.multicore` mesure volontairement le débit agrégé avec un
 processus par processeur logique disponible. Son paramètre `workers` décrit donc
@@ -67,6 +69,9 @@ sélection automatique privilégie le premier adaptateur dédié, puis le premie
 intégré ; `--gpu INDEX` permet de la remplacer. L'indice, le nom, le type et le
 backend sont attachés aux résultats. L'indice sert uniquement à sélectionner un
 GPU localement et n'entre pas dans le protocole comparatif entre machines.
+Un adaptateur WebGPU classé `CPU`, notamment `Microsoft Basic Render Driver`
+dans certaines machines virtuelles, est refusé : son débit serait produit par
+le processeur et ne constituerait pas une mesure du matériel graphique.
 
 ## Limites
 

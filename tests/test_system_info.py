@@ -20,9 +20,20 @@ class FakeProcess:
         return "rendu-video"
 
 
+class FakeIdleProcess:
+    pid = 0
+
+    def cpu_percent(self, _interval=None) -> float:
+        raise AssertionError("Le pseudo-processus PID 0 doit être ignoré.")
+
+
 def test_machine_readiness_warns_about_non_idle_state(monkeypatch) -> None:
     cpu_values = iter([0.0, 30.0])
-    monkeypatch.setattr(system_info.psutil, "process_iter", lambda _attrs: [FakeProcess()])
+    monkeypatch.setattr(
+        system_info.psutil,
+        "process_iter",
+        lambda _attrs: [FakeIdleProcess(), FakeProcess()],
+    )
     monkeypatch.setattr(system_info.psutil, "cpu_percent", lambda _interval=None: next(cpu_values))
     monkeypatch.setattr(
         system_info.psutil,

@@ -215,7 +215,9 @@ def machine_readiness(sample_seconds: float = 1.0, process_limit: int = 5) -> Re
     processes: list[psutil.Process] = []
     current_pid = os.getpid()
     for process in psutil.process_iter(["pid", "name"]):
-        if process.pid == current_pid:
+        # Windows expose le pseudo-processus « System Idle Process » avec le PID 0.
+        # Il ne représente pas une charge concurrente et ne doit pas être archivé.
+        if process.pid <= 0 or process.pid == current_pid:
             continue
         try:
             process.cpu_percent(None)

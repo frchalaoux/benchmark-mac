@@ -54,6 +54,11 @@ benchmark-mac run --group gpu --gpu 1 --label "Portable — GPU 1"
 Le GPU effectivement choisi est annoncé avant la campagne et enregistré dans
 chaque résultat GPU.
 
+Dans une machine virtuelle sans accélération graphique transmise, WebGPU peut
+n'exposer que `Microsoft Basic Render Driver`, classé `CPU`. Ce moteur logiciel
+est signalé et refusé pour éviter de présenter un score CPU comme une performance
+GPU. Les douze autres benchmarks continuent normalement.
+
 ## Installation depuis GitHub
 
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`

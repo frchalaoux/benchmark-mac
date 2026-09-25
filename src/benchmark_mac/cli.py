@@ -207,6 +207,13 @@ def run(
                 f"GPU mesuré ({mode}) : [{adapter.index}] {adapter.device} · "
                 f"{adapter.adapter_type} · {adapter.backend}\n"
             )
+            if adapter.adapter_type.casefold() == "cpu":
+                typer.secho(
+                    "Attention : cet adaptateur est un moteur de rendu logiciel exécuté "
+                    "par le CPU. Les benchmarks GPU seront refusés, mais les autres "
+                    "groupes continueront.\n",
+                    fg=typer.colors.YELLOW,
+                )
         readiness = machine_readiness()
         _show_readiness(readiness)
         report, path = service().run(

@@ -12,7 +12,9 @@ Cette candidate conserve les fonctionnalités GPU de `dev0` et corrige la mise
 à niveau automatique de `uv` sous Windows. Le script officiel est téléchargé
 dans un fichier temporaire puis exécuté dans un processus PowerShell enfant :
 son éventuel `exit` ne peut plus fermer la console principale. Cette version
-n'est pas encore taguée ni installable depuis GitHub.
+n'est pas encore taguée ni installable depuis GitHub. Elle ignore également le
+pseudo-processus Windows PID 0 pendant le contrôle préalable et refuse les
+moteurs WebGPU logiciels classés `CPU`, tels que `Microsoft Basic Render Driver`.
 
 ### `v0.3.0.dev0` — développement publié
 

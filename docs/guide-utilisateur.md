@@ -41,7 +41,9 @@ et ses avertissements sont enregistrés dans le rapport JSON.
 Ce contrôle est un instantané, pas une certification : une tâche peut démarrer
 après l'échantillon, et certains services protégés ne livrent pas tous leurs
 détails. Les processus affichés sont une aide au diagnostic ; il ne faut pas
-arrêter un processus système que l'on ne reconnaît pas.
+arrêter un processus système que l'on ne reconnaît pas. Sous Windows, le
+pseudo-processus PID 0 (« System Idle Process ») est ignoré : il représente le
+temps CPU inoccupé et non une application concurrente.
 
 ## Choisir l'étendue
 
@@ -72,6 +74,11 @@ benchmark-mac run --group gpu --gpu 1 --label "PC hybride — GPU 1"
 
 Les indices sont propres à la machine : vérifier `benchmark-mac info` sur
 chacune d'elles au lieu de supposer que `0` désigne toujours le GPU dédié.
+
+Dans une machine virtuelle sans GPU transmis, `Microsoft Basic Render Driver`
+peut apparaître avec le type `CPU`. Il s'agit d'un moteur logiciel. La suite
+refuse alors les quatre résultats GPU afin de ne pas les confondre avec les
+performances d'une carte physique, mais poursuit tous les autres groupes.
 
 Les profils sont :
 

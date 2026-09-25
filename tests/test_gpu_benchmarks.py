@@ -38,3 +38,23 @@ def test_gpu_selection_prefers_discrete_and_accepts_an_explicit_index(monkeypatc
     finally:
         gpu_benchmarks._adapter.cache_clear()
         gpu_benchmarks._device.cache_clear()
+
+
+def test_software_adapter_is_not_benchmarked_as_a_hardware_gpu(monkeypatch) -> None:
+    adapter = SimpleNamespace(
+        info={
+            "device": "Microsoft Basic Render Driver",
+            "adapter_type": "CPU",
+            "backend_type": "D3D12",
+        }
+    )
+    monkeypatch.setattr(gpu_benchmarks.wgpu.gpu, "enumerate_adapters_sync", lambda: [adapter])
+    gpu_benchmarks._adapter.cache_clear()
+    gpu_benchmarks._device.cache_clear()
+
+    try:
+        with pytest.raises(RuntimeError, match="moteur WebGPU logiciel"):
+            gpu_benchmarks._device(None)
+    finally:
+        gpu_benchmarks._adapter.cache_clear()
+        gpu_benchmarks._device.cache_clear()

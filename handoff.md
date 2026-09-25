@@ -33,8 +33,9 @@
 ## Validations réalisées
 
 - `uv run ruff check .` : réussi.
-- `uv run pytest` : 46 tests réussis, dont la reprise après échec d'un ancien `uv`.
-- `uv build` : source et wheel `0.3.0.dev0` construits avant le correctif `dev1`.
+- `uv run pytest` : 47 tests réussis, dont la reprise après échec d'un ancien `uv`,
+  l'exclusion du PID 0 et le refus d'un moteur graphique logiciel.
+- `uv build` : source et wheel `0.3.0.dev1` construits.
 - Exécution réelle des quatre benchmarks sur AMD Radeon Pro 560X via Metal.
 - Détection réelle de deux GPU sur MacBook Pro : Radeon dédiée et Intel UHD 630.
 - Sélection explicite et exécution réelle de `gpu.compute-fp32` sur l'Intel UHD 630.
@@ -44,6 +45,11 @@
 - Second défaut identifié dans `dev0` : l'exécution imbriquée de
   `irm https://astral.sh/uv/install.ps1 | iex` permet au script tiers de fermer
   la session PowerShell appelante avec `exit`.
+- Troisième défaut Windows identifié dans `dev0` : le pseudo-processus PID 0
+  provoque une erreur de validation `ProcessLoad` avant les benchmarks.
+- Une VM Windows 10 sans GPU transmis expose `Microsoft Basic Render Driver`
+  comme adaptateur WebGPU de type `CPU`; `dev1` le signale et refuse les scores
+  GPU logiciels sans interrompre les autres groupes.
 - La validation fonctionnelle de la préversion complète reste à effectuer sous
   Windows et Linux après publication.
 

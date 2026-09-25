@@ -86,6 +86,11 @@ def selected_gpu_adapter(gpu_index: int | None = None) -> GpuAdapterSummary:
 @cache
 def _device(gpu_index: int | None) -> tuple[wgpu.GPUDevice, dict[str, object]]:
     adapter, info = _adapter(gpu_index)
+    if str(info.get("adapter_type", "")).casefold() == "cpu":
+        name = str(info.get("device") or "inconnu")
+        raise RuntimeError(
+            f"{name} est un moteur WebGPU logiciel exécuté par le CPU, pas un GPU matériel."
+        )
     return adapter.request_device_sync(), info
 
 
