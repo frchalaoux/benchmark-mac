@@ -3,7 +3,7 @@
 ## État actuel
 
 - Branche locale : `feat/gpu-preflight`.
-- Version préparée : `0.3.0.dev0` ; tag prévu : `v0.3.0.dev0`.
+- Préversion publiée : `v0.3.0.dev0`, pointant sur le commit testé `73c7d53`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -39,21 +39,20 @@
 - La validation fonctionnelle de la préversion complète reste à effectuer sous
   Windows et Linux après publication.
 
-## Publication préparée
+## Publication effectuée
 
-La documentation cible la future URL du tag `v0.3.0.dev0` et fournit les deux
-commandes d'installation GitHub. Avant publication, refaire toutes les
-validations, committer la documentation, puis demander une confirmation
-impérative distincte.
+- Branche `feat/gpu-preflight` publiée sur `origin`.
+- Tag annoté `v0.3.0.dev0` publié sur le commit `73c7d53`.
+- Branche, tag et page GitHub vérifiés après publication.
+- Les installateurs `install.sh` et `install.ps1` du tag répondent depuis
+  `raw.githubusercontent.com` et ciblent bien `v0.3.0.dev0` avec CPython 3.14.4.
+- Aucune fusion dans `main` et aucune release GitHub effectuées.
 
-Après confirmation seulement :
+## Prochaine étape possible
 
-1. pousser `feat/gpu-preflight` sur `origin` ;
-2. créer le tag annoté `v0.3.0.dev0` sur le commit final ;
-3. pousser ce tag sur `origin` ;
-4. vérifier que la branche et le tag sont visibles sur GitHub et que les deux
-   URL `raw.githubusercontent.com` des installateurs répondent ;
-5. ne pas fusionner dans `main` sans une nouvelle demande explicite.
+Installer `v0.3.0.dev0` sur le Windows 10 qui possède encore `uv 0.5.1` afin de
+confirmer la mise à niveau automatique, puis exécuter au minimum
+`benchmark-mac info` et `benchmark-mac run --group gpu --profile quick`.
 
 ## Points de vigilance
 
