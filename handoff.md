@@ -3,9 +3,8 @@
 ## État actuel
 
 - Branche locale : `feat/gpu-preflight`.
-- Préversions publiées : `v0.3.0.dev0` sur `73c7d53` et `v0.3.0.dev1` sur
-  `57bf438`.
-- Préversion suivante préparée localement : `v0.3.0.dev2`.
+- Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
+  `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -25,7 +24,8 @@
   géré par `uv`.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
-- Sous Windows, `dev1` télécharge l'installateur officiel dans un fichier
+- Sous Windows, à partir de `dev1`, l'installateur télécharge la mise à niveau
+  officielle de `uv` dans un fichier
   temporaire et l'exécute dans un processus PowerShell enfant. Son éventuel
   `exit` ne peut donc plus fermer la console principale.
 - Documentation des quatre benchmarks GPU avec protocole, limites et références
@@ -59,17 +59,17 @@
 - Branche `feat/gpu-preflight` publiée sur `origin`.
 - Tag annoté `v0.3.0.dev0` publié sur le commit `73c7d53`.
 - Tag annoté `v0.3.0.dev1` publié sur le commit `57bf438`.
-- Branche, tag et page GitHub vérifiés après publication.
-- Les installateurs `install.sh` et `install.ps1` de `v0.3.0.dev1` répondent
+- Tag annoté `v0.3.0.dev2` publié sur le commit `41da9e3`.
+- Branche, tag, archive et page GitHub vérifiés après publication.
+- Les installateurs `install.sh` et `install.ps1` de `v0.3.0.dev2` répondent
   depuis `raw.githubusercontent.com`, ciblent le bon tag avec CPython 3.14.4 et
   contiennent la reprise PowerShell isolée.
 - Aucune fusion dans `main` et aucune release GitHub effectuées.
 
 ## Prochaine étape possible
 
-Publier `v0.3.0.dev2` après confirmation explicite, puis l'installer sur macOS
-et sur le Windows 10 de validation. Exécuter au minimum
-`benchmark-mac --version`, `benchmark-mac info` et
+Installer `v0.3.0.dev2` sur macOS et sur le Windows 10 de validation. Exécuter
+au minimum `benchmark-mac --version`, `benchmark-mac info` et
 `benchmark-mac run --group gpu --profile quick`.
 
 ## Points de vigilance
