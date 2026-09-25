@@ -6,7 +6,7 @@ $releaseVersion = if ($env:BENCHMARK_MAC_VERSION) {
     $env:BENCHMARK_MAC_VERSION
 }
 else {
-    "v0.3.0.dev0"
+    "v0.3.0.dev1"
 }
 $pythonVersion = "3.14.4"
 $sourceUrl = if ($env:BENCHMARK_MAC_SOURCE) {
@@ -20,12 +20,33 @@ if ($PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot "pyproject.toml"))) {
     $sourceUrl = $PSScriptRoot
 }
 
+function Install-CurrentUv {
+    $installerPath = Join-Path ([IO.Path]::GetTempPath()) "uv-installer-$([guid]::NewGuid()).ps1"
+    try {
+        Invoke-WebRequest -UseBasicParsing https://astral.sh/uv/install.ps1 -OutFile $installerPath
+        $powerShellExecutable = Join-Path $PSHOME "powershell.exe"
+        if (-not (Test-Path $powerShellExecutable)) {
+            $powerShellExecutable = Join-Path $PSHOME "pwsh.exe"
+        }
+        if (-not (Test-Path $powerShellExecutable)) {
+            throw "Impossible de trouver l'exécutable PowerShell utilisé pour installer uv."
+        }
+        & $powerShellExecutable -NoProfile -ExecutionPolicy Bypass -File $installerPath
+        if ($LASTEXITCODE -ne 0) {
+            throw "L'installateur officiel de uv a échoué (code $LASTEXITCODE)."
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $installerPath -Force -ErrorAction SilentlyContinue
+    }
+}
+
 if (Get-Command uv -ErrorAction SilentlyContinue) {
     $uvCommand = "uv"
 }
 else {
     Write-Host "Installation de uv..."
-    irm https://astral.sh/uv/install.ps1 | iex
+    Install-CurrentUv
     $uvPath = Join-Path $HOME ".local\bin\uv.exe"
     if (-not (Test-Path $uvPath)) {
         throw "uv est introuvable apres son installation."
@@ -38,7 +59,7 @@ Write-Host "Installation de CPython $pythonVersion gere par uv..."
 if ($LASTEXITCODE -ne 0) {
     Write-Host "La version actuelle de uv ne trouve pas CPython $pythonVersion."
     Write-Host "Mise a niveau de uv depuis l'installateur officiel, puis nouvelle tentative..."
-    irm https://astral.sh/uv/install.ps1 | iex
+    Install-CurrentUv
     $updatedUvPath = Join-Path $HOME ".local\bin\uv.exe"
     if (-not (Test-Path $updatedUvPath)) {
         throw "La version mise a niveau de uv est introuvable dans $updatedUvPath."

@@ -21,9 +21,15 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
     assert EXPECTED_TAG in windows_installer
     assert "BENCHMARK_MAC_VERSION" in posix_installer
     assert "BENCHMARK_MAC_VERSION" in windows_installer
+    assert "Install-CurrentUv" in windows_installer
+    assert "-File $installerPath" in windows_installer
+    assert "irm https://astral.sh/uv/install.ps1 | iex" not in windows_installer
     for document in (readme, versions):
-        assert f"/{EXPECTED_TAG}/install.sh" in document
-        assert f"/{EXPECTED_TAG}/install.ps1" in document
+        assert __version__ in document
+        assert "/v0.3.0.dev0/install.sh" in document
+        assert "/v0.3.0.dev0/install.ps1" in document
+        assert f"/{EXPECTED_TAG}/install.sh" not in document
+        assert f"/{EXPECTED_TAG}/install.ps1" not in document
 
 
 def test_posix_installer_defaults_to_its_own_tag(tmp_path: Path) -> None:

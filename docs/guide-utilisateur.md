@@ -6,11 +6,11 @@ L'installateur GitHub installe `uv` si nécessaire. `uv` installe ensuite sa
 propre version de CPython 3.14.4 et isole `benchmark-mac` du Python du système.
 Il n'est donc pas nécessaire d'installer Python séparément.
 
-Si un `uv` déjà présent est trop ancien pour connaître CPython 3.14.4,
-l'installateur retente automatiquement l'opération après avoir installé la
-version actuelle de `uv` depuis son installateur officiel. Cette reprise est
-notamment nécessaire sous Windows avec d'anciennes versions telles que
-`uv 0.5.1`.
+À partir de `0.3.0.dev1`, si un `uv` déjà présent est trop ancien pour connaître
+CPython 3.14.4, l'installateur retente automatiquement l'opération après avoir
+installé la version actuelle de `uv` dans un processus PowerShell enfant. Cette
+isolation empêche l'installateur tiers de fermer la console principale et est
+notamment nécessaire avec d'anciennes versions telles que `uv 0.5.1`.
 
 La version réellement exécutée se vérifie avec :
 

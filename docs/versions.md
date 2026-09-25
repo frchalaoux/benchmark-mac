@@ -6,7 +6,15 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.0.dev0` — développement actuel
+### `0.3.0.dev1` — correction locale en préparation
+
+Cette candidate conserve les fonctionnalités GPU de `dev0` et corrige la mise
+à niveau automatique de `uv` sous Windows. Le script officiel est téléchargé
+dans un fichier temporaire puis exécuté dans un processus PowerShell enfant :
+son éventuel `exit` ne peut plus fermer la console principale. Cette version
+n'est pas encore taguée ni installable depuis GitHub.
+
+### `v0.3.0.dev0` — développement publié
 
 [Consulter le code source de `v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0)
 
@@ -25,6 +33,11 @@ Cette préversion ajoute :
 Elle doit être validée sur plusieurs configurations macOS, Windows et Linux
 avant de devenir stable. Les rapports `0.2.x` et `0.3.x` ne doivent pas être
 mélangés dans une comparaison.
+
+Sous Windows, la reprise automatique de `dev0` présente toutefois un défaut :
+elle injecte l'installateur officiel de `uv` dans la session en cours. Si celui-ci
+appelle `exit`, la console peut se fermer avant la reprise de `benchmark-mac`.
+Mettre `uv` à niveau séparément ou attendre `dev1`.
 
 ### `v0.2.1` — stable actuelle
 
@@ -116,6 +129,9 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.ps1 | iex
 ```
 
+Sous Windows, avec un ancien `uv`, exécuter d'abord la procédure isolée décrite
+dans [Ancien `uv` sous Windows](#ancien-uv-sous-windows).
+
 Le contrôle suivant doit afficher `benchmark-mac 0.3.0.dev0` :
 
 ```bash
@@ -149,13 +165,14 @@ commande peut échouer avec `No download found`. Mettre alors `uv` à niveau et
 placer sa version officielle en tête du `PATH` pour la session :
 
 ```powershell
-irm https://astral.sh/uv/install.ps1 | iex
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
 $env:Path = "$HOME\.local\bin;$env:Path"
 uv --version
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps1 | iex
 ```
 
-La préversion `v0.3.0.dev0` automatise cette reprise.
+La candidate locale `0.3.0.dev1` automatise cette reprise sans exécuter
+l'installateur tiers dans la console principale.
 
 ## Installer l'ancienne `v0.2.0`
 
@@ -274,6 +291,6 @@ de versions différentes.
 
 Toutes ces versions utilisent CPython 3.14.4 afin de rendre les résultats plus
 comparables et prennent en charge macOS, Windows et Linux. Jusqu'à `v0.2.1`, le
-GPU est seulement inventorié. `v0.3.0.dev0` ajoute les mesures WebGPU communes,
+GPU est seulement inventorié. La série `0.3` ajoute les mesures WebGPU communes,
 mais ne couvre pas le ray tracing, les unités IA, les codecs vidéo matériels ou
 un moteur de jeu complet.
