@@ -132,6 +132,10 @@ nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
 `benchmark-mac` éventuellement installée. Si un ancien `uv` ne connaît pas ce
 Python, l'installateur met automatiquement `uv` à niveau et réessaie.
 
+Les préversions suivent la convention de tag `vX.Y.Z.devK`. Le nom exact est
+donc ici `v0.3.0.dev1`; tous les points font partie du nom Git et doivent être
+conservés dans les URL et les commandes.
+
 ### macOS et Linux
 
 ```bash

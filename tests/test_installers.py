@@ -24,10 +24,16 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
     assert "Install-CurrentUv" in windows_installer
     assert "-File $installerPath" in windows_installer
     assert "irm https://astral.sh/uv/install.ps1 | iex" not in windows_installer
+    expected_posix_url = (
+        f"https://raw.githubusercontent.com/frchalaoux/benchmark-mac/{EXPECTED_TAG}/install.sh"
+    )
+    expected_windows_url = (
+        f"https://raw.githubusercontent.com/frchalaoux/benchmark-mac/{EXPECTED_TAG}/install.ps1"
+    )
     for document in (readme, versions):
         assert __version__ in document
-        assert f"/{EXPECTED_TAG}/install.sh" in document
-        assert f"/{EXPECTED_TAG}/install.ps1" in document
+        assert expected_posix_url in document
+        assert expected_windows_url in document
     assert "/v0.3.0.dev0/install.sh" in versions
     assert "/v0.3.0.dev0/install.ps1" in versions
 

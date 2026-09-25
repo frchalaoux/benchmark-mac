@@ -38,6 +38,13 @@ annoncée : récupérer un installateur depuis un tag ne doit jamais installer e
 silence une autre version. Un tag ne doit être présenté comme disponible que si
 son code source est effectivement accessible depuis GitHub.
 
+## Convention des préversions
+
+Les tags de préversion suivent durablement la forme `vX.Y.Z.devK`, avec un
+point avant `dev` ; par exemple `v0.3.0.dev1`. Employer exactement la même
+forme dans la version du paquet (sans le `v`), les installateurs, le README, la
+documentation et les liens GitHub.
+
 ## Intégration entre branches
 
 Privilégier une pull request documentée pour intégrer une branche de travail,

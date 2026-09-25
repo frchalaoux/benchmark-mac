@@ -93,6 +93,10 @@ Cette préversion est destinée à valider les nouveaux tests GPU et le contrôl
 de l'état initial avant une future stable. Sous Windows, la mise à niveau de
 `uv` s'exécute dans un processus enfant et le pseudo-processus PID 0 est ignoré.
 
+> **Convention des préversions :** les tags suivent la forme `vX.Y.Z.devK`.
+> Le tag courant s'écrit donc exactement `v0.3.0.dev1`. Les points font partie
+> du nom Git et doivent être conservés dans les URL et les commandes.
+
 Sur macOS ou Linux :
 
 ```bash

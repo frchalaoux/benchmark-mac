@@ -18,6 +18,10 @@ La version réellement exécutée se vérifie avec :
 benchmark-mac --version
 ```
 
+Pour une installation GitHub, utiliser le nom affiché dans la
+[fiche des versions](versions.md). Les préversions suivent la convention
+`vX.Y.Z.devK` : le nom complet actuel est `v0.3.0.dev1`, avec tous ses points.
+
 Avant une mesure :
 
 1. brancher un portable sur secteur ;
