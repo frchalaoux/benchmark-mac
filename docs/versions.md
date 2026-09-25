@@ -6,9 +6,9 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.0.dev1` — développement actuel
+### `v0.3.0.dev2` — développement actuel
 
-[Consulter le code source de `v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1)
+[Consulter le code source de `v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2)
 
 Cette candidate conserve les fonctionnalités GPU de `dev0` et corrige la mise
 à niveau automatique de `uv` sous Windows. Le script officiel est téléchargé
@@ -17,6 +17,17 @@ son éventuel `exit` ne peut plus fermer la console principale. Elle ignore
 également le pseudo-processus Windows PID 0 pendant le contrôle préalable et
 refuse les moteurs WebGPU logiciels classés `CPU`, tels que
 `Microsoft Basic Render Driver`.
+
+Cette révision explicite aussi la convention durable `vX.Y.Z.devK` dans les
+instructions du projet, le README et les guides.
+
+### `v0.3.0.dev1` — développement antérieur
+
+[Consulter le code source de `v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1)
+
+Cette préversion introduit les corrections Windows reprises dans `dev2` : mise
+à niveau de `uv` dans un processus PowerShell enfant, exclusion du PID 0 et
+refus des moteurs WebGPU logiciels classés `CPU`.
 
 ### `v0.3.0.dev0` — développement publié
 
@@ -41,7 +52,7 @@ mélangés dans une comparaison.
 Sous Windows, la reprise automatique de `dev0` présente toutefois un défaut :
 elle injecte l'installateur officiel de `uv` dans la session en cours. Si celui-ci
 appelle `exit`, la console peut se fermer avant la reprise de `benchmark-mac`.
-Mettre `uv` à niveau séparément ou utiliser `v0.3.0.dev1`.
+Mettre `uv` à niveau séparément ou utiliser `v0.3.0.dev2`.
 
 Pour reproduire malgré tout une campagne `dev0`, après mise à niveau préalable
 de `uv` sous Windows :
@@ -125,7 +136,7 @@ Cette première version stable fournit :
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
 pondérés ni le rapport HTML de `v0.2.1`.
 
-## Installer `v0.3.0.dev1`
+## Installer `v0.3.0.dev2`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv` si
 nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
@@ -133,22 +144,22 @@ nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
 Python, l'installateur met automatiquement `uv` à niveau et réessaie.
 
 Les préversions suivent la convention de tag `vX.Y.Z.devK`. Le nom exact est
-donc ici `v0.3.0.dev1`; tous les points font partie du nom Git et doivent être
+donc ici `v0.3.0.dev2`; tous les points font partie du nom Git et doivent être
 conservés dans les URL et les commandes.
 
 ### macOS et Linux
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev1/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev2/install.sh | sh
 ```
 
 ### Windows PowerShell
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev1/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev2/install.ps1 | iex
 ```
 
-Le contrôle suivant doit afficher `benchmark-mac 0.3.0.dev1` :
+Le contrôle suivant doit afficher `benchmark-mac 0.3.0.dev2` :
 
 ```bash
 benchmark-mac --version
@@ -187,7 +198,7 @@ uv --version
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps1 | iex
 ```
 
-`v0.3.0.dev1` automatise cette reprise sans exécuter l'installateur tiers dans
+`v0.3.0.dev2` automatise cette reprise sans exécuter l'installateur tiers dans
 la console principale.
 
 ## Installer l'ancienne `v0.2.0`

@@ -5,6 +5,7 @@
 - Branche locale : `feat/gpu-preflight`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53` et `v0.3.0.dev1` sur
   `57bf438`.
+- Préversion suivante préparée localement : `v0.3.0.dev2`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -20,7 +21,7 @@
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
-- Installateurs alignés sur la candidate `v0.3.0.dev1` et CPython 3.14.4
+- Installateurs alignés sur la candidate `v0.3.0.dev2` et CPython 3.14.4
   géré par `uv`.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
@@ -35,7 +36,7 @@
 - `uv run ruff check .` : réussi.
 - `uv run pytest` : 47 tests réussis, dont la reprise après échec d'un ancien `uv`,
   l'exclusion du PID 0 et le refus d'un moteur graphique logiciel.
-- `uv build` : source et wheel `0.3.0.dev1` construits.
+- `uv build` : source et wheel `0.3.0.dev2` construits.
 - Exécution réelle des quatre benchmarks sur AMD Radeon Pro 560X via Metal.
 - Détection réelle de deux GPU sur MacBook Pro : Radeon dédiée et Intel UHD 630.
 - Sélection explicite et exécution réelle de `gpu.compute-fp32` sur l'Intel UHD 630.
@@ -66,17 +67,17 @@
 
 ## Prochaine étape possible
 
-Installer `v0.3.0.dev1` sur le Windows 10 qui possède encore `uv 0.5.1` afin de
-confirmer que la mise à niveau automatique ne ferme plus la console et que le
-PID 0 est ignoré. Exécuter ensuite au minimum `benchmark-mac --version`,
-`benchmark-mac info` et `benchmark-mac run --group gpu --profile quick`.
+Publier `v0.3.0.dev2` après confirmation explicite, puis l'installer sur macOS
+et sur le Windows 10 de validation. Exécuter au minimum
+`benchmark-mac --version`, `benchmark-mac info` et
+`benchmark-mac run --group gpu --profile quick`.
 
 ## Points de vigilance
 
 - Ne jamais effectuer d'opération distante sans confirmation explicite,
   impérative, séparée et actuelle de l'utilisateur.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
-- Ne pas présenter `v0.3.0.dev1` comme stable ; `v0.2.1` reste la stable
+- Ne pas présenter `v0.3.0.dev2` comme stable ; `v0.2.1` reste la stable
   recommandée.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
