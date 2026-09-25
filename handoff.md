@@ -3,8 +3,8 @@
 ## État actuel
 
 - Branche locale : `feat/gpu-preflight`.
-- Préversion publiée : `v0.3.0.dev0`, pointant sur le commit `73c7d53`.
-- Correctif prêt pour publication : `v0.3.0.dev1`.
+- Préversions publiées : `v0.3.0.dev0` sur `73c7d53` et `v0.3.0.dev1` sur
+  `57bf438`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -57,18 +57,19 @@
 
 - Branche `feat/gpu-preflight` publiée sur `origin`.
 - Tag annoté `v0.3.0.dev0` publié sur le commit `73c7d53`.
+- Tag annoté `v0.3.0.dev1` publié sur le commit `57bf438`.
 - Branche, tag et page GitHub vérifiés après publication.
-- Les installateurs `install.sh` et `install.ps1` du tag répondent depuis
-  `raw.githubusercontent.com` et ciblent bien `v0.3.0.dev0` avec CPython 3.14.4.
+- Les installateurs `install.sh` et `install.ps1` de `v0.3.0.dev1` répondent
+  depuis `raw.githubusercontent.com`, ciblent le bon tag avec CPython 3.14.4 et
+  contiennent la reprise PowerShell isolée.
 - Aucune fusion dans `main` et aucune release GitHub effectuées.
 
 ## Prochaine étape possible
 
-Publier `v0.3.0.dev1` après une nouvelle confirmation explicite, puis l'installer
-sur le Windows 10 qui possède encore `uv 0.5.1` afin de confirmer
-que la mise à niveau automatique ne ferme plus la console. Exécuter ensuite au
-minimum `benchmark-mac --version`, `benchmark-mac info` et
-`benchmark-mac run --group gpu --profile quick`.
+Installer `v0.3.0.dev1` sur le Windows 10 qui possède encore `uv 0.5.1` afin de
+confirmer que la mise à niveau automatique ne ferme plus la console et que le
+PID 0 est ignoré. Exécuter ensuite au minimum `benchmark-mac --version`,
+`benchmark-mac info` et `benchmark-mac run --group gpu --profile quick`.
 
 ## Points de vigilance
 
