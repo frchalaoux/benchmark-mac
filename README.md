@@ -4,10 +4,10 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La préversion publiée `v0.3.0.dev0` ajoute quatre benchmarks GPU WebGPU légers
-et un contrôle de l'état de la machine avant chaque campagne. La branche de
-travail prépare `0.3.0.dev1`, qui corrige la mise à niveau de `uv` sous Windows.
-La stable recommandée reste `v0.2.1`.
+La préversion `v0.3.0.dev1` ajoute quatre benchmarks GPU WebGPU légers et un
+contrôle de l'état de la machine avant chaque campagne. Elle corrige aussi
+l'installation et le contrôle préalable sous Windows. La stable recommandée
+reste `v0.2.1`.
 
 ## Versions publiées
 
@@ -16,7 +16,8 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0) | Développement publié | Tester les GPU et le contrôle préalable | Ancien `uv` problématique sous Windows ; correctif `dev1` en préparation |
+| [`v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1) | Développement actuel | Tester les GPU et le contrôle préalable | Corrige l'installation et le PID 0 sous Windows |
+| [`v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0) | Développement antérieur | Reproduire une campagne existante | Problèmes d'installation et de contrôle préalable sous Windows |
 | [`v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1) | Stable | Comparer des machines, notamment sous Windows | Version recommandée |
 | [`v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0) | Stable antérieure | Reproduire une campagne existante | Échec SQLite possible sous Windows |
 | [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement archivé | Reproduire une campagne de préversion | Base fonctionnelle de `v0.2.0` |
@@ -86,39 +87,28 @@ mettre d'abord `uv` à niveau avec la procédure indiquée dans la
 [fiche des versions](docs/versions.md#ancien-uv-sous-windows), puis relancer
 l'installation de `v0.2.1`.
 
-### Version de développement publiée `v0.3.0.dev0`
+### Version de développement `v0.3.0.dev1`
 
 Cette préversion est destinée à valider les nouveaux tests GPU et le contrôle
-de l'état initial avant une future stable. Sous Windows, ne pas l'utiliser avec
-un ancien `uv` : sa tentative de mise à niveau imbriquée peut fermer la session
-PowerShell. Mettre d'abord `uv` à niveau dans un processus séparé :
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
-$env:Path = "$HOME\.local\bin;$env:Path"
-uv --version
-```
+de l'état initial avant une future stable. Sous Windows, la mise à niveau de
+`uv` s'exécute dans un processus enfant et le pseudo-processus PID 0 est ignoré.
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev1/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev1/install.ps1 | iex
 ```
 
 L'installateur emploie `uv tool install --reinstall` : la même commande permet
 donc aussi de passer d'une version antérieure à cette préversion. Vérifier le
 résultat avec `benchmark-mac --version`, qui doit afficher
-`benchmark-mac 0.3.0.dev0`.
-
-La correction `0.3.0.dev1` est pour l'instant disponible uniquement depuis la
-branche de travail locale. Elle lance l'installateur `uv` dans un processus
-PowerShell enfant, de sorte qu'un `exit` ne ferme plus la console principale.
+`benchmark-mac 0.3.0.dev1`.
 
 `v0.2.0.dev0` reste téléchargeable pour la reproductibilité, mais son
 installateur nécessite un contournement détaillé dans la

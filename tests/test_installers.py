@@ -26,10 +26,10 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
     assert "irm https://astral.sh/uv/install.ps1 | iex" not in windows_installer
     for document in (readme, versions):
         assert __version__ in document
-        assert "/v0.3.0.dev0/install.sh" in document
-        assert "/v0.3.0.dev0/install.ps1" in document
-        assert f"/{EXPECTED_TAG}/install.sh" not in document
-        assert f"/{EXPECTED_TAG}/install.ps1" not in document
+        assert f"/{EXPECTED_TAG}/install.sh" in document
+        assert f"/{EXPECTED_TAG}/install.ps1" in document
+    assert "/v0.3.0.dev0/install.sh" in versions
+    assert "/v0.3.0.dev0/install.ps1" in versions
 
 
 def test_posix_installer_defaults_to_its_own_tag(tmp_path: Path) -> None:

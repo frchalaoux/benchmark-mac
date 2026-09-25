@@ -4,7 +4,7 @@
 
 - Branche locale : `feat/gpu-preflight`.
 - Préversion publiée : `v0.3.0.dev0`, pointant sur le commit `73c7d53`.
-- Correctif local en préparation : `0.3.0.dev1`.
+- Correctif prêt pour publication : `v0.3.0.dev1`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -20,7 +20,7 @@
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
-- Installateurs locaux alignés sur la candidate `v0.3.0.dev1` et CPython 3.14.4
+- Installateurs alignés sur la candidate `v0.3.0.dev1` et CPython 3.14.4
   géré par `uv`.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
@@ -64,8 +64,8 @@
 
 ## Prochaine étape possible
 
-Valider et publier `v0.3.0.dev1` après une nouvelle confirmation explicite, puis
-l'installer sur le Windows 10 qui possède encore `uv 0.5.1` afin de confirmer
+Publier `v0.3.0.dev1` après une nouvelle confirmation explicite, puis l'installer
+sur le Windows 10 qui possède encore `uv 0.5.1` afin de confirmer
 que la mise à niveau automatique ne ferme plus la console. Exécuter ensuite au
 minimum `benchmark-mac --version`, `benchmark-mac info` et
 `benchmark-mac run --group gpu --profile quick`.
@@ -75,7 +75,7 @@ minimum `benchmark-mac --version`, `benchmark-mac info` et
 - Ne jamais effectuer d'opération distante sans confirmation explicite,
   impérative, séparée et actuelle de l'utilisateur.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
-- Ne pas présenter `v0.3.0.dev0` comme stable ; `v0.2.1` reste la stable
+- Ne pas présenter `v0.3.0.dev1` comme stable ; `v0.2.1` reste la stable
   recommandée.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
