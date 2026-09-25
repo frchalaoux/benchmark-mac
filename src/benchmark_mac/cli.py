@@ -300,14 +300,14 @@ def compare(
         typer.echo(f"  {machine.narrative}")
     typer.echo("\nDÉTAIL DES BENCHMARKS")
     for benchmark_id in analysis.common_benchmarks:
-        values = []
-        for machine in analysis.machines:
+        values = [f"{analysis.machines[0].label} 100 (référence)"]
+        for machine in analysis.machines[1:]:
             metric = machine.metrics[benchmark_id]
             values.append(
-                f"{machine.label} {metric.index:.0f} ({metric.difference_percent:+.1f} %)"
+                f"{machine.label} {metric.index:.0f} "
+                f"({metric.difference_percent:+.1f} % ; {metric.conclusion})"
             )
-        conclusion = analysis.machines[1].metrics[benchmark_id].conclusion
-        typer.echo(f"  {benchmark_id} : {' · '.join(values)} — {conclusion}")
+        typer.echo(f"  {benchmark_id} : {' · '.join(values)}")
     for warning in analysis.warnings:
         typer.secho(f"Attention : {warning}", fg=typer.colors.YELLOW)
     if html is not None:

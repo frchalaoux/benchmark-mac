@@ -2,7 +2,10 @@
 
 ## État actuel
 
-- Branche locale : `feat/gpu-preflight`.
+- Branche locale : `fix/multi-machine-cli-comparison`, créée depuis
+  `feat/gpu-preflight` après intégration locale en fast-forward dans `main`.
+- `main` local pointe sur `8dc7a53`; `origin/main` reste à `c7ffdce` tant que
+  sa publication n'a pas été explicitement confirmée.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
 - Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
@@ -30,12 +33,17 @@
   `exit` ne peut donc plus fermer la console principale.
 - Documentation des quatre benchmarks GPU avec protocole, limites et références
   WebGPU, WGSL, `wgpu-py` et IEEE 754.
+- La sortie CLI des comparaisons multi-machines associe désormais à chaque
+  candidate son propre écart et sa propre conclusion; la première machine est
+  explicitement affichée comme référence.
 
 ## Validations réalisées
 
 - `uv run ruff check .` : réussi.
-- `uv run pytest` : 47 tests réussis, dont la reprise après échec d'un ancien `uv`,
+- `uv run pytest` : 48 tests réussis, dont la reprise après échec d'un ancien `uv`,
   l'exclusion du PID 0 et le refus d'un moteur graphique logiciel.
+- Test CLI ajouté avec trois machines, dont une plus rapide et une plus lente
+  que la référence.
 - `uv build` : source et wheel `0.3.0.dev2` construits.
 - Exécution réelle des quatre benchmarks sur AMD Radeon Pro 560X via Metal.
 - Détection réelle de deux GPU sur MacBook Pro : Radeon dédiée et Intel UHD 630.
@@ -65,12 +73,16 @@
   depuis `raw.githubusercontent.com`, ciblent le bon tag avec CPython 3.14.4 et
   contiennent la reprise PowerShell isolée.
 - Aucune fusion dans `main` et aucune release GitHub effectuées.
+- L'intégration dans `main` est réalisée localement seulement; aucune référence
+  distante n'a été modifiée.
 
 ## Prochaine étape possible
 
-Installer `v0.3.0.dev2` sur macOS et sur le Windows 10 de validation. Exécuter
-au minimum `benchmark-mac --version`, `benchmark-mac info` et
-`benchmark-mac run --group gpu --profile quick`.
+Publier `main` et la nouvelle branche seulement après confirmation explicite,
+puis préparer séparément la première préversion de la série `0.3.1` en mettant
+à jour de manière cohérente le paquet, les installateurs et la documentation.
+La validation réelle de `v0.3.0.dev2` sous Windows et Linux reste également à
+effectuer.
 
 ## Points de vigilance
 
