@@ -36,7 +36,18 @@ else {
 Write-Host "Installation de CPython $pythonVersion gere par uv..."
 & $uvCommand python install $pythonVersion
 if ($LASTEXITCODE -ne 0) {
-    throw "L'installation de Python $pythonVersion a échoué (code $LASTEXITCODE)."
+    Write-Host "La version actuelle de uv ne trouve pas CPython $pythonVersion."
+    Write-Host "Mise a niveau de uv depuis l'installateur officiel, puis nouvelle tentative..."
+    irm https://astral.sh/uv/install.ps1 | iex
+    $updatedUvPath = Join-Path $HOME ".local\bin\uv.exe"
+    if (-not (Test-Path $updatedUvPath)) {
+        throw "La version mise a niveau de uv est introuvable dans $updatedUvPath."
+    }
+    $uvCommand = $updatedUvPath
+    & $uvCommand python install $pythonVersion
+    if ($LASTEXITCODE -ne 0) {
+        throw "L'installation de Python $pythonVersion a encore échoué après la mise à niveau de uv (code $LASTEXITCODE)."
+    }
 }
 
 Write-Host "Installation de benchmark-mac $releaseVersion..."

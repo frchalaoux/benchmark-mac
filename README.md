@@ -4,9 +4,9 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La branche de travail prépare `0.3.0.dev0` : elle ajoute quatre benchmarks GPU
-WebGPU légers et un contrôle de l'état de la machine avant chaque campagne. Ce
-numéro n'est pas présenté comme un tag disponible tant qu'il n'est pas publié.
+La préversion `v0.3.0.dev0` ajoute quatre benchmarks GPU WebGPU légers et un
+contrôle de l'état de la machine avant chaque campagne. La stable recommandée
+reste `v0.2.1` pour les campagnes qui ne nécessitent pas encore ces nouveautés.
 
 ## Versions publiées
 
@@ -15,6 +15,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0) | Développement actuel | Tester les GPU et le contrôle préalable | Préversion à valider sur plusieurs machines |
 | [`v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1) | Stable | Comparer des machines, notamment sous Windows | Version recommandée |
 | [`v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0) | Stable antérieure | Reproduire une campagne existante | Échec SQLite possible sous Windows |
 | [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement archivé | Reproduire une campagne de préversion | Base fonctionnelle de `v0.2.0` |
@@ -24,8 +25,8 @@ ou choisir une version ci-dessous.
 
 La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
-jour. Les commandes GitHub ci-dessous ciblent la stable actuelle ; les sections
-fonctionnelles décrivent la préparation `0.3.0.dev0` de cette branche.
+jour. Les fonctionnalités décrites ci-dessous correspondent à la préversion
+`v0.3.0.dev0` ; les différences avec la stable sont signalées explicitement.
 
 ## Couverture actuelle
 
@@ -73,6 +74,34 @@ irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps
 
 Cette version corrige l'échec `WinError 32` du benchmark SQLite sous Windows en
 fermant explicitement la base avant la suppression du répertoire temporaire.
+
+Si Windows possède encore un ancien `uv` qui ne connaît pas CPython 3.14.4,
+mettre d'abord `uv` à niveau avec la procédure indiquée dans la
+[fiche des versions](docs/versions.md#ancien-uv-sous-windows), puis relancer
+l'installation de `v0.2.1`.
+
+### Version de développement `v0.3.0.dev0`
+
+Cette préversion est destinée à valider les nouveaux tests GPU et le contrôle
+de l'état initial avant une future stable. Elle met automatiquement `uv` à
+niveau si la version présente ne sait pas télécharger CPython 3.14.4.
+
+Sur macOS ou Linux :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.sh | sh
+```
+
+Sous Windows, dans PowerShell :
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.ps1 | iex
+```
+
+L'installateur emploie `uv tool install --reinstall` : la même commande permet
+donc aussi de passer d'une version antérieure à cette préversion. Vérifier le
+résultat avec `benchmark-mac --version`, qui doit afficher
+`benchmark-mac 0.3.0.dev0`.
 
 `v0.2.0.dev0` reste téléchargeable pour la reproductibilité, mais son
 installateur nécessite un contournement détaillé dans la
@@ -179,7 +208,8 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige la même version de la suite, le même profil et la même
 version de Python. Les rapports sont enregistrés dans `data/results/` par défaut.
 Une différence dont les plages min–max se chevauchent est signalée comme non
-concluante.
+concluante. Les rapports `0.2.x` et `0.3.x` ne sont pas directement comparables,
+car le catalogue, les scénarios et le schéma JSON ont évolué.
 
 ## Développement
 

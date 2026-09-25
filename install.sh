@@ -38,7 +38,27 @@ if [ ! -x "$uv_command" ] && ! command -v "$uv_command" >/dev/null 2>&1; then
 fi
 
 echo "Installation de CPython ${python_version} gere par uv..."
-"$uv_command" python install "$python_version"
+if ! "$uv_command" python install "$python_version"; then
+    echo "La version actuelle de uv ne trouve pas CPython ${python_version}."
+    echo "Mise a niveau de uv depuis l'installateur officiel, puis nouvelle tentative..."
+    if command -v curl >/dev/null 2>&1; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    elif command -v wget >/dev/null 2>&1; then
+        wget -qO- https://astral.sh/uv/install.sh | sh
+    else
+        echo "Erreur : curl ou wget est necessaire pour mettre uv a niveau." >&2
+        exit 1
+    fi
+    uv_command="$HOME/.local/bin/uv"
+    if [ ! -x "$uv_command" ]; then
+        echo "Erreur : la version mise a niveau de uv est introuvable." >&2
+        exit 1
+    fi
+    if ! "$uv_command" python install "$python_version"; then
+        echo "Erreur : CPython ${python_version} reste indisponible apres la mise a niveau de uv." >&2
+        exit 1
+    fi
+fi
 echo "Installation de benchmark-mac ${release_version}..."
 "$uv_command" tool install --managed-python --python "$python_version" --reinstall "$source_url"
 

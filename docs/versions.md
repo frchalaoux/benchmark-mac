@@ -6,15 +6,25 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `0.3.0.dev0` — préparation locale, non publiée
+### `v0.3.0.dev0` — développement actuel
 
-La branche de travail ajoute quatre mesures GPU WebGPU, un contrôle préalable
-des processus et de la charge, un septième scénario `jeu-3d` et le schéma JSON
-4. Les machines hybrides peuvent sélectionner un adaptateur avec `--gpu INDEX`.
-Elle ne figure pas encore dans la liste des tags GitHub : il n'existe donc
-pas encore de commande d'installation distante fiable pour cette version.
-Depuis son dossier de travail, elle s'installe avec `./install.sh` sur macOS ou
-Linux et `./install.ps1` dans PowerShell.
+[Consulter le code source de `v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0)
+
+Cette préversion ajoute :
+
+- quatre mesures GPU WebGPU sans Blender : FP32, mémoire, filtre d'image et raster ;
+- la sélection d'un adaptateur sur les machines multi-GPU avec `--gpu INDEX` ;
+- un contrôle préalable du CPU, de la mémoire, de l'échange et des processus actifs ;
+- la conservation de cet état initial et de ses avertissements dans le JSON ;
+- le scénario `jeu-3d` et l'intégration du GPU aux scénarios de comparaison ;
+- le titre HTML « Ce que ces performances changent au quotidien » ;
+- l'option globale `benchmark-mac --version` ;
+- la mise à niveau automatique d'un `uv` trop ancien pour CPython 3.14.4 ;
+- le schéma JSON 4.
+
+Elle doit être validée sur plusieurs configurations macOS, Windows et Linux
+avant de devenir stable. Les rapports `0.2.x` et `0.3.x` ne doivent pas être
+mélangés dans une comparaison.
 
 ### `v0.2.1` — stable actuelle
 
@@ -87,7 +97,32 @@ Cette première version stable fournit :
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
 pondérés ni le rapport HTML de `v0.2.1`.
 
-## Installer `v0.2.1`
+## Installer `v0.3.0.dev0`
+
+Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv` si
+nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
+`benchmark-mac` éventuellement installée. Si un ancien `uv` ne connaît pas ce
+Python, l'installateur met automatiquement `uv` à niveau et réessaie.
+
+### macOS et Linux
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.sh | sh
+```
+
+### Windows PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.ps1 | iex
+```
+
+Le contrôle suivant doit afficher `benchmark-mac 0.3.0.dev0` :
+
+```bash
+benchmark-mac --version
+```
+
+## Installer la stable `v0.2.1`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv`, puis
 `uv` gère CPython 3.14.4 et l'outil isolé.
@@ -105,6 +140,22 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/ins
 ```powershell
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps1 | iex
 ```
+
+### Ancien `uv` sous Windows
+
+L'installateur historique de `v0.2.1` réutilise le `uv` présent sans vérifier
+s'il connaît CPython 3.14.4. Avec une version ancienne telle que `uv 0.5.1`, la
+commande peut échouer avec `No download found`. Mettre alors `uv` à niveau et
+placer sa version officielle en tête du `PATH` pour la session :
+
+```powershell
+irm https://astral.sh/uv/install.ps1 | iex
+$env:Path = "$HOME\.local\bin;$env:Path"
+uv --version
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps1 | iex
+```
+
+La préversion `v0.3.0.dev0` automatise cette reprise.
 
 ## Installer l'ancienne `v0.2.0`
 
@@ -219,10 +270,10 @@ lancer la commande complète de la version souhaitée. Conserver dans le nom des
 rapports la version utilisée et ne pas comparer directement des rapports issus
 de versions différentes.
 
-## Portée des versions publiées
+## Portée des versions
 
-Les versions publiées jusqu'à `v0.2.1` utilisent CPython 3.14.4 afin de rendre
-les résultats plus comparables. Elles prennent en charge macOS, Windows et
-Linux. Le GPU y est inventorié, mais n'y est pas encore mesuré par un benchmark
-commun. Cette limite est levée dans la préparation locale `0.3.0.dev0` décrite
-ci-dessus.
+Toutes ces versions utilisent CPython 3.14.4 afin de rendre les résultats plus
+comparables et prennent en charge macOS, Windows et Linux. Jusqu'à `v0.2.1`, le
+GPU est seulement inventorié. `v0.3.0.dev0` ajoute les mesures WebGPU communes,
+mais ne couvre pas le ray tracing, les unités IA, les codecs vidéo matériels ou
+un moteur de jeu complet.
