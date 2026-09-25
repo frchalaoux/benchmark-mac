@@ -4,6 +4,10 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
+La branche de travail prépare `0.3.0.dev0` : elle ajoute quatre benchmarks GPU
+WebGPU légers et un contrôle de l'état de la machine avant chaque campagne. Ce
+numéro n'est pas présenté comme un tag disponible tant qu'il n'est pas publié.
+
 ## Versions publiées
 
 Consulter [tous les tags disponibles](https://github.com/frchalaoux/benchmark-mac/tags)
@@ -20,7 +24,8 @@ ou choisir une version ci-dessous.
 
 La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
-jour. Le reste de ce README décrit la version stable actuelle.
+jour. Les commandes GitHub ci-dessous ciblent la stable actuelle ; les sections
+fonctionnelles décrivent la préparation `0.3.0.dev0` de cette branche.
 
 ## Couverture actuelle
 
@@ -28,10 +33,24 @@ jour. Le reste de ce README décrit la version stable actuelle.
 - **mémoire** : bande passante de copie séquentielle ;
 - **stockage** : lectures et écritures séquentielles et aléatoires de 4 Kio ;
 - **applications** : traitement JSON et charge SQLite ;
+- **GPU** : calcul FP32, bande passante, filtre d'image et rendu raster hors écran ;
 - **inventaire** : modèle, OS, CPU, mémoire, GPU, disque et environnement Python.
 
-Le GPU est inventorié mais pas encore scoré. Une comparaison GPU honnête entre
-Metal, DirectX, CUDA et autres API nécessitera un moteur commun tel que Blender.
+Les mesures GPU utilisent `wgpu-py`, une petite couche WebGPU qui choisit Metal,
+Direct3D 12 ou Vulkan selon le système. Elles ne nécessitent ni Blender, ni
+fenêtre graphique, ni scène externe.
+
+Une machine peut exposer plusieurs GPU. `benchmark-mac info` les numérote ; par
+défaut, la suite choisit d'abord un GPU dédié, puis un GPU intégré. Pour mesurer
+chaque carte séparément, produire un rapport par indice :
+
+```bash
+benchmark-mac run --group gpu --gpu 0 --label "Portable — GPU 0"
+benchmark-mac run --group gpu --gpu 1 --label "Portable — GPU 1"
+```
+
+Le GPU effectivement choisi est annoncé avant la campagne et enregistré dans
+chaque résultat GPU.
 
 ## Installation depuis GitHub
 
@@ -82,6 +101,23 @@ uv run benchmark-mac list
 
 ## Lancer les benchmarks
 
+Avant de lancer une campagne comparable :
+
+1. brancher le portable au secteur et sélectionner le mode de performances à
+   utiliser sur toutes les machines ;
+2. fermer navigateurs, synchronisations, mises à jour, jeux, rendus, machines
+   virtuelles et autres tâches lourdes ;
+3. attendre quelques minutes après le démarrage ou une charge importante, dans
+   une pièce aux conditions aussi proches que possible ;
+4. conserver le même profil, le même nombre de passages et, pour le stockage,
+   le même type d'emplacement `--work-dir`.
+
+Au démarrage, `benchmark-mac` observe pendant une seconde la charge CPU, la
+mémoire, l'échange et les processus actifs. Il affiche un avertissement si le
+point de départ paraît éloigné du repos, puis poursuit la mesure. Ce contrôle
+ponctuel aide à repérer une mauvaise campagne ; il ne peut pas prouver que la
+machine a atteint son potentiel maximal.
+
 Toute la suite, avec le profil standard :
 
 ```bash
@@ -100,6 +136,7 @@ Un groupe ou plusieurs groupes :
 ```bash
 benchmark-mac run --group cpu
 benchmark-mac run --group memory --group storage --profile thorough
+benchmark-mac run --group gpu --profile standard
 ```
 
 Un ou plusieurs tests individuels :

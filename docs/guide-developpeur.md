@@ -5,6 +5,7 @@ Le paquet sépare les responsabilités :
 - `models.py` définit le schéma versionné des rapports ;
 - `system_info.py` collecte l'inventaire multiplateforme ;
 - `benchmarks.py` contient profils, catalogue et charges ;
+- `gpu_benchmarks.py` contient les pipelines WebGPU hors écran ;
 - `service.py` résout une sélection et isole les échecs ;
 - `repository.py` persiste les rapports atomiquement ;
 - `comparison.py` calcule indices, scénarios, incertitudes et formulations ;
@@ -27,6 +28,11 @@ par `benchmark-mac describe`.
 Ajouter ensuite sa `BenchmarkDefinition` à `DEFINITIONS`. Les groupes et le
 catalogue en découlent automatiquement. Toute évolution incompatible du JSON
 doit incrémenter `schema_version`.
+
+Le contrôle préalable repose sur `psutil`. Il ne bloque jamais une campagne :
+il produit un `ReadinessSnapshot`, affiché par la CLI, persisté dans le schéma 4
+et repris par l'analyse comparative. Toute évolution des seuils doit rester
+documentée dans la méthodologie et testée sans attente réelle.
 
 Les validations locales sont :
 

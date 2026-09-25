@@ -18,6 +18,17 @@ Elle avertit en cas de batterie, changement d'alimentation, limitation de
 fréquence, hausse d'au moins 10 °C ou température finale d'au moins 85 °C. Ces
 informations restent indisponibles sur certaines machines.
 
+Avant la campagne, un échantillon d'une seconde contrôle la charge de départ.
+Un avertissement est produit à partir de 15 % de CPU total, en dessous de 20 %
+de mémoire disponible, à partir de 10 % d'échange occupé ou lorsqu'un processus
+atteint 10 % de CPU. Les processus dépassant 2 % de CPU ou 3 % de mémoire sont
+conservés, dans la limite des cinq plus actifs. Ces seuils sont des heuristiques
+de reproductibilité, pas une définition scientifique universelle du repos.
+Le contrôle est non bloquant, ponctuel et limité aux informations accessibles
+sans privilège. Ses résultats sont conservés dans `readiness` et réaffichés
+comme avertissements lors d'une comparaison. La collecte multiplateforme repose
+sur l'API documentée de [psutil](https://psutil.readthedocs.io/).
+
 Le benchmark `cpu.multicore` mesure volontairement le débit agrégé avec un
 processus par processeur logique disponible. Son paramètre `workers` décrit donc
 la machine et peut différer entre deux rapports. Les autres paramètres de
@@ -47,12 +58,20 @@ la réactivité de l'interpréteur, les flottants, la cryptographie, la compress
 et la montée en charge multicœur. Le test mémoire mesure une copie séquentielle.
 Le stockage utilise des fichiers temporaires sur le chemin choisi, avec
 synchronisation des écritures. JSON et SQLite représentent des traitements
-applicatifs fréquents.
+applicatifs fréquents. Le groupe GPU utilise des shaders WGSL hors écran via
+`wgpu-py` : calcul FP32, copie de tampons, filtre spatial et remplissage raster.
+Le même code de charge est présenté à Metal, Direct3D 12 ou Vulkan selon la
+plateforme, et le moteur graphique effectivement choisi est enregistré.
+Quand plusieurs adaptateurs sont présents, une campagne n'en mesure qu'un. La
+sélection automatique privilégie le premier adaptateur dédié, puis le premier
+intégré ; `--gpu INDEX` permet de la remplacer. L'indice, le nom, le type et le
+backend sont attachés aux résultats. L'indice sert uniquement à sélectionner un
+GPU localement et n'entre pas dans le protocole comparatif entre machines.
 
 ## Limites
 
 Les caches du système peuvent augmenter le résultat de lecture disque. Les
-scores Python ne remplacent pas les outils spécialisés pour le GPU, l'encodage
-vidéo matériel, les moteurs 3D, l'autonomie ou les performances thermiques
-prolongées. Ces dimensions doivent être ajoutées comme scénarios optionnels avec
-une dépendance et une version figées.
+scores GPU synthétiques ne mesurent pas le ray tracing, les unités IA, les
+codecs vidéo matériels, un moteur de jeu complet ni une application créative.
+WebGPU et les pilotes peuvent aussi employer des chemins différents selon l'OS.
+La suite ne mesure pas l'autonomie ni les performances thermiques prolongées.

@@ -35,6 +35,28 @@ class EnvironmentSnapshot(BaseModel):
     temperature_celsius: float | None = Field(default=None, ge=-20, le=150)
 
 
+class ProcessLoad(BaseModel):
+    """Processus actif observé pendant le contrôle préalable."""
+
+    pid: int = Field(gt=0)
+    name: str
+    cpu_percent: float = Field(ge=0)
+    memory_percent: float = Field(ge=0)
+
+
+class ReadinessSnapshot(BaseModel):
+    """État de charge observé juste avant la campagne."""
+
+    sample_seconds: float = Field(gt=0)
+    cpu_percent: float = Field(ge=0, le=100)
+    memory_available_percent: float = Field(ge=0, le=100)
+    memory_available_bytes: int = Field(ge=0)
+    swap_percent: float = Field(ge=0, le=100)
+    active_processes: list[ProcessLoad] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    suitable: bool = True
+
+
 class BenchmarkResult(BaseModel):
     """Mesure principale normalisée d'un benchmark."""
 
@@ -67,7 +89,7 @@ class BenchmarkFailure(BaseModel):
 class BenchmarkReport(BaseModel):
     """Rapport complet, portable et comparable d'une exécution."""
 
-    schema_version: int = 3
+    schema_version: int = 4
     suite_version: str
     recorded_at: datetime
     label: str | None = None
@@ -78,5 +100,6 @@ class BenchmarkReport(BaseModel):
     environment_start: EnvironmentSnapshot | None = None
     environment_end: EnvironmentSnapshot | None = None
     environment_warnings: list[str] = Field(default_factory=list)
+    readiness: ReadinessSnapshot | None = None
     results: list[BenchmarkResult]
     failures: list[BenchmarkFailure] = Field(default_factory=list)

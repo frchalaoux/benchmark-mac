@@ -17,6 +17,8 @@ def test_list_displays_groups_profiles_and_individual_benchmarks() -> None:
     assert "thorough" in result.stdout
     assert "cpu.integer" in result.stdout
     assert "storage.random-write" in result.stdout
+    assert "gpu.compute-fp32" in result.stdout
+    assert "gpu.raster" in result.stdout
 
 
 def test_history_is_empty_in_an_isolated_directory(tmp_path, monkeypatch) -> None:

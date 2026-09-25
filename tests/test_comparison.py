@@ -9,7 +9,7 @@ from benchmark_mac.comparison import (
     parse_scenario_weights,
 )
 from benchmark_mac.html_report import render_html
-from benchmark_mac.models import BenchmarkResult
+from benchmark_mac.models import BenchmarkResult, ReadinessSnapshot
 
 
 def result(
@@ -48,7 +48,7 @@ def complete_report(label: str, multiplier: float):
     ]
     return report.model_copy(
         update={
-            "suite_version": "0.2.0.dev1",
+            "suite_version": "0.3.0.dev0",
             "repetitions": 3,
             "requested_benchmarks": [item.benchmark_id for item in results],
             "results": results,
@@ -141,6 +141,40 @@ def test_multicore_workers_can_differ_between_machines() -> None:
     )
 
 
+def test_gpu_adapter_metadata_can_differ_between_machines() -> None:
+    baseline = complete_report("Référence", 1)
+    candidate = complete_report("Candidate", 1.2)
+
+    def with_gpu(report, device: str, backend: str):
+        return report.model_copy(
+            update={
+                "results": [
+                    item.model_copy(
+                        update={
+                            "parameters": {
+                                "width": 512,
+                                "height": 512,
+                                "gpu_device": device,
+                                "gpu_backend": backend,
+                                "wgpu_version": "0.32.0",
+                            }
+                        }
+                    )
+                    if item.benchmark_id == "gpu.raster"
+                    else item
+                    for item in report.results
+                ]
+            }
+        )
+
+    analysis = analyze_reports(
+        [with_gpu(baseline, "Apple M4", "Metal"), with_gpu(candidate, "Radeon", "Vulkan")],
+        parse_scenario_weights(None),
+    )
+
+    assert analysis.machines[1].metrics["gpu.raster"].index == pytest.approx(120)
+
+
 def test_html_report_is_autonomous_and_contains_all_visual_sections() -> None:
     analysis = analyze_reports(
         [complete_report("Référence", 1), complete_report("Candidate", 1.25)],
@@ -153,8 +187,33 @@ def test_html_report_is_autonomous_and_contains_all_visual_sections() -> None:
     assert "Catégories techniques" in document
     assert "Carte thermique" in document
     assert "Temps équivalents" in document
+    assert "Ce que ces performances changent au quotidien" in document
     assert "class='dumbbell'" in document
     assert "https://" not in document
+
+
+def test_comparison_warns_about_a_busy_machine_at_start() -> None:
+    baseline = complete_report("Référence", 1)
+    candidate = complete_report("Candidate", 1.2).model_copy(
+        update={
+            "readiness": ReadinessSnapshot(
+                sample_seconds=1,
+                cpu_percent=42,
+                memory_available_percent=60,
+                memory_available_bytes=6_000_000,
+                swap_percent=0,
+                warnings=["Charge CPU initiale élevée (42,0 %)."],
+                suitable=False,
+            )
+        }
+    )
+
+    analysis = analyze_reports([baseline, candidate], parse_scenario_weights(None))
+
+    assert any(
+        "Candidate, état initial" in warning and "Charge CPU" in warning
+        for warning in analysis.warnings
+    )
 
 
 def test_heatmap_supports_more_than_two_machines() -> None:

@@ -25,10 +25,11 @@ SCENARIOS: dict[str, dict[str, float]] = {
         "application.sqlite": 0.15,
     },
     "calcul-intensif": {
-        "cpu.float": 0.25,
-        "cpu.multicore": 0.35,
-        "memory.copy": 0.25,
-        "cpu.hash": 0.15,
+        "cpu.float": 0.15,
+        "cpu.multicore": 0.20,
+        "memory.copy": 0.15,
+        "cpu.hash": 0.10,
+        "gpu.compute-fp32": 0.40,
     },
     "fichiers": {
         "cpu.hash": 0.15,
@@ -45,11 +46,19 @@ SCENARIOS: dict[str, dict[str, float]] = {
         "storage.random-write": 0.20,
     },
     "creation": {
-        "cpu.float": 0.20,
-        "cpu.multicore": 0.30,
-        "memory.copy": 0.20,
-        "storage.read": 0.15,
-        "storage.write": 0.15,
+        "cpu.float": 0.10,
+        "cpu.multicore": 0.15,
+        "memory.copy": 0.10,
+        "storage.read": 0.10,
+        "storage.write": 0.10,
+        "gpu.image-filter": 0.25,
+        "gpu.raster": 0.20,
+    },
+    "jeu-3d": {
+        "gpu.raster": 0.55,
+        "gpu.memory": 0.20,
+        "gpu.compute-fp32": 0.15,
+        "memory.copy": 0.10,
     },
 }
 
@@ -59,7 +68,8 @@ SCENARIO_LABELS = {
     "calcul-intensif": "Calcul intensif",
     "fichiers": "Gestion de fichiers",
     "base-de-donnees": "Base de données locale",
-    "creation": "Création 3D/vidéo (hors GPU)",
+    "creation": "Création 3D/vidéo",
+    "jeu-3d": "Jeu et rendu 3D généraliste",
 }
 
 CATEGORY_LABELS = {
@@ -67,10 +77,25 @@ CATEGORY_LABELS = {
     "cpu": "Processeur",
     "memory": "Mémoire",
     "storage": "Stockage",
+    "gpu": "Processeur graphique",
 }
 
 REFERENCE_DURATIONS = (10, 120, 1_800, 14_400)
-MACHINE_DEPENDENT_PARAMETERS = {"cpu.multicore": frozenset({"workers"})}
+MACHINE_DEPENDENT_PARAMETERS = {
+    "cpu.multicore": frozenset({"workers"}),
+    "gpu.compute-fp32": frozenset(
+        {"gpu_index", "gpu_device", "gpu_backend", "gpu_adapter_type", "wgpu_version"}
+    ),
+    "gpu.memory": frozenset(
+        {"gpu_index", "gpu_device", "gpu_backend", "gpu_adapter_type", "wgpu_version"}
+    ),
+    "gpu.image-filter": frozenset(
+        {"gpu_index", "gpu_device", "gpu_backend", "gpu_adapter_type", "wgpu_version"}
+    ),
+    "gpu.raster": frozenset(
+        {"gpu_index", "gpu_device", "gpu_backend", "gpu_adapter_type", "wgpu_version"}
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -298,6 +323,11 @@ def analyze_reports(
         warnings.extend(
             f"{report_label(report)} : {warning}" for warning in report.environment_warnings
         )
+        if report.readiness is not None:
+            warnings.extend(
+                f"{report_label(report)}, état initial : {warning}"
+                for warning in report.readiness.warnings
+            )
     if any(report.repetitions < 3 for report in reports):
         warnings.append("Moins de trois passages : la dispersion est peu représentative.")
     union = set().union(*(set(items) for items in maps))
@@ -343,8 +373,6 @@ def analyze_reports(
                 + ", ".join(sorted(missing))
                 + "."
             )
-    if "creation" in active_weights:
-        warnings.append("Le scénario création ne contient pas encore de mesure GPU.")
     for report, result_map in zip(reports, maps, strict=True):
         metrics: dict[str, MetricComparison] = {}
         ratios: dict[str, float] = {}

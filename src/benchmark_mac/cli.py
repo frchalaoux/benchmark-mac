@@ -14,6 +14,7 @@ from .benchmarks import (
     GROUPS,
     PROFILES,
     REFERENCE_LIBRARY,
+    resolve_benchmarks,
 )
 from .comparison import (
     CATEGORY_LABELS,
@@ -21,11 +22,12 @@ from .comparison import (
     analyze_reports,
     parse_scenario_weights,
 )
+from .gpu_benchmarks import gpu_adapters, selected_gpu_adapter
 from .html_report import render_html
-from .models import BenchmarkFailure, BenchmarkResult
+from .models import BenchmarkFailure, BenchmarkResult, ReadinessSnapshot
 from .repository import JsonReportRepository
 from .service import BenchmarkService
-from .system_info import system_snapshot
+from .system_info import machine_readiness, system_snapshot
 
 app = typer.Typer(
     no_args_is_help=True,
@@ -54,6 +56,16 @@ def info() -> None:
     )
     typer.echo(f"Mémoire : {_size(snapshot.memory_bytes)}")
     typer.echo(f"GPU : {', '.join(snapshot.gpu_devices) or 'inconnu'}")
+    try:
+        adapters = gpu_adapters()
+    except Exception as error:  # noqa: BLE001 - le diagnostic doit rester utilisable
+        typer.echo(f"Adaptateurs WebGPU : indisponibles ({error})")
+    else:
+        typer.echo("Adaptateurs WebGPU utilisables :")
+        for adapter in adapters:
+            typer.echo(
+                f"  [{adapter.index}] {adapter.device} · {adapter.adapter_type} · {adapter.backend}"
+            )
     typer.echo(f"Python : {snapshot.python_implementation} {snapshot.python_version}")
 
 
@@ -103,6 +115,31 @@ def _progress(benchmark_id: str, outcome: BenchmarkResult | BenchmarkFailure | N
         )
 
 
+def _show_readiness(snapshot: ReadinessSnapshot) -> None:
+    typer.secho("CONTRÔLE AVANT MESURE", bold=True)
+    typer.echo(
+        f"  CPU utilisé : {snapshot.cpu_percent:.1f} % · mémoire disponible : "
+        f"{snapshot.memory_available_percent:.1f} % · échange : {snapshot.swap_percent:.1f} %"
+    )
+    for process in snapshot.active_processes[:5]:
+        typer.echo(
+            f"  processus : {process.name} (PID {process.pid}) · CPU "
+            f"{process.cpu_percent:.1f} % · mémoire {process.memory_percent:.1f} %"
+        )
+    if snapshot.suitable:
+        typer.secho(
+            "  État de départ satisfaisant selon ce contrôle ponctuel.\n",
+            fg=typer.colors.GREEN,
+        )
+    else:
+        for warning in snapshot.warnings:
+            typer.secho(f"  Attention : {warning}", fg=typer.colors.YELLOW)
+        typer.echo(
+            "  Les mesures vont continuer, mais elles peuvent sous-estimer les performances "
+            "atteignables au repos.\n"
+        )
+
+
 @app.command("run")
 def run(
     benchmarks: Annotated[
@@ -129,16 +166,36 @@ def run(
         int,
         typer.Option("--repeat", "-r", min=1, max=9, help="Nombre de passages par test."),
     ] = 3,
+    gpu: Annotated[
+        int | None,
+        typer.Option(
+            "--gpu",
+            min=0,
+            help="Indice de l'adaptateur WebGPU affiché par `benchmark-mac info`.",
+        ),
+    ] = None,
 ) -> None:
     """Exécute toute la suite, un ou plusieurs groupes, ou des tests nommés."""
     try:
+        selected = resolve_benchmarks(benchmarks, groups)
+        if any(benchmark_id.startswith("gpu.") for benchmark_id in selected):
+            adapter = selected_gpu_adapter(gpu)
+            mode = "sélection automatique" if gpu is None else f"indice {gpu}"
+            typer.echo(
+                f"GPU mesuré ({mode}) : [{adapter.index}] {adapter.device} · "
+                f"{adapter.adapter_type} · {adapter.backend}\n"
+            )
+        readiness = machine_readiness()
+        _show_readiness(readiness)
         report, path = service().run(
             benchmarks,
             groups,
             profile_name=profile,
             label=label,
             work_dir=work_dir,
+            gpu_index=gpu,
             repetitions=repeat,
+            readiness=readiness,
             progress=_progress,
         )
     except ValueError as error:

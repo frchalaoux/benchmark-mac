@@ -155,6 +155,67 @@ seconde sur l'ensemble du scénario.
 ne couvre ni accès concurrents, ni base durable préexistante, ni requêtes
 analytiques complexes.
 
+## `gpu.compute-fp32` — calcul parallèle FP32
+
+**Objectif.** Comparer une charge arithmétique parallèle commune aux GPU des
+trois systèmes, sans installer une application 3D complète.
+
+**Protocole.** Un shader de calcul WGSL traite 262 144 valeurs en simple
+précision. Chaque invocation réalise 128 expressions multiplication-addition,
+comptées par convention comme 256 opérations flottantes. Le score divise le
+nombre total d'opérations par le temps mur entre soumission et lecture de
+synchronisation et s'exprime en GFLOP/s.
+
+**Interprétation et limites.** Le noyau mesure un calcul FP32 régulier. Il ne
+couvre ni FP64, ni tenseurs ou unités IA, ni ray tracing. Un compilateur peut
+fusionner une multiplication et une addition en FMA ; le comptage de deux
+opérations suit la convention usuelle, mais le résultat n'est pas une mesure du
+maximum théorique du constructeur. La soumission et la synchronisation sont
+incluses, ce qui pénalise davantage les GPU rapides sur les profils courts.
+
+## `gpu.memory` — bande passante GPU
+
+**Objectif.** Estimer le débit d'une lecture-écriture parallèle dans la mémoire
+accessible au GPU.
+
+**Protocole.** Un shader WGSL copie un tampon source vers un tampon destination.
+Le volume compté additionne quatre octets lus et quatre octets écrits par
+élément. Une valeur sentinelle est relue et vérifiée après le chronométrage. Le
+score est exprimé en Gio/s.
+
+**Interprétation et limites.** Les caches, la taille du tampon, la mémoire
+unifiée des SoC et les transferts implicites du pilote influencent le résultat.
+Ce test ne correspond donc pas nécessairement à la bande passante physique
+annoncée et ne sépare pas toutes les hiérarchies de mémoire.
+
+## `gpu.image-filter` — filtre d'image
+
+**Objectif.** Représenter un petit traitement d'image massivement parallèle.
+
+**Protocole.** Pour chaque pixel, un shader de calcul combine le centre et ses
+quatre voisins directs. La texture logique mesure 512², 1 024² ou 2 048² pixels
+selon le profil. Le score compte les pixels traités par seconde en Mpixel/s.
+
+**Interprétation et limites.** Cette opération synthétique couvre accès mémoire
+et calcul simple, mais ni décodage, ni gestion des couleurs, ni effets multiples,
+ni codecs vidéo matériels. Les données sont des flottants dans des tampons et
+non une chaîne complète d'édition photo.
+
+## `gpu.raster` — remplissage hors écran
+
+**Objectif.** Comparer un pipeline graphique minimal et multiplateforme.
+
+**Protocole.** Un triangle couvrant toute la cible est dessiné répétitivement
+dans une texture RGBA8 hors écran de 512², 1 024² ou 2 048² pixels. Le fragment
+shader calcule une couleur à partir de la position. Une lecture d'un pixel force
+l'achèvement de la file GPU. Le score est exprimé en Mpixel/s.
+
+**Interprétation et limites.** Le test privilégie le remplissage et un fragment
+shader très simple. Il ne représente ni une scène riche en géométrie, ni
+textures complexes, anticrénelage, transparence, ray tracing ou moteur de jeu.
+L'API WebGPU garde le code de charge commun, mais son implantation utilise Metal,
+Direct3D 12 ou Vulkan et reste dépendante du pilote.
+
 ## Bibliographie
 
 1. Amdahl, G. M. (1967). *Validity of the Single Processor Approach to Achieving Large Scale Computing Capabilities*. AFIPS, 483–485. <https://doi.org/10.1145/1465482.1465560>
@@ -169,3 +230,6 @@ analytiques complexes.
 10. Python Software Foundation. *Process-based parallelism*. Documentation Python 3.14. <https://docs.python.org/3.14/library/multiprocessing.html>
 11. SNIA (2020). *Solid State Storage Performance Test Specification*, version 2.0.2. <https://www.snia.org/solid-state-sss>
 12. SQLite Consortium. *Transaction documentation*. <https://www.sqlite.org/lang_transaction.html>
+13. W3C GPU for the Web Community Group. *WebGPU Specification*. <https://gpuweb.github.io/gpuweb/>
+14. W3C GPU for the Web Community Group. *WebGPU Shading Language*. <https://www.w3.org/TR/WGSL/>
+15. PyGfx. *wgpu-py documentation*. <https://wgpu-py.readthedocs.io/>

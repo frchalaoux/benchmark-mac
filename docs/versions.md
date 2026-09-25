@@ -6,6 +6,16 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
+### `0.3.0.dev0` — préparation locale, non publiée
+
+La branche de travail ajoute quatre mesures GPU WebGPU, un contrôle préalable
+des processus et de la charge, un septième scénario `jeu-3d` et le schéma JSON
+4. Les machines hybrides peuvent sélectionner un adaptateur avec `--gpu INDEX`.
+Elle ne figure pas encore dans la liste des tags GitHub : il n'existe donc
+pas encore de commande d'installation distante fiable pour cette version.
+Depuis son dossier de travail, elle s'installe avec `./install.sh` sur macOS ou
+Linux et `./install.ps1` dans PowerShell.
+
 ### `v0.2.1` — stable actuelle
 
 [Consulter le code source de `v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1)
@@ -208,8 +218,10 @@ lancer la commande complète de la version souhaitée. Conserver dans le nom des
 rapports la version utilisée et ne pas comparer directement des rapports issus
 de versions différentes.
 
-## Portée des versions actuelles
+## Portée des versions publiées
 
-Les versions actuelles utilisent CPython 3.14.4 afin de rendre les résultats plus
-comparables. Elles prennent en charge macOS, Windows et Linux. Le GPU est
-inventorié, mais n'est pas encore mesuré par un benchmark commun.
+Les versions publiées jusqu'à `v0.2.1` utilisent CPython 3.14.4 afin de rendre
+les résultats plus comparables. Elles prennent en charge macOS, Windows et
+Linux. Le GPU y est inventorié, mais n'y est pas encore mesuré par un benchmark
+commun. Cette limite est levée dans la préparation locale `0.3.0.dev0` décrite
+ci-dessus.

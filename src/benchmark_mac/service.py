@@ -10,9 +10,15 @@ from statistics import median
 
 from . import __version__
 from .benchmarks import CATALOG, PROFILES, BenchmarkContext, resolve_benchmarks
-from .models import BenchmarkFailure, BenchmarkReport, BenchmarkResult, EnvironmentSnapshot
+from .models import (
+    BenchmarkFailure,
+    BenchmarkReport,
+    BenchmarkResult,
+    EnvironmentSnapshot,
+    ReadinessSnapshot,
+)
 from .repository import JsonReportRepository
-from .system_info import environment_snapshot, system_snapshot
+from .system_info import environment_snapshot, machine_readiness, system_snapshot
 
 ProgressCallback = Callable[[str, BenchmarkResult | BenchmarkFailure | None], None]
 
@@ -56,7 +62,9 @@ class BenchmarkService:
         label: str | None = None,
         work_dir: Path | str = ".",
         workers: int | None = None,
+        gpu_index: int | None = None,
         repetitions: int = 3,
+        readiness: ReadinessSnapshot | None = None,
         progress: ProgressCallback | None = None,
     ) -> tuple[BenchmarkReport, Path]:
         """Exécute chaque test demandé et conserve les éventuels échecs isolés."""
@@ -70,9 +78,11 @@ class BenchmarkService:
             profile=PROFILES[profile_name],
             work_dir=Path(work_dir).resolve(),
             workers=workers or (os.cpu_count() or 1),
+            gpu_index=gpu_index,
         )
         results: list[BenchmarkResult] = []
         failures: list[BenchmarkFailure] = []
+        readiness = readiness or machine_readiness()
         environment_start = environment_snapshot()
         for benchmark_id in selected:
             if progress:
@@ -116,6 +126,7 @@ class BenchmarkService:
             environment_start=environment_start,
             environment_end=environment_end,
             environment_warnings=_environment_warnings(environment_start, environment_end),
+            readiness=readiness,
             results=results,
             failures=failures,
         )

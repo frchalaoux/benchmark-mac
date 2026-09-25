@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
 
+from .gpu_benchmarks import gpu_compute_fp32, gpu_image_filter, gpu_memory, gpu_raster
 from .models import BenchmarkResult
 
 MIB = 1_048_576
@@ -68,6 +69,11 @@ REFERENCE_LIBRARY = {
         "Langa, Ł., PEP 418 — Add monotonic time, performance counter, and process time "
         "functions, 2012, https://peps.python.org/pep-0418/"
     ),
+    "webgpu": ("W3C GPU for the Web Community Group, WebGPU, https://gpuweb.github.io/gpuweb/"),
+    "wgsl": (
+        "W3C GPU for the Web Community Group, WebGPU Shading Language, https://www.w3.org/TR/WGSL/"
+    ),
+    "wgpu-py": "PyGfx, wgpu-py documentation, https://wgpu-py.readthedocs.io/",
 }
 
 
@@ -165,6 +171,27 @@ BENCHMARK_DOCUMENTATION = {
         "charge décisionnelle complexe.",
         ("sqlite", "pep-418"),
     ),
+    "gpu.compute-fp32": BenchmarkDocumentation(
+        "Un shader WGSL applique 128 multiplications-additions à 262 144 valeurs FP32 ; "
+        "le score compte 256 opérations par valeur.",
+        "N'évalue ni les unités matricielles spécialisées, ni l'IA, ni le calcul FP64.",
+        ("webgpu", "wgsl", "wgpu-py", "ieee-754"),
+    ),
+    "gpu.memory": BenchmarkDocumentation(
+        "Un shader WGSL copie un tampon GPU ; le débit compte les octets lus et écrits.",
+        "Les caches et la mémoire unifiée peuvent influencer le résultat.",
+        ("webgpu", "wgsl", "wgpu-py"),
+    ),
+    "gpu.image-filter": BenchmarkDocumentation(
+        "Un shader WGSL applique hors écran un filtre pondéré à cinq pixels voisins.",
+        "Ne représente pas les codecs vidéo ni un moteur photo complet.",
+        ("webgpu", "wgsl", "wgpu-py"),
+    ),
+    "gpu.raster": BenchmarkDocumentation(
+        "Un pipeline WGSL remplit répétitivement une texture RGBA8 hors écran.",
+        "Mesure un remplissage simple, sans géométrie complexe ni ray tracing.",
+        ("webgpu", "wgsl", "wgpu-py"),
+    ),
 }
 
 
@@ -194,6 +221,7 @@ class BenchmarkContext:
     profile: BenchmarkProfile
     work_dir: Path
     workers: int
+    gpu_index: int | None = None
 
 
 BenchmarkRunner = Callable[[BenchmarkContext], BenchmarkResult]
@@ -643,12 +671,22 @@ DEFINITIONS = (
         "Base de données locale",
         application_sqlite,
     ),
+    BenchmarkDefinition(
+        "gpu.compute-fp32", "gpu", "Calcul GPU FP32", "Calcul parallèle", gpu_compute_fp32
+    ),
+    BenchmarkDefinition("gpu.memory", "gpu", "Bande passante GPU", "Mémoire GPU", gpu_memory),
+    BenchmarkDefinition(
+        "gpu.image-filter", "gpu", "Filtre d'image GPU", "Traitement d'image", gpu_image_filter
+    ),
+    BenchmarkDefinition(
+        "gpu.raster", "gpu", "Remplissage raster GPU", "Rendu hors écran", gpu_raster
+    ),
 )
 
 CATALOG = {definition.benchmark_id: definition for definition in DEFINITIONS}
 GROUPS = {
     group: tuple(item.benchmark_id for item in DEFINITIONS if item.group == group)
-    for group in ("cpu", "memory", "storage", "application")
+    for group in ("cpu", "memory", "storage", "application", "gpu")
 }
 GROUPS["all"] = tuple(CATALOG)
 

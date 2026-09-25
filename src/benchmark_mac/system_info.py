@@ -9,9 +9,12 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
-from .models import EnvironmentSnapshot, SystemSnapshot
+import psutil
+
+from .models import EnvironmentSnapshot, ProcessLoad, ReadinessSnapshot, SystemSnapshot
 
 
 def _command(*command: str, timeout: float = 10) -> str:
@@ -205,3 +208,71 @@ def environment_snapshot() -> EnvironmentSnapshot:
         )
         return EnvironmentSnapshot(power_source=battery or None)
     return EnvironmentSnapshot()
+
+
+def machine_readiness(sample_seconds: float = 1.0, process_limit: int = 5) -> ReadinessSnapshot:
+    """Estime si la machine est suffisamment au repos pour commencer une campagne."""
+    processes: list[psutil.Process] = []
+    current_pid = os.getpid()
+    for process in psutil.process_iter(["pid", "name"]):
+        if process.pid == current_pid:
+            continue
+        try:
+            process.cpu_percent(None)
+        except psutil.AccessDenied, psutil.NoSuchProcess:
+            continue
+        processes.append(process)
+    psutil.cpu_percent(None)
+    time.sleep(sample_seconds)
+    cpu_percent = psutil.cpu_percent(None)
+    memory = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+    observations: list[ProcessLoad] = []
+    for process in processes:
+        try:
+            cpu = process.cpu_percent(None)
+            memory_percent = process.memory_percent()
+            name = process.name()
+        except psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess:
+            continue
+        if cpu >= 2 or memory_percent >= 3:
+            observations.append(
+                ProcessLoad(
+                    pid=process.pid,
+                    name=name,
+                    cpu_percent=round(cpu, 1),
+                    memory_percent=round(memory_percent, 1),
+                )
+            )
+    observations.sort(key=lambda item: (item.cpu_percent, item.memory_percent), reverse=True)
+    observations = observations[:process_limit]
+    warnings: list[str] = []
+    if cpu_percent >= 15:
+        warnings.append(
+            f"Charge CPU initiale élevée ({cpu_percent:.1f} %) ; fermer les tâches actives "
+            "et attendre le retour au repos."
+        )
+    if memory.available / memory.total < 0.20:
+        warnings.append(
+            f"Mémoire disponible faible ({memory.available / memory.total * 100:.1f} %) ; "
+            "fermer les applications lourdes."
+        )
+    if swap.percent >= 10:
+        warnings.append(
+            f"Mémoire d'échange déjà utilisée à {swap.percent:.1f} % ; les résultats de "
+            "mémoire et de stockage peuvent être perturbés."
+        )
+    busy = [item for item in observations if item.cpu_percent >= 10]
+    if busy:
+        names = ", ".join(f"{item.name} ({item.cpu_percent:.0f} %)" for item in busy[:3])
+        warnings.append(f"Processus actifs détectés : {names}.")
+    return ReadinessSnapshot(
+        sample_seconds=sample_seconds,
+        cpu_percent=round(cpu_percent, 1),
+        memory_available_percent=round(memory.available / memory.total * 100, 1),
+        memory_available_bytes=memory.available,
+        swap_percent=round(swap.percent, 1),
+        active_processes=observations,
+        warnings=warnings,
+        suitable=not warnings,
+    )
