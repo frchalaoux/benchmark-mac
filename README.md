@@ -81,6 +81,7 @@ installateur nécessite un contournement détaillé dans la
 Vérifier ensuite l'installation :
 
 ```bash
+benchmark-mac --version
 uv tool list
 benchmark-mac list
 benchmark-mac compare --help

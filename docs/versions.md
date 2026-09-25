@@ -198,6 +198,7 @@ irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.1.0/install.ps
 suivantes vérifient ensuite que l'exécutable et le catalogue fonctionnent :
 
 ```bash
+benchmark-mac --version
 uv tool list
 benchmark-mac list
 benchmark-mac describe cpu.hash

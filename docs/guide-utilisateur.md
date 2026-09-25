@@ -6,6 +6,12 @@ L'installateur GitHub installe `uv` si nécessaire. `uv` installe ensuite sa
 propre version de CPython 3.14.4 et isole `benchmark-mac` du Python du système.
 Il n'est donc pas nécessaire d'installer Python séparément.
 
+La version réellement exécutée se vérifie avec :
+
+```bash
+benchmark-mac --version
+```
+
 Avant une mesure :
 
 1. brancher un portable sur secteur ;

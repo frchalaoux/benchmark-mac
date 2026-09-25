@@ -3,10 +3,18 @@ from pathlib import Path
 from test_repository import sample_report
 from typer.testing import CliRunner
 
+from benchmark_mac import __version__
 from benchmark_mac.cli import app
 from benchmark_mac.repository import JsonReportRepository
 
 runner = CliRunner()
+
+
+def test_version_option_displays_installed_version() -> None:
+    result = runner.invoke(app, ["--version"])
+
+    assert result.exit_code == 0
+    assert result.stdout.strip() == f"benchmark-mac {__version__}"
 
 
 def test_list_displays_groups_profiles_and_individual_benchmarks() -> None:

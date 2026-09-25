@@ -7,6 +7,7 @@ from typing import Annotated
 
 import typer
 
+from . import __version__
 from .benchmarks import (
     BENCHMARK_DOCUMENTATION,
     CATALOG,
@@ -33,6 +34,27 @@ app = typer.Typer(
     no_args_is_help=True,
     help="Suite de benchmarks locale pour macOS, Windows et Linux.",
 )
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        typer.echo(f"benchmark-mac {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            callback=_version_callback,
+            is_eager=True,
+            help="Affiche la version installée et quitte.",
+        ),
+    ] = False,
+) -> None:
+    """Suite de benchmarks locale pour macOS, Windows et Linux."""
 
 
 def service(root: Path = Path("data/results")) -> BenchmarkService:
