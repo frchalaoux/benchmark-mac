@@ -138,8 +138,18 @@ class ComparisonAnalysis:
     warnings: tuple[str, ...]
 
 
+STABLE_0_3_PROTOCOL_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0"})
+
+
 def report_label(report: BenchmarkReport) -> str:
     return report.label or report.system.model
+
+
+def comparison_protocol(version: str) -> str:
+    """Regroupe les versions dont le protocole de mesure est identique."""
+    if version in STABLE_0_3_PROTOCOL_VERSIONS:
+        return "0.3.0"
+    return version
 
 
 def validate_reports(reports: list[BenchmarkReport]) -> None:
@@ -148,8 +158,10 @@ def validate_reports(reports: list[BenchmarkReport]) -> None:
         raise ValueError("Indiquez au moins deux rapports.")
     reference = reports[0]
     for report in reports[1:]:
-        if report.suite_version != reference.suite_version:
-            raise ValueError("Les rapports doivent utiliser la même version de la suite.")
+        if comparison_protocol(report.suite_version) != comparison_protocol(
+            reference.suite_version
+        ):
+            raise ValueError("Les rapports doivent utiliser des versions compatibles de la suite.")
         if report.profile != reference.profile:
             raise ValueError("Les rapports doivent utiliser le même profil.")
         if report.system.python_version != reference.system.python_version:
@@ -319,6 +331,11 @@ def analyze_reports(
     baseline_map = maps[0]
     machines: list[MachineAnalysis] = []
     warnings: list[str] = []
+    suite_versions = sorted({report.suite_version for report in reports})
+    if len(suite_versions) > 1:
+        warnings.append(
+            "Versions compatibles du protocole 0.3.0 comparées : " + ", ".join(suite_versions) + "."
+        )
     for report in reports:
         warnings.extend(
             f"{report_label(report)} : {warning}" for warning in report.environment_warnings

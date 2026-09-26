@@ -6,7 +6,20 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.0.dev2` — développement actuel
+### `v0.3.0` — stable actuelle
+
+[Consulter le code source de `v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0)
+
+Cette version stable reprend les quatre benchmarks GPU WebGPU, la sélection
+d'adaptateur, le contrôle préalable de la machine et les corrections Windows
+validés dans les préversions `dev1` et `dev2`. Elle refuse les moteurs WebGPU
+logiciels afin de ne pas présenter un score CPU comme une performance GPU.
+
+Les rapports `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` emploient le même protocole
+de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste exclue de ce
+groupe de compatibilité.
+
+### `v0.3.0.dev2` — développement antérieur
 
 [Consulter le code source de `v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2)
 
@@ -65,7 +78,7 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev0/install.ps1 | iex
 ```
 
-### `v0.2.1` — stable actuelle
+### `v0.2.1` — stable antérieure
 
 [Consulter le code source de `v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1)
 
@@ -87,8 +100,8 @@ Cette version stable ajoute notamment :
 - comparaison de deux machines ou davantage ;
 - rapport HTML autonome avec barres, carte thermique et chronologies.
 
-Tous les rapports à comparer doivent employer la même version de la suite, le
-même profil et la même version de Python.
+Tous les rapports à comparer doivent employer des versions de protocole
+compatibles, le même profil et la même version de Python.
 
 Cette révision corrige la comparaison `cpu.multicore` : le nombre de processus
 peut varier selon les processeurs logiques disponibles sur chaque machine, sans
@@ -136,30 +149,26 @@ Cette première version stable fournit :
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
 pondérés ni le rapport HTML de `v0.2.1`.
 
-## Installer `v0.3.0.dev2`
+## Installer `v0.3.0`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv` si
 nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
 `benchmark-mac` éventuellement installée. Si un ancien `uv` ne connaît pas ce
 Python, l'installateur met automatiquement `uv` à niveau et réessaie.
 
-Les préversions suivent la convention de tag `vX.Y.Z.devK`. Le nom exact est
-donc ici `v0.3.0.dev2`; tous les points font partie du nom Git et doivent être
-conservés dans les URL et les commandes.
-
 ### macOS et Linux
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev2/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/install.sh | sh
 ```
 
 ### Windows PowerShell
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0.dev2/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/install.ps1 | iex
 ```
 
-Le contrôle suivant doit afficher `benchmark-mac 0.3.0.dev2` :
+Le contrôle suivant doit afficher `benchmark-mac 0.3.0` :
 
 ```bash
 benchmark-mac --version
