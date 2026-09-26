@@ -2,10 +2,15 @@
 
 ## État actuel
 
-- Branche locale : `feat/gpu-preflight`.
+- Branche locale : `release/0.3.0`, créée depuis `main` au commit `8dc7a53`.
+- Périmètre fonctionnel de `v0.3.0` figé : GPU WebGPU, contrôle préalable,
+  corrections Windows et documentation associée déjà présents sur `main`.
+- La correction CLI multi-machine du commit `6d4c5dd` est explicitement exclue
+  de `v0.3.0` et reste réservée à la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- Base : `main` au tag stable `v0.2.1` (`c7ffdce`).
+- `main` pointe sur `8dc7a53`; la dernière version stable publiée reste
+  `v0.2.1` (`c7ffdce`).
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
   bande passante, filtre d'image et remplissage raster.
@@ -68,9 +73,9 @@
 
 ## Prochaine étape possible
 
-Installer `v0.3.0.dev2` sur macOS et sur le Windows 10 de validation. Exécuter
-au minimum `benchmark-mac --version`, `benchmark-mac info` et
-`benchmark-mac run --group gpu --profile quick`.
+Achever la validation multiplateforme du périmètre figé, puis préparer le
+passage de `0.3.0.dev2` à `0.3.0` dans le paquet, les installateurs et la
+documentation. Aucun ajout fonctionnel ne doit entrer dans cette branche.
 
 ## Points de vigilance
 
