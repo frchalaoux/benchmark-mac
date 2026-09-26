@@ -138,7 +138,7 @@ class ComparisonAnalysis:
     warnings: tuple[str, ...]
 
 
-PROTOCOL_0_3_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0"})
+PROTOCOL_0_3_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0", "0.3.1"})
 
 
 def report_label(report: BenchmarkReport) -> str:
