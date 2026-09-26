@@ -138,7 +138,7 @@ class ComparisonAnalysis:
     warnings: tuple[str, ...]
 
 
-STABLE_0_3_PROTOCOL_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0"})
+PROTOCOL_0_3_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0"})
 
 
 def report_label(report: BenchmarkReport) -> str:
@@ -147,7 +147,7 @@ def report_label(report: BenchmarkReport) -> str:
 
 def comparison_protocol(version: str) -> str:
     """Regroupe les versions dont le protocole de mesure est identique."""
-    if version in STABLE_0_3_PROTOCOL_VERSIONS:
+    if version in PROTOCOL_0_3_VERSIONS:
         return "0.3.0"
     return version
 

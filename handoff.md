@@ -2,15 +2,12 @@
 
 ## État actuel
 
-- Branche locale : `chore/0.3.0-release-closeout`, créée depuis `main` au
-  commit de fusion `14cd225`.
-- Périmètre fonctionnel de `v0.3.0` figé : GPU WebGPU, contrôle préalable,
-  corrections Windows et documentation associée déjà présents sur `main`.
-- La correction CLI multi-machine du commit `6d4c5dd` est explicitement exclue
-  de `v0.3.0` et reste réservée à la série `0.3.1`.
+- Branche locale : `fix/multi-machine-cli-comparison`, réintégrée avec `main`
+  après le close-out complet de `v0.3.0`.
+- La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- `main` et `origin/main` pointent sur `14cd225`; la stable publiée actuelle est
+- `main` et `origin/main` pointent sur `afae631`; la stable publiée actuelle est
   `v0.3.0`, taguée sur `3d50177`.
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -38,13 +35,29 @@
   `exit` ne peut donc plus fermer la console principale.
 - Documentation des quatre benchmarks GPU avec protocole, limites et références
   WebGPU, WGSL, `wgpu-py` et IEEE 754.
+- La sortie CLI des comparaisons multi-machines associe désormais à chaque
+  candidate son propre écart et sa propre conclusion; la première machine est
+  explicitement affichée comme référence.
+- Paquet, installateurs et documentation alignés sur la préversion publiée
+  `v0.3.1.dev0`.
+- `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
+  `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
 
 ## Validations réalisées
 
 - `uv run ruff check .` : réussi.
-- `uv run pytest` : 49 tests réussis, dont la reprise après échec d'un ancien `uv`,
+- `uv run pytest` : 49 tests réussis sur la stable, dont la reprise après échec
+  d'un ancien `uv`,
   l'exclusion du PID 0, le refus d'un moteur graphique logiciel et la
   compatibilité contrôlée entre `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
+- Test CLI ajouté sur la branche `0.3.1` avec trois machines, dont une plus
+  rapide et une plus lente que la référence.
+- Candidate `0.3.1.dev0` : 50 tests réussis, source et wheel construites,
+  archive inspectée et wheel exécutée dans un environnement isolé avec la
+  version attendue.
+- Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
+  comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
+  distincte pour chacune des deux machines candidates sur les 16 benchmarks.
 - `uv build` : source et wheel `0.3.0` construites; la wheel installée dans un
   environnement isolé affiche bien `benchmark-mac 0.3.0`.
 - L'archive source exclut explicitement le rapport utilisateur racine
@@ -92,12 +105,14 @@
 - GitHub Release stable `benchmark-mac v0.3.0` publiée et marquée `Latest` :
   https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.0
 - Installateurs bruts et métadonnées de version revérifiés après publication.
+- Pull request documentaire nº 4 fusionnée dans `main` au commit `afae631`.
+- Branche `fix/multi-machine-cli-comparison` et tag annoté `v0.3.1.dev0`
+  publiés ensemble sur le commit `0e96ee5`; aucune GitHub Release créée.
 
 ## Prochaine étape possible
 
-Finaliser ce close-out documentaire, puis reprendre
-`fix/multi-machine-cli-comparison`, intégrer `main` et préparer la première
-préversion de la série `0.3.1`.
+Publier le close-out de la préversion sur sa branche après confirmation, puis
+préparer une pull request vers `main` sans déplacer le tag `v0.3.1.dev0`.
 
 ## Points de vigilance
 

@@ -61,6 +61,23 @@ def test_compare_uses_first_report_as_baseline(tmp_path: Path) -> None:
     assert "+50.0 %" in result.stdout
 
 
+def test_compare_displays_a_conclusion_for_each_candidate(tmp_path: Path) -> None:
+    baseline = JsonReportRepository(tmp_path / "baseline").save(sample_report())
+    faster = JsonReportRepository(tmp_path / "faster").save(
+        sample_report(value=15, label="PC rapide")
+    )
+    slower = JsonReportRepository(tmp_path / "slower").save(sample_report(value=8, label="PC lent"))
+
+    result = runner.invoke(app, ["compare", str(baseline), str(faster), str(slower)])
+
+    assert result.exit_code == 0
+    assert "Mac test 100 (référence)" in result.stdout
+    assert "PC rapide 150 (+50.0 % ; différence importante en faveur de cette machine)" in (
+        result.stdout
+    )
+    assert "PC lent 80 (-20.0 % ; différence nette en sa défaveur)" in result.stdout
+
+
 def test_compare_writes_a_weighted_autonomous_html_report(tmp_path: Path) -> None:
     first = JsonReportRepository(tmp_path / "first").save(sample_report())
     second = JsonReportRepository(tmp_path / "second").save(

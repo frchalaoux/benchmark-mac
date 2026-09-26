@@ -6,6 +6,15 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
+### `v0.3.1.dev0` — développement actuel
+
+[Consulter le code source de `v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0)
+
+Cette préversion corrige la sortie texte des comparaisons de plus de deux
+machines : chaque candidate affiche désormais son propre écart et sa propre
+conclusion, tandis que la première machine est clairement indiquée comme
+référence. Le protocole de mesure ne change pas.
+
 ### `v0.3.0` — stable actuelle
 
 [Consulter le code source de `v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0)
@@ -15,9 +24,9 @@ d'adaptateur, le contrôle préalable de la machine et les corrections Windows
 validés dans les préversions `dev1` et `dev2`. Elle refuse les moteurs WebGPU
 logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
-Les rapports `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` emploient le même protocole
-de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste exclue de ce
-groupe de compatibilité.
+Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0` et `0.3.1.dev0` emploient le
+même protocole de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste
+exclue de ce groupe de compatibilité.
 
 ### `v0.3.0.dev2` — développement antérieur
 
@@ -149,12 +158,32 @@ Cette première version stable fournit :
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
 pondérés ni le rapport HTML de `v0.2.1`.
 
-## Installer `v0.3.0`
+## Installer `v0.3.1.dev0`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv` si
 nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
 `benchmark-mac` éventuellement installée. Si un ancien `uv` ne connaît pas ce
 Python, l'installateur met automatiquement `uv` à niveau et réessaie.
+
+### macOS et Linux
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1.dev0/install.sh | sh
+```
+
+### Windows PowerShell
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1.dev0/install.ps1 | iex
+```
+
+Le contrôle suivant doit afficher `benchmark-mac 0.3.1.dev0` :
+
+```bash
+benchmark-mac --version
+```
+
+## Installer la stable `v0.3.0`
 
 ### macOS et Linux
 
@@ -166,12 +195,6 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/ins
 
 ```powershell
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/install.ps1 | iex
-```
-
-Le contrôle suivant doit afficher `benchmark-mac 0.3.0` :
-
-```bash
-benchmark-mac --version
 ```
 
 ## Installer la stable `v0.2.1`
