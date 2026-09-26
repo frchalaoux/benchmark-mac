@@ -114,6 +114,26 @@ def test_comparison_rejects_different_benchmark_parameters() -> None:
         analyze_reports([baseline, candidate], parse_scenario_weights(None))
 
 
+def test_stable_0_3_accepts_dev1_and_dev2_reports() -> None:
+    stable = complete_report("Stable", 1).model_copy(update={"suite_version": "0.3.0"})
+    dev1 = complete_report("Dev1", 1.1).model_copy(update={"suite_version": "0.3.0.dev1"})
+    dev2 = complete_report("Dev2", 1.2)
+
+    analysis = analyze_reports([stable, dev1, dev2], parse_scenario_weights(None))
+
+    assert len(analysis.machines) == 3
+    warning = next(item for item in analysis.warnings if "Versions compatibles" in item)
+    assert all(version in warning for version in ("0.3.0.dev1", "0.3.0.dev2", "0.3.0"))
+
+
+def test_stable_0_3_rejects_dev0_reports() -> None:
+    stable = complete_report("Stable", 1).model_copy(update={"suite_version": "0.3.0"})
+    dev0 = complete_report("Dev0", 1.1).model_copy(update={"suite_version": "0.3.0.dev0"})
+
+    with pytest.raises(ValueError, match="versions compatibles"):
+        analyze_reports([stable, dev0], parse_scenario_weights(None))
+
+
 def test_multicore_workers_can_differ_between_machines() -> None:
     baseline = complete_report("Référence", 1)
     candidate = complete_report("Candidate", 1.2)

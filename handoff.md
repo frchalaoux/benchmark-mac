@@ -25,8 +25,10 @@
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
-- Installateurs alignés sur la candidate `v0.3.0.dev2` et CPython 3.14.4
-  géré par `uv`.
+- Version stable `0.3.0` préparée localement dans le paquet et les
+  installateurs, avec CPython 3.14.4 géré par `uv`.
+- Les rapports `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` sont explicitement
+  reconnus comme compatibles; `0.3.0.dev0` reste refusée.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
 - Sous Windows, à partir de `dev1`, l'installateur télécharge la mise à niveau
@@ -39,9 +41,13 @@
 ## Validations réalisées
 
 - `uv run ruff check .` : réussi.
-- `uv run pytest` : 47 tests réussis, dont la reprise après échec d'un ancien `uv`,
-  l'exclusion du PID 0 et le refus d'un moteur graphique logiciel.
-- `uv build` : source et wheel `0.3.0.dev2` construits.
+- `uv run pytest` : 49 tests réussis, dont la reprise après échec d'un ancien `uv`,
+  l'exclusion du PID 0, le refus d'un moteur graphique logiciel et la
+  compatibilité contrôlée entre `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
+- `uv build` : source et wheel `0.3.0` construites; la wheel installée dans un
+  environnement isolé affiche bien `benchmark-mac 0.3.0`.
+- L'archive source exclut explicitement le rapport utilisateur racine
+  `comparaison.html`.
 - Exécution réelle des quatre benchmarks sur AMD Radeon Pro 560X via Metal.
 - Détection réelle de deux GPU sur MacBook Pro : Radeon dédiée et Intel UHD 630.
 - Sélection explicite et exécution réelle de `gpu.compute-fp32` sur l'Intel UHD 630.
@@ -83,17 +89,17 @@
 
 ## Prochaine étape possible
 
-Achever la validation multiplateforme du périmètre figé, puis préparer le
-passage de `0.3.0.dev2` à `0.3.0` dans le paquet, les installateurs et la
-documentation. Aucun ajout fonctionnel ne doit entrer dans cette branche.
+Relire le commit de préparation stable, puis préparer son intégration dans
+`main` et le tag annoté `v0.3.0`. Aucun ajout fonctionnel ne doit entrer dans
+cette branche.
 
 ## Points de vigilance
 
 - Ne jamais effectuer d'opération distante sans confirmation explicite,
   impérative, séparée et actuelle de l'utilisateur.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
-- Ne pas présenter `v0.3.0.dev2` comme stable ; `v0.2.1` reste la stable
-  recommandée.
+- Tant que `v0.3.0` n'est pas publié, `v0.2.1` reste la dernière stable
+  réellement disponible sur GitHub.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
 - Les mesures WebGPU sont synthétiques et ne remplacent pas Blender, un jeu, le

@@ -4,10 +4,9 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La préversion `v0.3.0.dev2` ajoute quatre benchmarks GPU WebGPU légers et un
+La version stable `v0.3.0` ajoute quatre benchmarks GPU WebGPU légers et un
 contrôle de l'état de la machine avant chaque campagne. Elle corrige aussi
-l'installation et le contrôle préalable sous Windows. La stable recommandée
-reste `v0.2.1`.
+l'installation et le contrôle préalable sous Windows.
 
 ## Versions publiées
 
@@ -16,10 +15,11 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement actuel | Tester les GPU et le contrôle préalable | Convention des tags explicitée |
+| [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable actuelle | Comparer CPU, mémoire, stockage, applications et GPU | Version recommandée |
+| [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
 | [`v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1) | Développement antérieur | Tester les corrections Windows | Corrige l'installation et le PID 0 sous Windows |
 | [`v0.3.0.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev0) | Développement antérieur | Reproduire une campagne existante | Problèmes d'installation et de contrôle préalable sous Windows |
-| [`v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1) | Stable | Comparer des machines, notamment sous Windows | Version recommandée |
+| [`v0.2.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.1) | Stable antérieure | Reproduire une campagne sans GPU | Remplacée par `v0.3.0` |
 | [`v0.2.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0) | Stable antérieure | Reproduire une campagne existante | Échec SQLite possible sous Windows |
 | [`v0.2.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev2) | Développement archivé | Reproduire une campagne de préversion | Base fonctionnelle de `v0.2.0` |
 | [`v0.2.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.2.0.dev1) | Développement archivé | Reproduire une campagne existante | Comparaison multicœur trop stricte |
@@ -66,36 +66,33 @@ GPU. Les douze autres benchmarks continuent normalement.
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`
 télécharge et gère CPython 3.14.4 avant d'installer l'application.
 
-### Version stable `v0.2.1`
+### Version stable `v0.3.0`
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.2.1/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.0/install.ps1 | iex
 ```
 
-Cette version corrige l'échec `WinError 32` du benchmark SQLite sous Windows en
-fermant explicitement la base avant la suppression du répertoire temporaire.
+Cette version installe CPython 3.14.4, met automatiquement à niveau un ancien
+`uv` si nécessaire et remplace toute version précédente de l'outil. Vérifier
+l'installation avec `benchmark-mac --version`, qui doit afficher
+`benchmark-mac 0.3.0`.
 
-Si Windows possède encore un ancien `uv` qui ne connaît pas CPython 3.14.4,
-mettre d'abord `uv` à niveau avec la procédure indiquée dans la
-[fiche des versions](docs/versions.md#ancien-uv-sous-windows), puis relancer
-l'installation de `v0.2.1`.
+### Préversion antérieure `v0.3.0.dev2`
 
-### Version de développement `v0.3.0.dev2`
-
-Cette préversion est destinée à valider les nouveaux tests GPU et le contrôle
-de l'état initial avant une future stable. Sous Windows, la mise à niveau de
-`uv` s'exécute dans un processus enfant et le pseudo-processus PID 0 est ignoré.
+Cette préversion reste disponible pour reproduire les campagnes de validation
+de la stable. Sous Windows, la mise à niveau de `uv` s'exécute dans un processus
+enfant et le pseudo-processus PID 0 est ignoré.
 
 > **Convention des préversions :** les tags suivent la forme `vX.Y.Z.devK`.
-> Le tag courant s'écrit donc exactement `v0.3.0.dev2`. Les points font partie
+> Ce tag s'écrit donc exactement `v0.3.0.dev2`. Les points font partie
 > du nom Git et doivent être conservés dans les URL et les commandes.
 
 Sur macOS ou Linux :
@@ -217,8 +214,10 @@ indices, écarts qualitatifs et temps équivalents. Il contient des barres, un
 graphique d'écart pour deux machines, une carte thermique pour plusieurs
 machines, des chronologies et un résumé en langage courant.
 
-La comparaison exige la même version de la suite, le même profil et la même
-version de Python. Les rapports sont enregistrés dans `data/results/` par défaut.
+La comparaison exige des versions de protocole compatibles, le même profil et
+la même version de Python. `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` sont
+explicitement compatibles entre elles. Les rapports sont enregistrés dans
+`data/results/` par défaut.
 Une différence dont les plages min–max se chevauchent est signalée comme non
 concluante. Les rapports `0.2.x` et `0.3.x` ne sont pas directement comparables,
 car le catalogue, les scénarios et le schéma JSON ont évolué.
