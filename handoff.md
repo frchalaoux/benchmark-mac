@@ -38,6 +38,10 @@
 - La sortie CLI des comparaisons multi-machines associe désormais à chaque
   candidate son propre écart et sa propre conclusion; la première machine est
   explicitement affichée comme référence.
+- Paquet, installateurs et documentation alignés localement sur la candidate
+  `v0.3.1.dev0`, sans tag ni publication distante à ce stade.
+- `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
+  `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
 
 ## Validations réalisées
 
@@ -48,6 +52,9 @@
   compatibilité contrôlée entre `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
 - Test CLI ajouté sur la branche `0.3.1` avec trois machines, dont une plus
   rapide et une plus lente que la référence.
+- Candidate `0.3.1.dev0` : 50 tests réussis, source et wheel construites,
+  archive inspectée et wheel exécutée dans un environnement isolé avec la
+  version attendue.
 - `uv build` : source et wheel `0.3.0` construites; la wheel installée dans un
   environnement isolé affiche bien `benchmark-mac 0.3.0`.
 - L'archive source exclut explicitement le rapport utilisateur racine
@@ -99,8 +106,9 @@
 
 ## Prochaine étape possible
 
-Préparer `0.3.1.dev0` en alignant le paquet, les installateurs, le README et la
-fiche des versions, puis valider la correction CLI multi-machine.
+Relire le commit de préparation de `0.3.1.dev0`, puis préparer la publication
+coordonnée de la branche et du tag sans aucune opération distante avant
+confirmation explicite.
 
 ## Points de vigilance
 

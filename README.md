@@ -6,7 +6,9 @@ Windows et Linux, puis produit des rapports JSON portables.
 
 La version stable `v0.3.0` ajoute quatre benchmarks GPU WebGPU légers et un
 contrôle de l'état de la machine avant chaque campagne. Elle corrige aussi
-l'installation et le contrôle préalable sous Windows.
+l'installation et le contrôle préalable sous Windows. La préversion
+`v0.3.1.dev0` corrige la conclusion détaillée du CLI lorsque plus de deux
+machines sont comparées, sans changer le protocole de mesure.
 
 ## Versions publiées
 
@@ -15,6 +17,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement actuel | Comparer clairement plus de deux machines dans le CLI | Candidate en préparation |
 | [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable actuelle | Comparer CPU, mémoire, stockage, applications et GPU | Version recommandée |
 | [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
 | [`v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1) | Développement antérieur | Tester les corrections Windows | Corrige l'installation et le PID 0 sous Windows |
@@ -65,6 +68,27 @@ GPU. Les douze autres benchmarks continuent normalement.
 
 Python n'a pas besoin d'être installé. Le script installe `uv`, puis `uv`
 télécharge et gère CPython 3.14.4 avant d'installer l'application.
+
+### Version de développement `v0.3.1.dev0`
+
+Cette préversion affiche, pour chaque machine candidate, son propre écart et sa
+propre conclusion dans le détail CLI. La première machine reste explicitement
+la référence 100.
+
+Sur macOS ou Linux :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1.dev0/install.sh | sh
+```
+
+Sous Windows, dans PowerShell :
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1.dev0/install.ps1 | iex
+```
+
+Le contrôle `benchmark-mac --version` doit afficher
+`benchmark-mac 0.3.1.dev0`.
 
 ### Version stable `v0.3.0`
 
@@ -215,9 +239,9 @@ graphique d'écart pour deux machines, une carte thermique pour plusieurs
 machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
-la même version de Python. `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` sont
-explicitement compatibles entre elles. Les rapports sont enregistrés dans
-`data/results/` par défaut.
+la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0` et
+`0.3.1.dev0` sont explicitement compatibles entre elles. Les rapports sont
+enregistrés dans `data/results/` par défaut.
 Une différence dont les plages min–max se chevauchent est signalée comme non
 concluante. Les rapports `0.2.x` et `0.3.x` ne sont pas directement comparables,
 car le catalogue, les scénarios et le schéma JSON ont évolué.

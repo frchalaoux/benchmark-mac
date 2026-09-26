@@ -5,24 +5,28 @@ comparées, puis servir de branche de travail à la série `0.3.1`.
 
 # Current Status
 
-- Branche créée depuis `main` local après intégration fast-forward de
-  `feat/gpu-preflight`.
+- Branche réintégrée avec `main` au commit `afae631` après publication et
+  close-out de la stable `v0.3.0`.
 - Chaque candidate affiche désormais son propre écart et sa propre conclusion
   dans le détail des benchmarks.
 - La première machine est explicitement indiquée comme référence.
-- Aucun tag `0.3.1` n'est encore préparé ou publié.
+- Paquet, installateurs et documentation alignés localement sur `0.3.1.dev0`.
+- `0.3.1.dev0` conserve le protocole de mesure de `0.3.0`.
+- Aucun tag `v0.3.1.dev0` n'est encore créé ou publié.
 
 # Next Concrete Action
 
-Après publication confirmée de `main` et de la branche, préparer
-`v0.3.1.dev0` en alignant version du paquet, installateurs, README et fiche des
-versions.
+Relire le commit de préparation, puis préparer la publication coordonnée de la
+branche et du tag `v0.3.1.dev0` sans opération distante.
 
 # Validation Snapshot
 
 - `uv run ruff check .` réussi.
 - `uv run ruff format --check .` réussi.
-- `uv run pytest` : 48 tests réussis.
+- `uv run pytest` : 50 tests réussis sur `0.3.1.dev0`.
+- Source et wheel `0.3.1.dev0` construites avec succès.
+- Archive inspectée sans rapport HTML; wheel installée isolément et
+  `benchmark-mac --version` vérifié à `0.3.1.dev0`.
 
 # Key Files
 
@@ -32,7 +36,6 @@ versions.
 
 # Watchouts
 
-- `origin/main` n'a pas encore reçu l'intégration locale.
+- Ne pas changer le protocole de mesure dans cette correction de rendu CLI.
 - Ne créer ni pousser branche ou tag sans confirmation explicite actuelle.
-- La modification locale de `.gitignore` est antérieure et reste hors du
-  commit de correction.
+- Les rapports HTML dans `data/results/` restent ignorés et locaux.
