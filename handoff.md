@@ -2,13 +2,13 @@
 
 ## État actuel
 
-- Branche locale : `chore/0.3.1-release-closeout`, créée depuis `main` au
-  commit de fusion `a3debdd`.
+- Close-out documentaire de `v0.3.1` intégré dans `main` par la pull request
+  nº 7 au commit de fusion `d2bc4e8`.
 - La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- `main` et `origin/main` pointent sur `a3debdd`; la stable publiée actuelle est
-  `v0.3.1`, taguée sur `9045884` et marquée `Latest` sur GitHub.
+- La stable publiée actuelle est `v0.3.1`, taguée sur `9045884` et marquée
+  `Latest` sur GitHub.
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
   bande passante, filtre d'image et remplissage raster.
@@ -118,6 +118,8 @@
   https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.1
 - Installateurs bruts, métadonnées, branche, tag et intégration dans `main`
   revérifiés après publication.
+- Close-out documentaire fusionné dans `main` par la pull request nº 7 au
+  commit `d2bc4e8`.
 
 ## Prochaine étape possible
 

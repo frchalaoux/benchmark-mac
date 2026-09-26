@@ -10,6 +10,7 @@ benchmarks CPU, mémoire,
 stockage, applications et GPU WebGPU, avec contrôle préalable, sélection
 d'adaptateur et comparaisons HTML multi-machines. Les rapports `0.3.0.dev1`,
 `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0` et `0.3.1` sont compatibles entre eux.
+Son close-out documentaire est intégré par la pull request nº 7 (`d2bc4e8`).
 
 # Next Concrete Action
 
