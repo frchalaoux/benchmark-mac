@@ -17,7 +17,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement actuel | Comparer clairement plus de deux machines dans le CLI | Candidate en préparation |
+| [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement actuel | Comparer clairement plus de deux machines dans le CLI | Préversion publiée |
 | [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable actuelle | Comparer CPU, mémoire, stockage, applications et GPU | Version recommandée |
 | [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
 | [`v0.3.0.dev1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev1) | Développement antérieur | Tester les corrections Windows | Corrige l'installation et le PID 0 sous Windows |

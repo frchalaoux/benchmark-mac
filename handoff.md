@@ -38,8 +38,8 @@
 - La sortie CLI des comparaisons multi-machines associe désormais à chaque
   candidate son propre écart et sa propre conclusion; la première machine est
   explicitement affichée comme référence.
-- Paquet, installateurs et documentation alignés localement sur la candidate
-  `v0.3.1.dev0`, sans tag ni publication distante à ce stade.
+- Paquet, installateurs et documentation alignés sur la préversion publiée
+  `v0.3.1.dev0`.
 - `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
   `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
 
@@ -55,6 +55,9 @@
 - Candidate `0.3.1.dev0` : 50 tests réussis, source et wheel construites,
   archive inspectée et wheel exécutée dans un environnement isolé avec la
   version attendue.
+- Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
+  comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
+  distincte pour chacune des deux machines candidates sur les 16 benchmarks.
 - `uv build` : source et wheel `0.3.0` construites; la wheel installée dans un
   environnement isolé affiche bien `benchmark-mac 0.3.0`.
 - L'archive source exclut explicitement le rapport utilisateur racine
@@ -103,12 +106,13 @@
   https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.0
 - Installateurs bruts et métadonnées de version revérifiés après publication.
 - Pull request documentaire nº 4 fusionnée dans `main` au commit `afae631`.
+- Branche `fix/multi-machine-cli-comparison` et tag annoté `v0.3.1.dev0`
+  publiés ensemble sur le commit `0e96ee5`; aucune GitHub Release créée.
 
 ## Prochaine étape possible
 
-Relire le commit de préparation de `0.3.1.dev0`, puis préparer la publication
-coordonnée de la branche et du tag sans aucune opération distante avant
-confirmation explicite.
+Publier le close-out de la préversion sur sa branche après confirmation, puis
+préparer une pull request vers `main` sans déplacer le tag `v0.3.1.dev0`.
 
 ## Points de vigilance
 

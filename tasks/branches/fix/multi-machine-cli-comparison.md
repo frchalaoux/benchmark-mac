@@ -12,12 +12,14 @@ comparées, puis servir de branche de travail à la série `0.3.1`.
 - La première machine est explicitement indiquée comme référence.
 - Paquet, installateurs et documentation alignés localement sur `0.3.1.dev0`.
 - `0.3.1.dev0` conserve le protocole de mesure de `0.3.0`.
-- Aucun tag `v0.3.1.dev0` n'est encore créé ou publié.
+- Branche et tag annoté `v0.3.1.dev0` publiés ensemble sur `0e96ee5`.
+- Archive distante validée avec une comparaison CLI réelle de trois rapports
+  complets et 16 benchmarks communs.
 
 # Next Concrete Action
 
-Relire le commit de préparation, puis préparer la publication coordonnée de la
-branche et du tag `v0.3.1.dev0` sans opération distante.
+Publier le close-out de la préversion sur la branche après confirmation, puis
+préparer une pull request vers `main` sans déplacer le tag.
 
 # Validation Snapshot
 
