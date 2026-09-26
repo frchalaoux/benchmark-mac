@@ -7,3 +7,4 @@ __pycache__/
 dist/
 *.tmp
 data/results/*.json
+data/results/comparaison*.html
