@@ -19,8 +19,9 @@ benchmark-mac --version
 ```
 
 Pour une installation GitHub, utiliser le nom affiché dans la
-[fiche des versions](versions.md). Les préversions suivent la convention
-`vX.Y.Z.devK` : le nom complet actuel est `v0.3.0.dev2`, avec tous ses points.
+[fiche des versions](versions.md). La stable actuelle est `v0.3.0`. Les
+préversions archivées suivent la convention `vX.Y.Z.devK`, par exemple
+`v0.3.0.dev2`, avec tous leurs points.
 
 Avant une mesure :
 
@@ -31,8 +32,8 @@ Avant une mesure :
    chargés, jeux, encodages, rendus, machines virtuelles et outils de compilation ;
 4. attendre quelques minutes après le démarrage ou une charge soutenue afin que
    l'activité de fond et la température se stabilisent ;
-5. employer la même version de la suite, le même profil, le même nombre de
-   passages et des conditions ambiantes aussi proches que possible.
+5. employer des versions de protocole compatibles, le même profil, le même
+   nombre de passages et des conditions ambiantes aussi proches que possible.
 
 Juste avant les tests, le programme échantillonne pendant une seconde la charge
 CPU totale, la mémoire disponible, l'échange et les processus les plus actifs.
