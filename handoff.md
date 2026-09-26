@@ -56,8 +56,18 @@
 - Une VM Windows 10 sans GPU transmis expose `Microsoft Basic Render Driver`
   comme adaptateur WebGPU de type `CPU`; `dev1` le signale et refuse les scores
   GPU logiciels sans interrompre les autres groupes.
-- La validation fonctionnelle de la préversion complète reste à effectuer sous
-  Windows et Linux après publication.
+- Windows 11 : campagne `standard` complète de 16 benchmarks réussie avec un
+  état initial déclaré convenable.
+- macOS Intel : campagne `quick` complète de 16 benchmarks réussie le
+  26 septembre 2026 sur Radeon Pro 560X, sans échange utilisé et avec un état
+  initial déclaré convenable. Les scores GPU de cette campagne restent trop
+  dispersés pour servir de référence de performance stable.
+- Linux amd64 sous Docker : l'installateur a correctement remplacé un ancien
+  `uv 0.9.30` par `uv 0.12.19`, installé CPython 3.14.4 et exécuté les 12
+  benchmarks CPU, mémoire, stockage et applications sans échec.
+- Linux sans GPU transmis : `llvmpipe` est détecté comme moteur WebGPU de type
+  `CPU` et les quatre scores GPU logiciels sont explicitement refusés. La voie
+  Linux avec GPU matériel n'a pas pu être testée dans ce conteneur.
 
 ## Publication effectuée
 
