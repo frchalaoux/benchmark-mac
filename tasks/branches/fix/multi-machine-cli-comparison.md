@@ -15,11 +15,12 @@ comparées, puis servir de branche de travail à la série `0.3.1`.
 - Branche et tag annoté `v0.3.1.dev0` publiés ensemble sur `0e96ee5`.
 - Archive distante validée avec une comparaison CLI réelle de trois rapports
   complets et 16 benchmarks communs.
+- Pull request nº 5 fusionnée dans `main` au commit `f6022ac`; correction
+  stabilisée et publiée dans `v0.3.1`.
 
 # Next Concrete Action
 
-Publier le close-out de la préversion sur la branche après confirmation, puis
-préparer une pull request vers `main` sans déplacer le tag.
+Aucune action requise; le travail est intégré et stabilisé dans `v0.3.1`.
 
 # Validation Snapshot
 
