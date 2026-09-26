@@ -5,15 +5,16 @@ un achat.
 
 # Current Status
 
-La préversion `v0.3.1.dev0` est publiée et sa correction CLI est intégrée dans
-`main`. La suite couvre 16 benchmarks CPU, mémoire,
+La stable `v0.3.1` est publiée et marquée `Latest`. La suite couvre 16
+benchmarks CPU, mémoire,
 stockage, applications et GPU WebGPU, avec contrôle préalable, sélection
 d'adaptateur et comparaisons HTML multi-machines. Les rapports `0.3.0.dev1`,
-`0.3.0.dev2` et `0.3.0` sont compatibles entre eux.
+`0.3.0.dev2`, `0.3.0`, `0.3.1.dev0` et `0.3.1` sont compatibles entre eux.
 
 # Next Concrete Action
 
-Finaliser et publier la stable `v0.3.1` depuis la branche `release/0.3.1`.
+Aucun travail bloquant. Choisir une prochaine évolution avant de créer une
+nouvelle branche; options connues : CI multiplateforme ou validation GPU Linux.
 
 # Validation Snapshot
 
@@ -22,7 +23,9 @@ Finaliser et publier la stable `v0.3.1` depuis la branche `release/0.3.1`.
   par la pull request nº 3 (`14cd225`).
 - Préversion `v0.3.1.dev0` publiée sur `0e96ee5`; correction fusionnée par la
   pull request nº 5 (`f6022ac`).
-- Ruff, format, 49 tests, source et wheel `0.3.0` validés.
+- Stable `v0.3.1` publiée sur `9045884`; pull request nº 6 fusionnée dans
+  `main` au commit `a3debdd`; GitHub Release marquée `Latest`.
+- Ruff, format, 50 tests, source et wheel `0.3.1` validés.
 - Validations fonctionnelles macOS, Windows 11 et Linux amd64 réalisées.
 
 # Watchouts
@@ -31,4 +34,5 @@ Finaliser et publier la stable `v0.3.1` depuis la branche `release/0.3.1`.
   sur toutes les machines.
 - Les lectures disque peuvent être influencées par les caches du système.
 - Ne jamais déplacer ou recréer le tag stable `v0.3.0`.
+- Ne jamais déplacer ou recréer le tag stable `v0.3.1`.
 - Ne rien publier à distance sans autorisation explicite actuelle.

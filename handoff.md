@@ -2,13 +2,13 @@
 
 ## État actuel
 
-- Branche locale : `release/0.3.1`, créée depuis `main` au commit de fusion
-  `f6022ac`.
+- Branche locale : `chore/0.3.1-release-closeout`, créée depuis `main` au
+  commit de fusion `a3debdd`.
 - La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- `main` et `origin/main` pointent sur `afae631`; la stable publiée actuelle est
-  `v0.3.0`, taguée sur `3d50177`.
+- `main` et `origin/main` pointent sur `a3debdd`; la stable publiée actuelle est
+  `v0.3.1`, taguée sur `9045884` et marquée `Latest` sur GitHub.
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
   bande passante, filtre d'image et remplissage raster.
@@ -23,10 +23,9 @@
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
-- Version stable `0.3.0` préparée localement dans le paquet et les
-  installateurs, avec CPython 3.14.4 géré par `uv`.
-- Les rapports `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0` sont explicitement
-  reconnus comme compatibles; `0.3.0.dev0` reste refusée.
+- Version stable `0.3.1` publiée avec CPython 3.14.4 géré par `uv`.
+- Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0` et `0.3.1`
+  sont explicitement compatibles; `0.3.0.dev0` reste refusée.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
 - Sous Windows, à partir de `dev1`, l'installateur télécharge la mise à niveau
@@ -42,13 +41,12 @@
   `v0.3.1.dev0`.
 - `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
   `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
-- Stable `0.3.1` préparée localement dans le paquet, les installateurs et la
-  documentation; elle reste dans le même groupe de protocole.
+- Stable `0.3.1` publiée sans changement du protocole de mesure.
 
 ## Validations réalisées
 
 - `uv run ruff check .` : réussi.
-- `uv run pytest` : 49 tests réussis sur la stable, dont la reprise après échec
+- `uv run pytest` : 50 tests réussis sur la stable, dont la reprise après échec
   d'un ancien `uv`,
   l'exclusion du PID 0, le refus d'un moteur graphique logiciel et la
   compatibilité contrôlée entre `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
@@ -112,11 +110,19 @@
 - Pull request documentaire nº 4 fusionnée dans `main` au commit `afae631`.
 - Branche `fix/multi-machine-cli-comparison` et tag annoté `v0.3.1.dev0`
   publiés ensemble sur le commit `0e96ee5`; aucune GitHub Release créée.
+- Pull request nº 5 fusionnée dans `main` au commit `f6022ac`.
+- Branche `release/0.3.1` et tag annoté `v0.3.1` publiés ensemble sur le commit
+  `9045884`.
+- Pull request nº 6 fusionnée dans `main` au commit `a3debdd`.
+- GitHub Release stable `benchmark-mac v0.3.1` publiée et marquée `Latest` :
+  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.1
+- Installateurs bruts, métadonnées, branche, tag et intégration dans `main`
+  revérifiés après publication.
 
 ## Prochaine étape possible
 
-Relire le commit de préparation stable, puis préparer la publication coordonnée
-de la branche et du tag `v0.3.1` sans opération distante avant confirmation.
+Aucun travail bloquant identifié. Améliorations futures possibles : validation
+GPU matérielle sous Linux et ajout d'une CI GitHub macOS, Windows et Linux.
 
 ## Points de vigilance
 
@@ -124,6 +130,7 @@ de la branche et du tag `v0.3.1` sans opération distante avant confirmation.
   impérative, séparée et actuelle de l'utilisateur.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
 - Ne jamais déplacer ou recréer le tag stable publié `v0.3.0`.
+- Ne jamais déplacer ou recréer le tag stable publié `v0.3.1`.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
 - Les mesures WebGPU sont synthétiques et ne remplacent pas Blender, un jeu, le
