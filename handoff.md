@@ -2,15 +2,16 @@
 
 ## État actuel
 
-- Branche locale : `release/0.3.0`, créée depuis `main` au commit `8dc7a53`.
+- Branche locale : `chore/0.3.0-release-closeout`, créée depuis `main` au
+  commit de fusion `14cd225`.
 - Périmètre fonctionnel de `v0.3.0` figé : GPU WebGPU, contrôle préalable,
   corrections Windows et documentation associée déjà présents sur `main`.
 - La correction CLI multi-machine du commit `6d4c5dd` est explicitement exclue
   de `v0.3.0` et reste réservée à la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- `main` pointe sur `8dc7a53`; la dernière version stable publiée reste
-  `v0.2.1` (`c7ffdce`).
+- `main` et `origin/main` pointent sur `14cd225`; la stable publiée actuelle est
+  `v0.3.0`, taguée sur `3d50177`.
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
   bande passante, filtre d'image et remplissage raster.
@@ -85,21 +86,25 @@
 - Les installateurs `install.sh` et `install.ps1` de `v0.3.0.dev2` répondent
   depuis `raw.githubusercontent.com`, ciblent le bon tag avec CPython 3.14.4 et
   contiennent la reprise PowerShell isolée.
-- Aucune fusion dans `main` et aucune release GitHub effectuées.
+- Branche `release/0.3.0` et tag annoté `v0.3.0` publiés ensemble sur le commit
+  `3d50177`.
+- Pull request GitHub nº 3 fusionnée dans `main` au commit `14cd225`.
+- GitHub Release stable `benchmark-mac v0.3.0` publiée et marquée `Latest` :
+  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.0
+- Installateurs bruts et métadonnées de version revérifiés après publication.
 
 ## Prochaine étape possible
 
-Relire le commit de préparation stable, puis préparer son intégration dans
-`main` et le tag annoté `v0.3.0`. Aucun ajout fonctionnel ne doit entrer dans
-cette branche.
+Finaliser ce close-out documentaire, puis reprendre
+`fix/multi-machine-cli-comparison`, intégrer `main` et préparer la première
+préversion de la série `0.3.1`.
 
 ## Points de vigilance
 
 - Ne jamais effectuer d'opération distante sans confirmation explicite,
   impérative, séparée et actuelle de l'utilisateur.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
-- Tant que `v0.3.0` n'est pas publié, `v0.2.1` reste la dernière stable
-  réellement disponible sur GitHub.
+- Ne jamais déplacer ou recréer le tag stable publié `v0.3.0`.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
 - Les mesures WebGPU sont synthétiques et ne remplacent pas Blender, un jeu, le
