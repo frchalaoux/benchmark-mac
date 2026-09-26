@@ -2,8 +2,8 @@
 
 ## État actuel
 
-- Branche locale : `fix/multi-machine-cli-comparison`, réintégrée avec `main`
-  après le close-out complet de `v0.3.0`.
+- Branche locale : `release/0.3.1`, créée depuis `main` au commit de fusion
+  `f6022ac`.
 - La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
@@ -42,6 +42,8 @@
   `v0.3.1.dev0`.
 - `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
   `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
+- Stable `0.3.1` préparée localement dans le paquet, les installateurs et la
+  documentation; elle reste dans le même groupe de protocole.
 
 ## Validations réalisées
 
@@ -55,6 +57,8 @@
 - Candidate `0.3.1.dev0` : 50 tests réussis, source et wheel construites,
   archive inspectée et wheel exécutée dans un environnement isolé avec la
   version attendue.
+- Stable `0.3.1` : 50 tests réussis, source et wheel construites, archive sans
+  rapport HTML et wheel exécutée isolément avec la version attendue.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.
@@ -111,8 +115,8 @@
 
 ## Prochaine étape possible
 
-Publier le close-out de la préversion sur sa branche après confirmation, puis
-préparer une pull request vers `main` sans déplacer le tag `v0.3.1.dev0`.
+Relire le commit de préparation stable, puis préparer la publication coordonnée
+de la branche et du tag `v0.3.1` sans opération distante avant confirmation.
 
 ## Points de vigilance
 

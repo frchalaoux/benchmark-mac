@@ -19,8 +19,8 @@ benchmark-mac --version
 ```
 
 Pour une installation GitHub, utiliser le nom affiché dans la
-[fiche des versions](versions.md). La stable actuelle est `v0.3.0` et la
-préversion courante `v0.3.1.dev0`. Les préversions suivent la convention
+[fiche des versions](versions.md). La stable actuelle est `v0.3.1`; sa
+préversion antérieure est `v0.3.1.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
 Avant une mesure :

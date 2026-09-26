@@ -119,13 +119,19 @@ def test_protocol_0_3_accepts_compatible_release_reports() -> None:
     dev1 = complete_report("Dev1", 1.1).model_copy(update={"suite_version": "0.3.0.dev1"})
     dev2 = complete_report("Dev2", 1.2)
     dev_0_3_1 = complete_report("Dev 0.3.1", 1.3).model_copy(update={"suite_version": "0.3.1.dev0"})
+    stable_0_3_1 = complete_report("Stable 0.3.1", 1.4).model_copy(
+        update={"suite_version": "0.3.1"}
+    )
 
-    analysis = analyze_reports([stable, dev1, dev2, dev_0_3_1], parse_scenario_weights(None))
+    analysis = analyze_reports(
+        [stable, dev1, dev2, dev_0_3_1, stable_0_3_1], parse_scenario_weights(None)
+    )
 
-    assert len(analysis.machines) == 4
+    assert len(analysis.machines) == 5
     warning = next(item for item in analysis.warnings if "Versions compatibles" in item)
     assert all(
-        version in warning for version in ("0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0")
+        version in warning
+        for version in ("0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0", "0.3.1")
     )
 
 

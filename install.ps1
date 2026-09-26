@@ -6,7 +6,7 @@ $releaseVersion = if ($env:BENCHMARK_MAC_VERSION) {
     $env:BENCHMARK_MAC_VERSION
 }
 else {
-    "v0.3.1.dev0"
+    "v0.3.1"
 }
 $pythonVersion = "3.14.4"
 $sourceUrl = if ($env:BENCHMARK_MAC_SOURCE) {
