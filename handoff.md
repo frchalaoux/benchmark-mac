@@ -15,15 +15,16 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
   `3c86581` après la fusion de la PR nº13.
 - Stable publiée : `v0.3.2`, taguée sur `57c7598` et marquée `Latest`.
 - Dépôt actuel : `https://github.com/frchalaoux/perfcomparator`.
-- Candidate locale : `0.4.0.dev0`.
-- Paquet candidat : `perfcomparator`.
-- Commande principale candidate : `perfcomparator`.
+- Préversion publiée : `v0.4.0.dev0`, taguée sur `d4fee69` et proposée par la
+  release GitHub « PerfComparator v0.4.0.dev0 ».
+- Paquet : `perfcomparator`.
+- Commande principale : `perfcomparator`.
 - Alias de transition : `benchmark-mac`.
 - Module Python interne : `benchmark_mac`.
 - La suite fonctionne sous macOS, Windows et Linux; son nom actuel est donc
   devenu trop restrictif.
-- Nom retenu et appliqué localement : `PerfComparator`; dépôt, paquet et commande
-  cibles : `perfcomparator`.
+- Nom retenu et publié : `PerfComparator`; dépôt, paquet et commande :
+  `perfcomparator`.
 - Le dépôt distant a été renommé en `perfcomparator`; les anciennes URL GitHub
   et les installateurs historiques redirigent encore correctement.
 
@@ -67,13 +68,15 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 - migration réelle isolée depuis l'archive distante `v0.3.2` réussie sur macOS :
   un seul outil `perfcomparator 0.4.0.dev0` enregistré, avec les commandes
   `perfcomparator` et `benchmark-mac` fonctionnelles ;
+- installation et smoke test réussis depuis l'installateur distant du tag
+  `v0.4.0.dev0` ;
 - installateur PowerShell vérifié par tests statiques, faute de PowerShell local.
 
 ## Prochaine action concrète
 
-Préparer puis publier le tag `v0.4.0.dev0` depuis la branche
-`release/0.4.0.dev0`. Pousser la branche contenant le commit avec le tag, puis
-créer la release GitHub seulement après une confirmation explicite actuelle.
+Pousser ce dernier état documentaire sur `release/0.4.0.dev0`, fusionner la PR
+nº14 dans `main`, puis supprimer la branche distante. Le tag `v0.4.0.dev0`
+reste fixé sur `d4fee69` et ne doit pas être déplacé.
 
 ## Critères d'acceptation
 
@@ -91,8 +94,8 @@ créer la release GitHub seulement après une confirmation explicite actuelle.
 
 ## Points de vigilance
 
-- Le renommage du dépôt GitHub est une opération distante et exige une
-  confirmation explicite.
+- La distribution n'est pas publiée sur PyPI ; les installateurs utilisent
+  directement l'archive GitHub du tag.
 - Ne pas confondre nom du dépôt, nom de distribution Python, commande CLI et
   module importable.
 - Vérifier l'aide réelle des commandes avant les tests; ne pas deviner leurs
