@@ -1,5 +1,6 @@
 from test_repository import sample_report
 
+from benchmark_mac import BENCHMARK_PROTOCOL_VERSION
 from benchmark_mac import benchmarks as benchmark_module
 from benchmark_mac.benchmarks import BenchmarkDefinition
 from benchmark_mac.models import BenchmarkResult, EnvironmentSnapshot, ReadinessSnapshot
@@ -29,7 +30,8 @@ def test_service_aggregates_repetitions_with_the_median(tmp_path, monkeypatch) -
         "benchmark_mac.service.system_snapshot", lambda _path: sample_report().system
     )
 
-    report, _ = BenchmarkService(JsonReportRepository(tmp_path / "results")).run(
+    repository = JsonReportRepository(tmp_path / "results")
+    report, path = BenchmarkService(repository).run(
         names=["test.fake"],
         profile_name="quick",
         work_dir=tmp_path,
@@ -51,6 +53,8 @@ def test_service_aggregates_repetitions_with_the_median(tmp_path, monkeypatch) -
     assert measured.relative_spread_percent == 100
     assert measured.sample_values == [10, 30, 20]
     assert report.repetitions == 3
+    assert report.protocol_version == BENCHMARK_PROTOCOL_VERSION
+    assert repository.load_path(path).protocol_version == BENCHMARK_PROTOCOL_VERSION
     assert report.readiness is not None
     assert report.readiness.suitable
     assert gpu_indices == [2, 2, 2]

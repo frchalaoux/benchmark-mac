@@ -91,6 +91,7 @@ class BenchmarkReport(BaseModel):
 
     schema_version: int = 4
     suite_version: str
+    protocol_version: str | None = None
     recorded_at: datetime
     label: str | None = None
     profile: str

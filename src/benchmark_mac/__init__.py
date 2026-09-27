@@ -2,5 +2,11 @@
 
 from .models import BenchmarkReport, BenchmarkResult, SystemSnapshot
 
-__all__ = ["BenchmarkReport", "BenchmarkResult", "SystemSnapshot"]
+__all__ = [
+    "BENCHMARK_PROTOCOL_VERSION",
+    "BenchmarkReport",
+    "BenchmarkResult",
+    "SystemSnapshot",
+]
 __version__ = "0.3.1"
+BENCHMARK_PROTOCOL_VERSION = "0.3.0"

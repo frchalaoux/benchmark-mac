@@ -29,6 +29,21 @@ Ajouter ensuite sa `BenchmarkDefinition` à `DEFINITIONS`. Les groupes et le
 catalogue en découlent automatiquement. Toute évolution incompatible du JSON
 doit incrémenter `schema_version`.
 
+Trois versions ont des responsabilités distinctes dans un rapport :
+
+- `suite_version` identifie exactement le logiciel qui l'a produit ;
+- `schema_version` identifie la structure JSON ;
+- `protocol_version` identifie la méthode de mesure et décide de la
+  compatibilité comparative.
+
+Une correction de CLI peut donc incrémenter `suite_version` sans changer
+`protocol_version`. Toute modification des charges, paramètres ou règles de
+calcul susceptibles de changer les scores doit au contraire créer une nouvelle
+version de protocole. Le champ `protocol_version`, optionnel pour préserver le
+schéma 4, est toujours écrit par les nouvelles campagnes. Pour les archives qui
+le précèdent, `comparison.py` conserve une table historique explicite ; ne
+jamais déduire la compatibilité d'un simple préfixe de version.
+
 Le contrôle préalable repose sur `psutil`. Il ne bloque jamais une campagne :
 il produit un `ReadinessSnapshot`, affiché par la CLI, persisté dans le schéma 4
 et repris par l'analyse comparative. Toute évolution des seuils doit rester

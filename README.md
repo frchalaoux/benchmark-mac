@@ -241,7 +241,11 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`
 et `0.3.1` sont explicitement compatibles entre elles. Les rapports sont
-enregistrés dans `data/results/` par défaut.
+enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
+séparément la version exacte de la suite (`suite_version`) et celle du protocole
+de mesure (`protocol_version`). Deux versions différentes de la suite restent
+donc comparables lorsqu'elles déclarent le même protocole. Pour les anciens
+rapports sans ce champ, la table de compatibilité historique reste appliquée.
 Une différence dont les plages min–max se chevauchent est signalée comme non
 concluante. Les rapports `0.2.x` et `0.3.x` ne sont pas directement comparables,
 car le catalogue, les scénarios et le schéma JSON ont évolué.

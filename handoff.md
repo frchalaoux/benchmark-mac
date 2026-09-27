@@ -20,6 +20,9 @@
   échange et processus actifs. Les avertissements restent non bloquants, sont
   enregistrés dans le JSON et remontent dans les comparaisons.
 - Schéma JSON 4. Les rapports `0.2.x` et `0.3.x` ne sont pas comparables.
+- La branche `feat/report-protocol-version` ajoute un champ optionnel
+  `protocol_version` aux nouveaux rapports. `suite_version` reste exacte et les
+  archives antérieures utilisent la table de compatibilité historique.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
@@ -57,6 +60,10 @@
   version attendue.
 - Stable `0.3.1` : 50 tests réussis, source et wheel construites, archive sans
   rapport HTML et wheel exécutée isolément avec la version attendue.
+- Branche `feat/report-protocol-version` : Ruff réussi, 53 tests réussis,
+  comparaison réelle de trois anciens rapports réussie et wheel exécutée
+  isolément; le JSON produit distingue `suite_version: "0.3.1"` et
+  `protocol_version: "0.3.0"`.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.
@@ -123,8 +130,9 @@
 
 ## Prochaine étape possible
 
-Aucun travail bloquant identifié. Améliorations futures possibles : validation
-GPU matérielle sous Linux et ajout d'une CI GitHub macOS, Windows et Linux.
+Relire et intégrer la branche locale `feat/report-protocol-version` après
+validation. Améliorations futures possibles : validation GPU matérielle sous
+Linux et ajout d'une CI GitHub macOS, Windows et Linux.
 
 ## Points de vigilance
 

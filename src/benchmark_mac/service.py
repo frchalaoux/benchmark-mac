@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from statistics import median
 
-from . import __version__
+from . import BENCHMARK_PROTOCOL_VERSION, __version__
 from .benchmarks import CATALOG, PROFILES, BenchmarkContext, resolve_benchmarks
 from .models import (
     BenchmarkFailure,
@@ -117,6 +117,7 @@ class BenchmarkService:
         environment_end = environment_snapshot()
         report = BenchmarkReport(
             suite_version=__version__,
+            protocol_version=BENCHMARK_PROTOCOL_VERSION,
             recorded_at=datetime.now(UTC),
             label=label,
             profile=profile_name,

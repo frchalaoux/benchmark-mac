@@ -1,0 +1,41 @@
+# Objective
+
+Enregistrer la version du protocole de mesure indépendamment de la version de
+la suite afin de comparer automatiquement des rapports produits par des
+versions logicielles différentes mais compatibles.
+
+# Current Status
+
+Implémentation locale terminée sur `feat/report-protocol-version`. Les nouvelles
+campagnes écrivent `protocol_version: "0.3.0"`; les anciens rapports restent
+comparables par la table historique.
+
+# Next Concrete Action
+
+Relire le diff final et préparer le commit local.
+
+# Validation Snapshot
+
+- Les rapports historiques restent pris en charge par une table de repli.
+- Une campagne réelle écrit `suite_version: "0.3.1"`,
+  `protocol_version: "0.3.0"` et `schema_version: 4`.
+- Une comparaison réelle de trois archives `0.3.0.dev2` produit encore les 16
+  benchmarks détaillés.
+- `uv run ruff format --check .` et `uv run ruff check .` réussissent.
+- Les 53 tests réussissent, notamment le cas mixte ancien/nouveau.
+- La source et la wheel `0.3.1` se construisent avec le nouveau champ; aucun
+  rapport HTML n'est embarqué.
+
+# Key Files
+
+- `src/benchmark_mac/models.py`
+- `src/benchmark_mac/service.py`
+- `src/benchmark_mac/comparison.py`
+- `tests/test_comparison.py`
+- `tests/test_service.py`
+
+# Watchouts
+
+- Ne jamais réécrire `suite_version` dans un rapport existant.
+- `0.3.0.dev0` doit rester exclue du groupe historique compatible.
+- Ne rien publier à distance sans confirmation explicite actuelle.
