@@ -1,185 +1,91 @@
-# Handoff
+# Handoff — transition progressive du nom du projet
 
-## État actuel
+## Objectif unique de la prochaine session
 
-- Close-out documentaire de `v0.3.1` intégré dans `main` par la pull request
-  nº 7 au commit de fusion `d2bc4e8`.
-- La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
-- Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
-  `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- La stable publiée actuelle est `v0.3.2`, taguée sur `57c7598` et marquée
-  `Latest` sur GitHub.
-- 16 benchmarks exécutables ensemble, par groupe ou individuellement.
-- Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
-  bande passante, filtre d'image et remplissage raster.
-- Adaptateurs WebGPU listés par `benchmark-mac info`. Sélection automatique du
-  premier GPU dédié, puis intégré, ou sélection explicite avec `--gpu INDEX`.
-- Un seul GPU est mesuré par rapport ; utiliser un rapport par adaptateur sur
-  les machines hybrides.
-- Contrôle préalable d'une seconde avec `psutil 7.1.0` : CPU, mémoire disponible,
-  échange et processus actifs. Les avertissements restent non bloquants, sont
-  enregistrés dans le JSON et remontent dans les comparaisons.
-- Schéma JSON 4. Les rapports `0.2.x` et `0.3.x` ne sont pas comparables.
-- La branche `feat/report-protocol-version` ajoute un champ optionnel
-  `protocol_version` aux nouveaux rapports. `suite_version` reste exacte et les
-  archives antérieures utilisent la table de compatibilité historique.
-- La préversion `v0.3.2.dev0` est publiée depuis la branche
-  `feat/report-protocol-version` tout en conservant le protocole de mesure
-  `0.3.0`.
-- La branche `release/0.3.2` et le tag annoté `v0.3.2` sont publiés sur
-  `57c7598`; la pull request nº 11 est fusionnée dans `main` sur `4f9a552`.
-- Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
-- Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
-- `benchmark-mac --version` affiche la version réellement exécutée.
-- Version stable `0.3.1` publiée avec CPython 3.14.4 géré par `uv`.
-- Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
-  `0.3.2.dev0` et `0.3.2` sont explicitement compatibles avec le protocole
-  `0.3.0`; `0.3.0.dev0` reste refusée.
-- Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
-  automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
-- Sous Windows, à partir de `dev1`, l'installateur télécharge la mise à niveau
-  officielle de `uv` dans un fichier
-  temporaire et l'exécute dans un processus PowerShell enfant. Son éventuel
-  `exit` ne peut donc plus fermer la console principale.
-- Documentation des quatre benchmarks GPU avec protocole, limites et références
-  WebGPU, WGSL, `wgpu-py` et IEEE 754.
-- La sortie CLI des comparaisons multi-machines associe désormais à chaque
-  candidate son propre écart et sa propre conclusion; la première machine est
-  explicitement affichée comme référence.
-- Paquet, installateurs et documentation alignés sur la préversion publiée
-  `v0.3.1.dev0`.
-- `0.3.1.dev0` conserve le protocole de mesure `0.3.0` et reste compatible avec
-  `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
-- Stable `0.3.1` publiée sans changement du protocole de mesure.
+Remplacer progressivement le nom public `benchmark-mac` par un nom réellement
+multiplateforme, sans casser les installations existantes ni la compatibilité
+des rapports JSON.
 
-## Validations réalisées
+Ne traiter aucun autre chantier pendant cette session : ni catalogue public de
+rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 
-- `uv run ruff check .` : réussi.
-- `uv run pytest` : 50 tests réussis sur la stable, dont la reprise après échec
-  d'un ancien `uv`,
-  l'exclusion du PID 0, le refus d'un moteur graphique logiciel et la
-  compatibilité contrôlée entre `0.3.0.dev1`, `0.3.0.dev2` et `0.3.0`.
-- Test CLI ajouté sur la branche `0.3.1` avec trois machines, dont une plus
-  rapide et une plus lente que la référence.
-- Candidate `0.3.1.dev0` : 50 tests réussis, source et wheel construites,
-  archive inspectée et wheel exécutée dans un environnement isolé avec la
-  version attendue.
-- Stable `0.3.1` : 50 tests réussis, source et wheel construites, archive sans
-  rapport HTML et wheel exécutée isolément avec la version attendue.
-- Branche `feat/report-protocol-version` : Ruff réussi, 53 tests réussis,
-  comparaison réelle de trois anciens rapports réussie et wheel `0.3.2.dev0`
-  exécutée isolément; le JSON produit contient `suite_version: "0.3.2.dev0"`,
-  `protocol_version: "0.3.0"` et `schema_version: 4`.
-- Archive distante `v0.3.2.dev0` : comparaison mixte réelle réussie entre trois
-  rapports complets `0.3.0.dev2`, `0.3.1` et `0.3.2.dev0`, avec 16 benchmarks
-  détaillés et un avertissement confirmant le protocole commun `0.3.0`.
-- Linux amd64 sous Ubuntu 24.04 Docker : l'installateur distant
-  `v0.3.2.dev0` installe `uv 0.12.19`, CPython 3.14.4 et les 16 définitions;
-  `cpu.integer` réussit sans échec et le JSON contient `suite_version:
-  "0.3.2.dev0"`, `protocol_version: "0.3.0"` et `schema_version: 4`.
-- Stable locale `0.3.2` : Ruff et formatage réussis, 53 tests réussis, source
-  et wheel construites et inspectées sans rapport utilisateur embarqué.
-- Wheel stable `0.3.2` exécutée isolément sur les 16 benchmarks `standard`,
-  trois passages et zéro échec; la campagne était trop chargée pour servir de
-  référence de performance.
-- Comparaison mixte stable réussie entre `0.3.0.dev2`, `0.3.1` et `0.3.2`,
-  avec 16 benchmarks détaillés et le protocole commun `0.3.0`.
-- Ubuntu 24.04 Docker : l'installateur stable local installe et exécute
-  `benchmark-mac 0.3.2`; le JSON Linux contient le protocole `0.3.0`, un
-  résultat et zéro échec.
-- Archive distante stable `v0.3.2` sous Ubuntu 24.04 Docker : installation de
-  `benchmark-mac 0.3.2`, exécution réelle de `cpu.integer`, JSON de schéma 4
-  avec le protocole `0.3.0`, un résultat et zéro échec.
-- Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
-  comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
-  distincte pour chacune des deux machines candidates sur les 16 benchmarks.
-- `uv build` : source et wheel `0.3.0` construites; la wheel installée dans un
-  environnement isolé affiche bien `benchmark-mac 0.3.0`.
-- L'archive source exclut explicitement le rapport utilisateur racine
-  `comparaison.html`.
-- Exécution réelle des quatre benchmarks sur AMD Radeon Pro 560X via Metal.
-- Détection réelle de deux GPU sur MacBook Pro : Radeon dédiée et Intel UHD 630.
-- Sélection explicite et exécution réelle de `gpu.compute-fp32` sur l'Intel UHD 630.
-- Contrôle préalable testé avec une machine au repos et avec un processus actif.
-- Cause de l'échec Windows identifiée : `uv 0.5.1` (2024) ne connaît pas le
-  téléchargement `cpython-3.14.4-windows-x86_64-none`.
-- Second défaut identifié dans `dev0` : l'exécution imbriquée de
-  `irm https://astral.sh/uv/install.ps1 | iex` permet au script tiers de fermer
-  la session PowerShell appelante avec `exit`.
-- Troisième défaut Windows identifié dans `dev0` : le pseudo-processus PID 0
-  provoque une erreur de validation `ProcessLoad` avant les benchmarks.
-- Une VM Windows 10 sans GPU transmis expose `Microsoft Basic Render Driver`
-  comme adaptateur WebGPU de type `CPU`; `dev1` le signale et refuse les scores
-  GPU logiciels sans interrompre les autres groupes.
-- Windows 11 : campagne `standard` complète de 16 benchmarks réussie avec un
-  état initial déclaré convenable.
-- macOS Intel : campagne `quick` complète de 16 benchmarks réussie le
-  26 septembre 2026 sur Radeon Pro 560X, sans échange utilisé et avec un état
-  initial déclaré convenable. Les scores GPU de cette campagne restent trop
-  dispersés pour servir de référence de performance stable.
-- Linux amd64 sous Docker : l'installateur a correctement remplacé un ancien
-  `uv 0.9.30` par `uv 0.12.19`, installé CPython 3.14.4 et exécuté les 12
-  benchmarks CPU, mémoire, stockage et applications sans échec.
-- Linux sans GPU transmis : `llvmpipe` est détecté comme moteur WebGPU de type
-  `CPU` et les quatre scores GPU logiciels sont explicitement refusés. La voie
-  Linux avec GPU matériel n'a pas pu être testée dans ce conteneur.
+## État de départ
 
-## Publication effectuée
+- Branche de travail : `feat/project-rename`, créée depuis `main` au commit
+  `77e97cf`.
+- Stable publiée : `v0.3.2`, taguée sur `57c7598` et marquée `Latest`.
+- Dépôt actuel : `https://github.com/frchalaoux/benchmark-mac`.
+- Paquet installable : `benchmark-mac`.
+- Commande actuelle : `benchmark-mac`.
+- Module Python interne : `benchmark_mac`.
+- La suite fonctionne sous macOS, Windows et Linux; son nom actuel est donc
+  devenu trop restrictif.
+- Aucun changement de nom n'a encore été effectué.
 
-- Branche `feat/gpu-preflight` publiée sur `origin`.
-- Tag annoté `v0.3.0.dev0` publié sur le commit `73c7d53`.
-- Tag annoté `v0.3.0.dev1` publié sur le commit `57bf438`.
-- Tag annoté `v0.3.0.dev2` publié sur le commit `41da9e3`.
-- Branche, tag, archive et page GitHub vérifiés après publication.
-- Les installateurs `install.sh` et `install.ps1` de `v0.3.0.dev2` répondent
-  depuis `raw.githubusercontent.com`, ciblent le bon tag avec CPython 3.14.4 et
-  contiennent la reprise PowerShell isolée.
-- Branche `release/0.3.0` et tag annoté `v0.3.0` publiés ensemble sur le commit
-  `3d50177`.
-- Pull request GitHub nº 3 fusionnée dans `main` au commit `14cd225`.
-- GitHub Release stable `benchmark-mac v0.3.0` publiée et marquée `Latest` :
-  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.0
-- Installateurs bruts et métadonnées de version revérifiés après publication.
-- Pull request documentaire nº 4 fusionnée dans `main` au commit `afae631`.
-- Branche `fix/multi-machine-cli-comparison` et tag annoté `v0.3.1.dev0`
-  publiés ensemble sur le commit `0e96ee5`; aucune GitHub Release créée.
-- Pull request nº 5 fusionnée dans `main` au commit `f6022ac`.
-- Branche `release/0.3.1` et tag annoté `v0.3.1` publiés ensemble sur le commit
-  `9045884`.
-- Pull request nº 6 fusionnée dans `main` au commit `a3debdd`.
-- GitHub Release stable `benchmark-mac v0.3.1` publiée et marquée `Latest` :
-  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.1
-- Installateurs bruts, métadonnées, branche, tag et intégration dans `main`
-  revérifiés après publication.
-- Close-out documentaire fusionné dans `main` par la pull request nº 7 au
-  commit `d2bc4e8`.
-- Branche `feat/report-protocol-version` et tag annoté `v0.3.2.dev0` publiés
-  ensemble sur le commit `5bffb42`; archive distante et installateurs vérifiés.
-- Pull request nº 9 fusionnée dans `main` au commit `ff307fd`.
-- Close-out de `v0.3.2.dev0` fusionné par la pull request nº 10 au commit
-  `aad53f1`.
-- Branche `release/0.3.2` et tag annoté `v0.3.2` publiés ensemble sur le commit
-  `57c7598`.
-- Pull request nº 11 fusionnée dans `main` au commit `4f9a552`.
-- GitHub Release stable `benchmark-mac v0.3.2` publiée et marquée `Latest` :
-  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.2
-- Installateurs bruts, archive distante, métadonnées de version et smoke test
-  Ubuntu vérifiés après publication.
+## Décisions déjà prises
 
-## Prochaine étape possible
+1. Procéder par transition douce, vraisemblablement dans la série `0.4.0`.
+2. Choisir et vérifier le nouveau nom avant toute modification de code ou
+   opération distante.
+3. Renommer l'identité publique, le dépôt, le paquet et la commande de façon
+   coordonnée.
+4. Conserver temporairement `benchmark-mac` comme alias de commande afin de ne
+   pas casser les usages existants.
+5. Garder dans un premier temps le module interne `benchmark_mac`; son renommage
+   apporterait peu de valeur et augmenterait fortement le risque.
+6. Ne modifier ni `protocol_version` (`0.3.0`) ni `schema_version` (`4`) pour un
+   simple changement de nom.
+7. Préserver tous les anciens tags et vérifier que leurs installateurs restent
+   utilisables après le renommage du dépôt.
+8. Ne réaliser aucune opération distante sans annoncer toute la séquence et
+   obtenir une confirmation explicite actuelle.
 
-Intégrer ce close-out documentaire, puis choisir entre la validation GPU
-matérielle sous Linux et l'ajout d'une CI GitHub.
+## Prochaine action concrète
+
+Proposer une courte liste de noms multiplateformes, puis vérifier pour chaque
+candidat :
+
+- disponibilité du dépôt GitHub;
+- disponibilité et éventuels conflits sur PyPI;
+- collisions évidentes avec une marque ou un logiciel existant;
+- lisibilité comme commande de terminal;
+- capacité à nommer aussi un futur catalogue communautaire de rapports.
+
+Présenter ensuite les résultats à l'utilisateur et attendre son choix. Poursuivre
+ensuite la migration sur la branche `feat/project-rename` déjà créée.
+
+## Stratégie de migration à appliquer après le choix
+
+- Ajouter la nouvelle commande tout en conservant l'alias `benchmark-mac`.
+- Adapter le nom du paquet, les installateurs, les messages CLI, les rapports
+  HTML, les tests et la documentation.
+- Mettre à jour les URL GitHub et le remote local au moment approprié.
+- Vérifier les installations nouvelle et historique avec un seul parcours de
+  validation automatisé et idempotent.
+- Préparer une publication coordonnée, puis demander une confirmation unique
+  couvrant exactement les opérations distantes annoncées.
+
+## Critères d'acceptation
+
+- La nouvelle commande installe et exécute toute la suite.
+- `benchmark-mac` continue de fonctionner comme alias pendant la transition.
+- Les anciens rapports restent comparables avec les nouveaux lorsque leur
+  protocole est compatible.
+- Les anciens tags ne sont ni déplacés ni recréés.
+- Les installateurs macOS/Linux et Windows utilisent le bon dépôt et la bonne
+  version.
+- Le README indique clairement le nouveau nom et la période de compatibilité de
+  l'ancien nom.
+- Les tests, la construction des distributions et un unique smoke test distant
+  réussissent.
 
 ## Points de vigilance
 
-- Ne jamais effectuer d'opération distante sans confirmation explicite,
-  impérative, séparée et actuelle de l'utilisateur.
-- Toujours pousser la branche contenant le commit avant ou avec le tag.
-- Ne jamais déplacer ou recréer le tag stable publié `v0.3.0`.
-- Ne jamais déplacer ou recréer le tag stable publié `v0.3.1`.
-- Ne jamais déplacer ou recréer le tag stable publié `v0.3.2`.
-- Un indice GPU est local à une machine : toujours consulter
-  `benchmark-mac info` avant d'utiliser `--gpu`.
-- Les mesures WebGPU sont synthétiques et ne remplacent pas Blender, un jeu, le
-  ray tracing, les codecs vidéo matériels ou les accélérateurs IA.
+- Le renommage du dépôt GitHub est une opération distante et exige une
+  confirmation explicite.
+- Ne pas confondre nom du dépôt, nom de distribution Python, commande CLI et
+  module importable.
+- Vérifier l'aide réelle des commandes avant les tests; ne pas deviner leurs
+  options.
+- Éviter une pull request documentaire de close-out : conserver dans Git
+  uniquement les informations durables.
