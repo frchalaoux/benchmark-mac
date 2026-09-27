@@ -67,6 +67,9 @@
   comparaison réelle de trois anciens rapports réussie et wheel `0.3.2.dev0`
   exécutée isolément; le JSON produit contient `suite_version: "0.3.2.dev0"`,
   `protocol_version: "0.3.0"` et `schema_version: 4`.
+- Archive distante `v0.3.2.dev0` : comparaison mixte réelle réussie entre trois
+  rapports complets `0.3.0.dev2`, `0.3.1` et `0.3.2.dev0`, avec 16 benchmarks
+  détaillés et un avertissement confirmant le protocole commun `0.3.0`.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.
@@ -136,8 +139,9 @@
 
 ## Prochaine étape possible
 
-Aucun travail bloquant identifié. Améliorations futures possibles : validation
-GPU matérielle sous Linux et ajout d'une CI GitHub macOS, Windows et Linux.
+Exécuter un smoke test Linux Docker depuis le tag distant `v0.3.2.dev0`, puis
+préparer la branche stable `release/0.3.2`. La validation GPU matérielle sous
+Linux et l'ajout d'une CI GitHub restent des améliorations futures.
 
 ## Points de vigilance
 
