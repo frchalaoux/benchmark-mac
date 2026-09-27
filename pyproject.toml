@@ -11,6 +11,12 @@ dependencies = [
   "wgpu==0.32.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/frchalaoux/perfcomparator"
+Repository = "https://github.com/frchalaoux/perfcomparator.git"
+Issues = "https://github.com/frchalaoux/perfcomparator/issues"
+Documentation = "https://github.com/frchalaoux/perfcomparator/blob/main/DOCUMENTATION.md"
+
 [project.scripts]
 perfcomparator = "benchmark_mac.cli:app"
 benchmark-mac = "benchmark_mac.cli:app"

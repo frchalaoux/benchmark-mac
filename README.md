@@ -9,17 +9,16 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Changement de nom en préparation
+## Préversion `v0.4.0.dev0`
 
-La candidate locale `0.4.0.dev0` introduit le nom **PerfComparator**, le paquet
+La préversion `0.4.0.dev0` introduit le nom **PerfComparator**, le paquet
 `perfcomparator` et la commande principale `perfcomparator`. La commande
 `benchmark-mac` reste disponible comme alias pendant la transition. Le module
 Python interne reste `benchmark_mac`, et le protocole de mesure reste `0.3.0` :
 les rapports demeurent compatibles avec ceux de la famille `0.3.x` reconnue.
 L'installateur remplace aussi l'ancien paquet enregistré par `uv`.
 
-Cette candidate n'est pas encore publiée. Après publication du dépôt et du tag
-`v0.4.0.dev0`, ses installateurs seront accessibles aux adresses suivantes :
+Ses installateurs sont :
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.sh | sh
@@ -31,12 +30,13 @@ irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/inst
 
 ## Versions publiées
 
-Consulter [tous les tags disponibles](https://github.com/frchalaoux/benchmark-mac/tags)
+Consulter [tous les tags disponibles](https://github.com/frchalaoux/perfcomparator/tags)
 ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.3.2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
+| [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement actuel | Tester le changement de nom et la migration | Préversion |
+| [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
 | [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable antérieure | Comparer clairement plusieurs machines | Remplacée par `v0.3.2` |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
@@ -65,13 +65,13 @@ compatible avec les rapports historiques reconnus de cette famille.
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2/install.ps1 | iex
 ```
 
 Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2`.

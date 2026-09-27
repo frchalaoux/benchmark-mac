@@ -11,10 +11,10 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 
 ## État courant
 
-- Branche de travail : `feat/project-rename`, créée depuis `main` au commit
-  `77e97cf`.
+- Branche de publication : `release/0.4.0.dev0`, créée depuis `main` au commit
+  `3c86581` après la fusion de la PR nº13.
 - Stable publiée : `v0.3.2`, taguée sur `57c7598` et marquée `Latest`.
-- Dépôt actuel : `https://github.com/frchalaoux/benchmark-mac`.
+- Dépôt actuel : `https://github.com/frchalaoux/perfcomparator`.
 - Candidate locale : `0.4.0.dev0`.
 - Paquet candidat : `perfcomparator`.
 - Commande principale candidate : `perfcomparator`.
@@ -24,8 +24,8 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
   devenu trop restrictif.
 - Nom retenu et appliqué localement : `PerfComparator`; dépôt, paquet et commande
   cibles : `perfcomparator`.
-- Le dépôt distant porte encore le nom `benchmark-mac`; aucune opération
-  distante liée au renommage n'a été effectuée.
+- Le dépôt distant a été renommé en `perfcomparator`; les anciennes URL GitHub
+  et les installateurs historiques redirigent encore correctement.
 
 ## Décisions déjà prises
 
@@ -71,10 +71,9 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 
 ## Prochaine action concrète
 
-Après le commit local, annoncer précisément la séquence distante proposée
-(publication de la branche, pull request, renommage du dépôt et future
-préversion) puis attendre une confirmation explicite actuelle. Mettre à jour le
-remote local et les liens publiés seulement au moment coordonné du renommage.
+Préparer puis publier le tag `v0.4.0.dev0` depuis la branche
+`release/0.4.0.dev0`. Pousser la branche contenant le commit avec le tag, puis
+créer la release GitHub seulement après une confirmation explicite actuelle.
 
 ## Critères d'acceptation
 

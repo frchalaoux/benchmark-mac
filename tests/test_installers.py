@@ -18,6 +18,9 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
 
     assert project["project"]["name"] == "perfcomparator"
     assert project["project"]["version"] == __version__
+    assert project["project"]["urls"]["Repository"] == (
+        "https://github.com/frchalaoux/perfcomparator.git"
+    )
     assert project["project"]["scripts"] == {
         "perfcomparator": "benchmark_mac.cli:app",
         "benchmark-mac": "benchmark_mac.cli:app",
