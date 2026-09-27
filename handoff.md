@@ -26,8 +26,8 @@
 - La préversion `v0.3.2.dev0` est publiée depuis la branche
   `feat/report-protocol-version` tout en conservant le protocole de mesure
   `0.3.0`.
-- La branche locale `release/0.3.2` prépare la stable `0.3.2`; le tag stable
-  n'existe pas encore et `v0.3.1` reste la release `Latest`.
+- La branche locale `release/0.3.2` contient le commit candidat de la stable;
+  le tag `v0.3.2` n'existe pas encore et `v0.3.1` reste la release `Latest`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.

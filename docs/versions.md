@@ -6,20 +6,13 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.2` — stable en préparation, non publiée
+### `v0.3.2` — stable actuelle
 
-Cette future stable reprend `protocol_version` sans modifier le protocole de
-mesure `0.3.0`. Elle reste compatible avec les rapports historiques reconnus de
-cette famille. Le tag n'existe pas encore; les commandes préparées ne devront
-être utilisées qu'après sa publication.
+[Consulter le code source de `v0.3.2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2)
 
-```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
-```
-
-```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
-```
+Cette stable reprend `protocol_version` sans modifier le protocole de mesure
+`0.3.0`. Elle reste compatible avec les rapports historiques reconnus de cette
+famille.
 
 ### `v0.3.2.dev0` — développement publié
 
@@ -43,7 +36,7 @@ irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/insta
 
 Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
 
-### `v0.3.1` — stable actuelle
+### `v0.3.1` — stable antérieure
 
 [Consulter le code source de `v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1)
 
@@ -69,9 +62,9 @@ d'adaptateur, le contrôle préalable de la machine et les corrections Windows
 validés dans les préversions `dev1` et `dev2`. Elle refuse les moteurs WebGPU
 logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
-Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0` et `0.3.1`
-emploient le même protocole de mesure et peuvent être comparés entre eux.
-`0.3.0.dev0` reste exclue de ce groupe de compatibilité.
+Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
+`0.3.2.dev0` et `0.3.2` emploient le même protocole de mesure et peuvent être
+comparés entre eux. `0.3.0.dev0` reste exclue de ce groupe de compatibilité.
 
 ### `v0.3.0.dev2` — développement antérieur
 
@@ -203,7 +196,7 @@ Cette première version stable fournit :
 Elle ne contient pas les répétitions automatiques, la dispersion, les scénarios
 pondérés ni le rapport HTML de `v0.2.1`.
 
-## Installer `v0.3.1`
+## Installer `v0.3.2`
 
 Python n'a pas besoin d'être préinstallé. L'installateur récupère `uv` si
 nécessaire, puis `uv` gère CPython 3.14.4 et remplace la version de
@@ -213,16 +206,16 @@ Python, l'installateur met automatiquement `uv` à niveau et réessaie.
 ### macOS et Linux
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
 ```
 
 ### Windows PowerShell
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.1/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
 ```
 
-Le contrôle suivant doit afficher `benchmark-mac 0.3.1` :
+Le contrôle suivant doit afficher `benchmark-mac 0.3.2` :
 
 ```bash
 benchmark-mac --version

@@ -4,10 +4,9 @@ Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La version stable `v0.3.1` comprend quatre benchmarks GPU WebGPU légers, un
-contrôle de l'état de la machine avant chaque campagne et une comparaison CLI
-correcte de plus de deux machines. Elle conserve le protocole de mesure de
-`v0.3.0`.
+La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de la
+version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
+la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
 ## Versions publiées
 
@@ -16,8 +15,9 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable actuelle | Comparer clairement plusieurs machines | Version recommandée |
-| [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement actuel | Tester la compatibilité mémorisée des protocoles | Préversion |
+| [`v0.3.2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
+| [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
+| [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable antérieure | Comparer clairement plusieurs machines | Remplacée par `v0.3.2` |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
 | [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable antérieure | Comparer CPU, mémoire, stockage, applications et GPU | Remplacée par `v0.3.1` |
 | [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
@@ -35,13 +35,11 @@ les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
 
-## Stable `v0.3.2` en préparation
+## Version stable `v0.3.2`
 
 `v0.3.2` mémorise séparément `suite_version` et `protocol_version` dans les
 nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
-compatible avec les rapports historiques reconnus de cette famille. Cette
-stable n'est pas encore publiée; les commandes ci-dessous sont préparées pour
-le futur tag et ne devront être utilisées qu'après sa publication.
+compatible avec les rapports historiques reconnus de cette famille.
 
 Sur macOS ou Linux :
 
@@ -55,8 +53,7 @@ Sous Windows, dans PowerShell :
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
 ```
 
-Après publication, le contrôle `benchmark-mac --version` devra afficher
-`benchmark-mac 0.3.2`.
+Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2`.
 
 ## Couverture actuelle
 
@@ -263,8 +260,8 @@ graphique d'écart pour deux machines, une carte thermique pour plusieurs
 machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
-la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`
-et `0.3.1` sont explicitement compatibles entre elles. Les rapports sont
+la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
+`0.3.1`, `0.3.2.dev0` et `0.3.2` sont compatibles entre elles. Les rapports sont
 enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
 séparément la version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent
