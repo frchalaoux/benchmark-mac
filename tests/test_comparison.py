@@ -143,6 +143,47 @@ def test_stable_0_3_rejects_dev0_reports() -> None:
         analyze_reports([stable, dev0], parse_scenario_weights(None))
 
 
+def test_declared_protocol_accepts_different_future_suite_versions() -> None:
+    baseline = complete_report("Version A", 1).model_copy(
+        update={"suite_version": "0.3.2", "protocol_version": "0.3.0"}
+    )
+    candidate = complete_report("Version B", 1.1).model_copy(
+        update={"suite_version": "0.4.0.dev0", "protocol_version": "0.3.0"}
+    )
+
+    analysis = analyze_reports([baseline, candidate], parse_scenario_weights(None))
+
+    assert len(analysis.machines) == 2
+    assert any(
+        "protocole 0.3.0" in warning and "0.3.2" in warning and "0.4.0.dev0" in warning
+        for warning in analysis.warnings
+    )
+
+
+def test_declared_protocol_remains_compatible_with_a_legacy_report() -> None:
+    legacy = complete_report("Rapport historique", 1)
+    current = complete_report("Rapport actuel", 1.1).model_copy(
+        update={"suite_version": "0.3.2", "protocol_version": "0.3.0"}
+    )
+
+    analysis = analyze_reports([legacy, current], parse_scenario_weights(None))
+
+    assert len(analysis.machines) == 2
+    assert any("protocole 0.3.0" in warning for warning in analysis.warnings)
+
+
+def test_declared_protocol_rejects_incompatible_reports() -> None:
+    baseline = complete_report("Ancien protocole", 1).model_copy(
+        update={"suite_version": "0.3.1", "protocol_version": "0.3.0"}
+    )
+    candidate = complete_report("Nouveau protocole", 1.1).model_copy(
+        update={"suite_version": "0.3.1", "protocol_version": "0.4.0"}
+    )
+
+    with pytest.raises(ValueError, match="versions compatibles"):
+        analyze_reports([baseline, candidate], parse_scenario_weights(None))
+
+
 def test_multicore_workers_can_differ_between_machines() -> None:
     baseline = complete_report("Référence", 1)
     candidate = complete_report("Candidate", 1.2)

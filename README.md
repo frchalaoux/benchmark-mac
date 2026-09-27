@@ -17,6 +17,7 @@ ou choisir une version ci-dessous.
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable actuelle | Comparer clairement plusieurs machines | Version recommandée |
+| [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement actuel | Tester la compatibilité mémorisée des protocoles | Préversion |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
 | [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable antérieure | Comparer CPU, mémoire, stockage, applications et GPU | Remplacée par `v0.3.1` |
 | [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
@@ -33,6 +34,26 @@ La [fiche détaillée des versions](docs/versions.md) indique les différences,
 les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
+
+## Préversion de développement `v0.3.2.dev0`
+
+`v0.3.2.dev0` mémorise séparément `suite_version` et `protocol_version` dans
+les nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
+compatible avec les rapports historiques reconnus de cette famille.
+
+Sur macOS ou Linux :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.sh | sh
+```
+
+Sous Windows, dans PowerShell :
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.ps1 | iex
+```
+
+Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
 
 ## Couverture actuelle
 
@@ -241,7 +262,11 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`
 et `0.3.1` sont explicitement compatibles entre elles. Les rapports sont
-enregistrés dans `data/results/` par défaut.
+enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
+séparément la version exacte de la suite (`suite_version`) et celle du protocole
+de mesure (`protocol_version`). Deux versions différentes de la suite restent
+donc comparables lorsqu'elles déclarent le même protocole. Pour les anciens
+rapports sans ce champ, la table de compatibilité historique reste appliquée.
 Une différence dont les plages min–max se chevauchent est signalée comme non
 concluante. Les rapports `0.2.x` et `0.3.x` ne sont pas directement comparables,
 car le catalogue, les scénarios et le schéma JSON ont évolué.

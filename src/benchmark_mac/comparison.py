@@ -138,7 +138,9 @@ class ComparisonAnalysis:
     warnings: tuple[str, ...]
 
 
-PROTOCOL_0_3_VERSIONS = frozenset({"0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0", "0.3.1"})
+LEGACY_PROTOCOL_BY_SUITE_VERSION = {
+    version: "0.3.0" for version in ("0.3.0.dev1", "0.3.0.dev2", "0.3.0", "0.3.1.dev0", "0.3.1")
+}
 
 
 def report_label(report: BenchmarkReport) -> str:
@@ -146,10 +148,13 @@ def report_label(report: BenchmarkReport) -> str:
 
 
 def comparison_protocol(version: str) -> str:
-    """Regroupe les versions dont le protocole de mesure est identique."""
-    if version in PROTOCOL_0_3_VERSIONS:
-        return "0.3.0"
-    return version
+    """Retrouve le protocole des anciens rapports qui ne l'enregistraient pas."""
+    return LEGACY_PROTOCOL_BY_SUITE_VERSION.get(version, version)
+
+
+def report_protocol(report: BenchmarkReport) -> str:
+    """Retourne le protocole déclaré, ou le protocole historique de la suite."""
+    return report.protocol_version or comparison_protocol(report.suite_version)
 
 
 def validate_reports(reports: list[BenchmarkReport]) -> None:
@@ -158,9 +163,7 @@ def validate_reports(reports: list[BenchmarkReport]) -> None:
         raise ValueError("Indiquez au moins deux rapports.")
     reference = reports[0]
     for report in reports[1:]:
-        if comparison_protocol(report.suite_version) != comparison_protocol(
-            reference.suite_version
-        ):
+        if report_protocol(report) != report_protocol(reference):
             raise ValueError("Les rapports doivent utiliser des versions compatibles de la suite.")
         if report.profile != reference.profile:
             raise ValueError("Les rapports doivent utiliser le même profil.")
@@ -334,7 +337,9 @@ def analyze_reports(
     suite_versions = sorted({report.suite_version for report in reports})
     if len(suite_versions) > 1:
         warnings.append(
-            "Versions compatibles du protocole 0.3.0 comparées : " + ", ".join(suite_versions) + "."
+            f"Versions compatibles du protocole {report_protocol(reports[0])} comparées : "
+            + ", ".join(suite_versions)
+            + "."
         )
     for report in reports:
         warnings.extend(

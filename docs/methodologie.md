@@ -2,10 +2,13 @@
 
 ## Reproductibilité
 
-Chaque rapport conserve la version de la suite, le profil, la version et le
-chemin de Python, l'OS et l'inventaire matériel. L'installation officielle doit
-utiliser CPython 3.14.4 géré par `uv` afin d'éviter qu'un Python système différent
-modifie les scores.
+Chaque rapport conserve séparément la version exacte de la suite et la version
+du protocole de mesure, ainsi que le profil, la version et le chemin de Python,
+l'OS et l'inventaire matériel. Deux versions de suite différentes peuvent être
+comparées lorsqu'elles déclarent le même protocole. Les anciens rapports sans
+ce champ utilisent une table de compatibilité historique explicite.
+L'installation officielle doit utiliser CPython 3.14.4 géré par `uv` afin
+d'éviter qu'un Python système différent modifie les scores.
 
 Le logiciel réalise trois passages par défaut et retient leur médiane. Il
 conserve les valeurs individuelles, le minimum, le maximum et l'étendue relative.
