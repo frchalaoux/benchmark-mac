@@ -7,7 +7,7 @@
 - La correction CLI multi-machine du commit `6d4c5dd` ouvre la série `0.3.1`.
 - Préversions publiées : `v0.3.0.dev0` sur `73c7d53`, `v0.3.0.dev1` sur
   `57bf438` et `v0.3.0.dev2` sur `41da9e3`.
-- La stable publiée actuelle est `v0.3.1`, taguée sur `9045884` et marquée
+- La stable publiée actuelle est `v0.3.2`, taguée sur `57c7598` et marquée
   `Latest` sur GitHub.
 - 16 benchmarks exécutables ensemble, par groupe ou individuellement.
 - Quatre benchmarks GPU hors écran fondés sur `wgpu 0.32.0` : calcul FP32,
@@ -26,14 +26,15 @@
 - La préversion `v0.3.2.dev0` est publiée depuis la branche
   `feat/report-protocol-version` tout en conservant le protocole de mesure
   `0.3.0`.
-- La branche locale `release/0.3.2` contient le commit candidat de la stable;
-  le tag `v0.3.2` n'existe pas encore et `v0.3.1` reste la release `Latest`.
+- La branche `release/0.3.2` et le tag annoté `v0.3.2` sont publiés sur
+  `57c7598`; la pull request nº 11 est fusionnée dans `main` sur `4f9a552`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
 - Version stable `0.3.1` publiée avec CPython 3.14.4 géré par `uv`.
-- Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0` et `0.3.1`
-  sont explicitement compatibles; `0.3.0.dev0` reste refusée.
+- Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
+  `0.3.2.dev0` et `0.3.2` sont explicitement compatibles avec le protocole
+  `0.3.0`; `0.3.0.dev0` reste refusée.
 - Si un ancien `uv` ne connaît pas CPython 3.14.4, les installateurs mettent
   automatiquement `uv` à niveau depuis la source officielle, puis réessaient.
 - Sous Windows, à partir de `dev1`, l'installateur télécharge la mise à niveau
@@ -86,6 +87,9 @@
 - Ubuntu 24.04 Docker : l'installateur stable local installe et exécute
   `benchmark-mac 0.3.2`; le JSON Linux contient le protocole `0.3.0`, un
   résultat et zéro échec.
+- Archive distante stable `v0.3.2` sous Ubuntu 24.04 Docker : installation de
+  `benchmark-mac 0.3.2`, exécution réelle de `cpu.integer`, JSON de schéma 4
+  avec le protocole `0.3.0`, un résultat et zéro échec.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.
@@ -152,13 +156,20 @@
 - Branche `feat/report-protocol-version` et tag annoté `v0.3.2.dev0` publiés
   ensemble sur le commit `5bffb42`; archive distante et installateurs vérifiés.
 - Pull request nº 9 fusionnée dans `main` au commit `ff307fd`.
+- Close-out de `v0.3.2.dev0` fusionné par la pull request nº 10 au commit
+  `aad53f1`.
+- Branche `release/0.3.2` et tag annoté `v0.3.2` publiés ensemble sur le commit
+  `57c7598`.
+- Pull request nº 11 fusionnée dans `main` au commit `4f9a552`.
+- GitHub Release stable `benchmark-mac v0.3.2` publiée et marquée `Latest` :
+  https://github.com/frchalaoux/benchmark-mac/releases/tag/v0.3.2
+- Installateurs bruts, archive distante, métadonnées de version et smoke test
+  Ubuntu vérifiés après publication.
 
 ## Prochaine étape possible
 
-Relire le commit stable, puis préparer la publication coordonnée de la branche
-et du tag `v0.3.2` sans opération distante avant confirmation. La validation GPU
-matérielle sous Linux et l'ajout d'une CI GitHub restent des améliorations
-futures.
+Intégrer ce close-out documentaire, puis choisir entre la validation GPU
+matérielle sous Linux et l'ajout d'une CI GitHub.
 
 ## Points de vigilance
 
@@ -167,6 +178,7 @@ futures.
 - Toujours pousser la branche contenant le commit avant ou avec le tag.
 - Ne jamais déplacer ou recréer le tag stable publié `v0.3.0`.
 - Ne jamais déplacer ou recréer le tag stable publié `v0.3.1`.
+- Ne jamais déplacer ou recréer le tag stable publié `v0.3.2`.
 - Un indice GPU est local à une machine : toujours consulter
   `benchmark-mac info` avant d'utiliser `--gpu`.
 - Les mesures WebGPU sont synthétiques et ne remplacent pas Blender, un jeu, le
