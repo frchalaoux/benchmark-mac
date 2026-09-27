@@ -35,25 +35,28 @@ les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
 
-## Préversion de développement `v0.3.2.dev0`
+## Stable `v0.3.2` en préparation
 
-`v0.3.2.dev0` mémorise séparément `suite_version` et `protocol_version` dans
-les nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
-compatible avec les rapports historiques reconnus de cette famille.
+`v0.3.2` mémorise séparément `suite_version` et `protocol_version` dans les
+nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
+compatible avec les rapports historiques reconnus de cette famille. Cette
+stable n'est pas encore publiée; les commandes ci-dessous sont préparées pour
+le futur tag et ne devront être utilisées qu'après sa publication.
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
 ```
 
-Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
+Après publication, le contrôle `benchmark-mac --version` devra afficher
+`benchmark-mac 0.3.2`.
 
 ## Couverture actuelle
 

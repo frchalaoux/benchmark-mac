@@ -26,6 +26,8 @@
 - La préversion `v0.3.2.dev0` est publiée depuis la branche
   `feat/report-protocol-version` tout en conservant le protocole de mesure
   `0.3.0`.
+- La branche locale `release/0.3.2` prépare la stable `0.3.2`; le tag stable
+  n'existe pas encore et `v0.3.1` reste la release `Latest`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
@@ -74,6 +76,16 @@
   `v0.3.2.dev0` installe `uv 0.12.19`, CPython 3.14.4 et les 16 définitions;
   `cpu.integer` réussit sans échec et le JSON contient `suite_version:
   "0.3.2.dev0"`, `protocol_version: "0.3.0"` et `schema_version: 4`.
+- Stable locale `0.3.2` : Ruff et formatage réussis, 53 tests réussis, source
+  et wheel construites et inspectées sans rapport utilisateur embarqué.
+- Wheel stable `0.3.2` exécutée isolément sur les 16 benchmarks `standard`,
+  trois passages et zéro échec; la campagne était trop chargée pour servir de
+  référence de performance.
+- Comparaison mixte stable réussie entre `0.3.0.dev2`, `0.3.1` et `0.3.2`,
+  avec 16 benchmarks détaillés et le protocole commun `0.3.0`.
+- Ubuntu 24.04 Docker : l'installateur stable local installe et exécute
+  `benchmark-mac 0.3.2`; le JSON Linux contient le protocole `0.3.0`, un
+  résultat et zéro échec.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.
@@ -143,8 +155,10 @@
 
 ## Prochaine étape possible
 
-Préparer la branche stable `release/0.3.2`. La validation GPU matérielle sous
-Linux et l'ajout d'une CI GitHub restent des améliorations futures.
+Relire le commit stable, puis préparer la publication coordonnée de la branche
+et du tag `v0.3.2` sans opération distante avant confirmation. La validation GPU
+matérielle sous Linux et l'ajout d'une CI GitHub restent des améliorations
+futures.
 
 ## Points de vigilance
 

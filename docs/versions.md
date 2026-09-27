@@ -6,7 +6,22 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.2.dev0` — développement actuel
+### `v0.3.2` — stable en préparation, non publiée
+
+Cette future stable reprend `protocol_version` sans modifier le protocole de
+mesure `0.3.0`. Elle reste compatible avec les rapports historiques reconnus de
+cette famille. Le tag n'existe pas encore; les commandes préparées ne devront
+être utilisées qu'après sa publication.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
+```
+
+### `v0.3.2.dev0` — développement publié
 
 [Consulter le code source de `v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0)
 
