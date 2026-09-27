@@ -8,12 +8,13 @@ versions logicielles différentes mais compatibles.
 
 Implémentation locale terminée sur `feat/report-protocol-version`. Les nouvelles
 campagnes `0.3.2.dev0` écrivent `protocol_version: "0.3.0"`; les anciens
-rapports restent comparables par la table historique. La préversion n'est pas
-encore publiée.
+rapports restent comparables par la table historique. La branche et le tag sont
+prêts pour une publication coordonnée après confirmation explicite.
 
 # Next Concrete Action
 
-Relire le diff final et préparer le commit local.
+Vérifier l'absence du tag distant, puis publier ensemble la branche et le tag
+annoté après confirmation explicite.
 
 # Validation Snapshot
 

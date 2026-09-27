@@ -23,8 +23,8 @@
 - La branche `feat/report-protocol-version` ajoute un champ optionnel
   `protocol_version` aux nouveaux rapports. `suite_version` reste exacte et les
   archives antérieures utilisent la table de compatibilité historique.
-- Cette branche ouvre la préversion locale `0.3.2.dev0`, non encore publiée,
-  tout en conservant le protocole de mesure `0.3.0`.
+- Cette branche prépare la préversion `0.3.2.dev0` tout en conservant le
+  protocole de mesure `0.3.0`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.

@@ -6,16 +6,17 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.3.2.dev0` — en préparation, non publiée
+### `v0.3.2.dev0` — développement actuel
 
-Cette future préversion ajoute `protocol_version` aux nouveaux rapports sans
+[Consulter le code source de `v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0)
+
+Cette préversion ajoute `protocol_version` aux nouveaux rapports sans
 modifier le protocole de mesure `0.3.0`. Elle conserve la version exacte du
 logiciel dans `suite_version` et compare automatiquement des versions de suite
 différentes lorsqu'elles déclarent le même protocole. Les anciens rapports sans
 ce champ restent pris en charge par la table historique.
 
-Le tag n'existe pas encore. Après sa publication seulement, les commandes
-préparées seront :
+Sur macOS ou Linux :
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.sh | sh
@@ -24,6 +25,8 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev
 ```powershell
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.ps1 | iex
 ```
+
+Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
 
 ### `v0.3.1` — stable actuelle
 

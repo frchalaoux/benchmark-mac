@@ -17,6 +17,7 @@ ou choisir une version ci-dessous.
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable actuelle | Comparer clairement plusieurs machines | Version recommandée |
+| [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement actuel | Tester la compatibilité mémorisée des protocoles | Préversion |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
 | [`v0.3.0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0) | Stable antérieure | Comparer CPU, mémoire, stockage, applications et GPU | Remplacée par `v0.3.1` |
 | [`v0.3.0.dev2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.0.dev2) | Développement antérieur | Reproduire les validations de la stable | Convention des tags explicitée |
@@ -34,12 +35,11 @@ les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
 
-## Préversion en préparation
+## Préversion de développement `v0.3.2.dev0`
 
 `v0.3.2.dev0` mémorise séparément `suite_version` et `protocol_version` dans
-les nouveaux rapports. Elle n'est pas encore publiée : les commandes suivantes
-sont préparées pour le futur tag et ne doivent être utilisées qu'après sa
-publication sur la page GitHub des tags.
+les nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
+compatible avec les rapports historiques reconnus de cette famille.
 
 Sur macOS ou Linux :
 
@@ -53,8 +53,7 @@ Sous Windows, dans PowerShell :
 irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.ps1 | iex
 ```
 
-Après publication, `benchmark-mac --version` devra afficher
-`benchmark-mac 0.3.2.dev0`.
+Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
 
 ## Couverture actuelle
 
