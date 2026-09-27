@@ -16,19 +16,28 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     versions = (ROOT / "docs" / "versions.md").read_text(encoding="utf-8")
 
+    assert project["project"]["name"] == "perfcomparator"
     assert project["project"]["version"] == __version__
+    assert project["project"]["scripts"] == {
+        "perfcomparator": "benchmark_mac.cli:app",
+        "benchmark-mac": "benchmark_mac.cli:app",
+    }
     assert EXPECTED_TAG in posix_installer
     assert EXPECTED_TAG in windows_installer
+    assert "PERFCOMPARATOR_VERSION" in posix_installer
+    assert "PERFCOMPARATOR_VERSION" in windows_installer
     assert "BENCHMARK_MAC_VERSION" in posix_installer
     assert "BENCHMARK_MAC_VERSION" in windows_installer
+    assert "tool uninstall benchmark-mac" in posix_installer
+    assert "tool uninstall benchmark-mac" in windows_installer
     assert "Install-CurrentUv" in windows_installer
     assert "-File $installerPath" in windows_installer
     assert "irm https://astral.sh/uv/install.ps1 | iex" not in windows_installer
     expected_posix_url = (
-        f"https://raw.githubusercontent.com/frchalaoux/benchmark-mac/{EXPECTED_TAG}/install.sh"
+        f"https://raw.githubusercontent.com/frchalaoux/perfcomparator/{EXPECTED_TAG}/install.sh"
     )
     expected_windows_url = (
-        f"https://raw.githubusercontent.com/frchalaoux/benchmark-mac/{EXPECTED_TAG}/install.ps1"
+        f"https://raw.githubusercontent.com/frchalaoux/perfcomparator/{EXPECTED_TAG}/install.ps1"
     )
     for document in (readme, versions):
         assert __version__ in document
@@ -54,6 +63,8 @@ def test_posix_installer_defaults_to_its_own_tag(tmp_path: Path) -> None:
     }
     environment.pop("BENCHMARK_MAC_SOURCE", None)
     environment.pop("BENCHMARK_MAC_VERSION", None)
+    environment.pop("PERFCOMPARATOR_SOURCE", None)
+    environment.pop("PERFCOMPARATOR_VERSION", None)
 
     subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
 
@@ -71,9 +82,9 @@ def test_posix_installer_honors_an_explicit_source(tmp_path: Path) -> None:
     uv.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$UV_LOG"\n', encoding="utf-8")
     uv.chmod(0o755)
     log = tmp_path / "uv.log"
-    source = "https://example.invalid/benchmark-mac.tar.gz"
+    source = "https://example.invalid/perfcomparator.tar.gz"
     environment = os.environ | {
-        "BENCHMARK_MAC_SOURCE": source,
+        "PERFCOMPARATOR_SOURCE": source,
         "HOME": str(tmp_path),
         "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
         "UV_LOG": str(log),
@@ -82,6 +93,35 @@ def test_posix_installer_honors_an_explicit_source(tmp_path: Path) -> None:
     subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
 
     assert source in log.read_text(encoding="utf-8")
+
+
+def test_posix_installer_cleans_up_the_legacy_tool_after_installing(tmp_path: Path) -> None:
+    installer = tmp_path / "install.sh"
+    installer.write_text((ROOT / "install.sh").read_text(encoding="utf-8"), encoding="utf-8")
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    uv = fake_bin / "uv"
+    uv.write_text(
+        '#!/bin/sh\nprintf "%s\\n" "$*" >> "$UV_LOG"\n'
+        'case "$*" in "tool list") printf "%s\\n" "benchmark-mac v0.3.2";; esac\n',
+        encoding="utf-8",
+    )
+    uv.chmod(0o755)
+    log = tmp_path / "uv.log"
+    environment = os.environ | {
+        "HOME": str(tmp_path),
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+        "UV_LOG": str(log),
+    }
+
+    subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
+
+    calls = log.read_text(encoding="utf-8")
+    assert calls.count("tool install --managed-python") == 1
+    assert "tool uninstall benchmark-mac" in calls
+    assert calls.index("tool uninstall benchmark-mac") < calls.index(
+        "tool install --managed-python"
+    )
 
 
 def test_posix_installer_updates_uv_and_retries_when_python_is_unknown(tmp_path: Path) -> None:

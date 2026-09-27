@@ -1,19 +1,25 @@
-# Installe benchmark-mac pour le compte courant (Windows PowerShell).
+# Installe PerfComparator pour le compte courant (Windows PowerShell).
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 $ErrorActionPreference = "Stop"
 
-$releaseVersion = if ($env:BENCHMARK_MAC_VERSION) {
+$releaseVersion = if ($env:PERFCOMPARATOR_VERSION) {
+    $env:PERFCOMPARATOR_VERSION
+}
+elseif ($env:BENCHMARK_MAC_VERSION) {
     $env:BENCHMARK_MAC_VERSION
 }
 else {
-    "v0.3.2"
+    "v0.4.0.dev0"
 }
 $pythonVersion = "3.14.4"
-$sourceUrl = if ($env:BENCHMARK_MAC_SOURCE) {
+$sourceUrl = if ($env:PERFCOMPARATOR_SOURCE) {
+    $env:PERFCOMPARATOR_SOURCE
+}
+elseif ($env:BENCHMARK_MAC_SOURCE) {
     $env:BENCHMARK_MAC_SOURCE
 }
 else {
-    "https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/$releaseVersion.tar.gz"
+    "https://github.com/frchalaoux/perfcomparator/archive/refs/tags/$releaseVersion.tar.gz"
 }
 
 if ($PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot "pyproject.toml"))) {
@@ -71,16 +77,26 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 
-Write-Host "Installation de benchmark-mac $releaseVersion..."
-& $uvCommand tool install --managed-python --python $pythonVersion --reinstall $sourceUrl
+$toolList = & $uvCommand tool list 2>$null
+$legacyToolInstalled = $toolList -match "^benchmark-mac v"
+
+if ($legacyToolInstalled) {
+    Write-Host "Nettoyage de l'ancien enregistrement benchmark-mac..."
+    & $uvCommand tool uninstall benchmark-mac
+    if ($LASTEXITCODE -ne 0) {
+        throw "Le nettoyage de l'ancien enregistrement benchmark-mac a échoué (code $LASTEXITCODE)."
+    }
+}
+Write-Host "Installation de PerfComparator $releaseVersion..."
+& $uvCommand tool install --managed-python --python $pythonVersion --force --reinstall $sourceUrl
 if ($LASTEXITCODE -ne 0) {
-    throw "L'installation de benchmark-mac a échoué (code $LASTEXITCODE)."
+    throw "L'installation de PerfComparator a échoué (code $LASTEXITCODE)."
 }
 
 Write-Host ""
-if (Get-Command benchmark-mac -ErrorAction SilentlyContinue) {
-    Write-Host "benchmark-mac est installe. Lancez : benchmark-mac list"
+if (Get-Command perfcomparator -ErrorAction SilentlyContinue) {
+    Write-Host "PerfComparator est installe. Lancez : perfcomparator list"
 }
 else {
-    Write-Host "benchmark-mac est installe. Fermez et rouvrez PowerShell, puis lancez : benchmark-mac list"
+    Write-Host "PerfComparator est installe. Fermez et rouvrez PowerShell, puis lancez : perfcomparator list"
 }

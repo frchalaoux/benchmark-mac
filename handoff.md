@@ -1,32 +1,38 @@
 # Handoff — transition progressive du nom du projet
 
-## Objectif unique de la prochaine session
+## Objectif
 
-Remplacer progressivement le nom public `benchmark-mac` par un nom réellement
-multiplateforme, sans casser les installations existantes ni la compatibilité
+Remplacer progressivement le nom public `benchmark-mac` par `PerfComparator`,
+un nom réellement multiplateforme, sans casser les installations existantes ni la compatibilité
 des rapports JSON.
 
 Ne traiter aucun autre chantier pendant cette session : ni catalogue public de
 rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 
-## État de départ
+## État courant
 
 - Branche de travail : `feat/project-rename`, créée depuis `main` au commit
   `77e97cf`.
 - Stable publiée : `v0.3.2`, taguée sur `57c7598` et marquée `Latest`.
 - Dépôt actuel : `https://github.com/frchalaoux/benchmark-mac`.
-- Paquet installable : `benchmark-mac`.
-- Commande actuelle : `benchmark-mac`.
+- Candidate locale : `0.4.0.dev0`.
+- Paquet candidat : `perfcomparator`.
+- Commande principale candidate : `perfcomparator`.
+- Alias de transition : `benchmark-mac`.
 - Module Python interne : `benchmark_mac`.
 - La suite fonctionne sous macOS, Windows et Linux; son nom actuel est donc
   devenu trop restrictif.
-- Aucun changement de nom n'a encore été effectué.
+- Nom retenu et appliqué localement : `PerfComparator`; dépôt, paquet et commande
+  cibles : `perfcomparator`.
+- Le dépôt distant porte encore le nom `benchmark-mac`; aucune opération
+  distante liée au renommage n'a été effectuée.
 
 ## Décisions déjà prises
 
-1. Procéder par transition douce, vraisemblablement dans la série `0.4.0`.
-2. Choisir et vérifier le nouveau nom avant toute modification de code ou
-   opération distante.
+1. Procéder par transition douce dans la série `0.4.0`, en commençant par
+   `0.4.0.dev0`.
+2. Le nom `PerfComparator` a été vérifié comme disponible sur PyPI, dans
+   l'espace GitHub du projet et en `.com`; aucune réservation n'a été faite.
 3. Renommer l'identité publique, le dépôt, le paquet et la commande de façon
    coordonnée.
 4. Conserver temporairement `benchmark-mac` comme alias de commande afin de ne
@@ -40,30 +46,35 @@ rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
 8. Ne réaliser aucune opération distante sans annoncer toute la séquence et
    obtenir une confirmation explicite actuelle.
 
+## Travail local réalisé
+
+- identité publique, distribution et commande principale renommées ;
+- alias `benchmark-mac` conservé et module `benchmark_mac` inchangé ;
+- version portée à `0.4.0.dev0`, sans changement du protocole `0.3.0` ni du
+  schéma 4 ;
+- installateurs adaptés au nouveau dépôt et capables de remplacer proprement
+  l'ancien outil enregistré par `uv` ;
+- CLI, rapports HTML, documentation, tests et verrou adaptés ;
+- rapports historiques et liens des versions `0.3.x` préservés.
+
+## Validations acquises
+
+- `ruff format --check` et `ruff check` réussis ;
+- 54 tests réussis ;
+- wheel et archive source `perfcomparator-0.4.0.dev0` construites et inspectées ;
+- les deux commandes sont présentes dans la wheel ;
+- aucun rapport utilisateur n'est inclus dans les distributions ;
+- migration réelle isolée depuis l'archive distante `v0.3.2` réussie sur macOS :
+  un seul outil `perfcomparator 0.4.0.dev0` enregistré, avec les commandes
+  `perfcomparator` et `benchmark-mac` fonctionnelles ;
+- installateur PowerShell vérifié par tests statiques, faute de PowerShell local.
+
 ## Prochaine action concrète
 
-Proposer une courte liste de noms multiplateformes, puis vérifier pour chaque
-candidat :
-
-- disponibilité du dépôt GitHub;
-- disponibilité et éventuels conflits sur PyPI;
-- collisions évidentes avec une marque ou un logiciel existant;
-- lisibilité comme commande de terminal;
-- capacité à nommer aussi un futur catalogue communautaire de rapports.
-
-Présenter ensuite les résultats à l'utilisateur et attendre son choix. Poursuivre
-ensuite la migration sur la branche `feat/project-rename` déjà créée.
-
-## Stratégie de migration à appliquer après le choix
-
-- Ajouter la nouvelle commande tout en conservant l'alias `benchmark-mac`.
-- Adapter le nom du paquet, les installateurs, les messages CLI, les rapports
-  HTML, les tests et la documentation.
-- Mettre à jour les URL GitHub et le remote local au moment approprié.
-- Vérifier les installations nouvelle et historique avec un seul parcours de
-  validation automatisé et idempotent.
-- Préparer une publication coordonnée, puis demander une confirmation unique
-  couvrant exactement les opérations distantes annoncées.
+Après le commit local, annoncer précisément la séquence distante proposée
+(publication de la branche, pull request, renommage du dépôt et future
+préversion) puis attendre une confirmation explicite actuelle. Mettre à jour le
+remote local et les liens publiés seulement au moment coordonné du renommage.
 
 ## Critères d'acceptation
 
@@ -76,8 +87,8 @@ ensuite la migration sur la branche `feat/project-rename` déjà créée.
   version.
 - Le README indique clairement le nouveau nom et la période de compatibilité de
   l'ancien nom.
-- Les tests, la construction des distributions et un unique smoke test distant
-  réussissent.
+- Les tests, la construction des distributions et le smoke test de migration
+  depuis la stable distante réussissent.
 
 ## Points de vigilance
 
