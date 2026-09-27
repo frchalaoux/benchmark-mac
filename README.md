@@ -1,12 +1,33 @@
-# benchmark-mac
+# PerfComparator
 
-Suite locale pour comparer les performances de Mac et de PC avant un achat. Elle
+PerfComparator, anciennement `benchmark-mac`, est une suite locale pour comparer
+les performances de plusieurs machines avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
 La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de la
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
+
+## Changement de nom en préparation
+
+La candidate locale `0.4.0.dev0` introduit le nom **PerfComparator**, le paquet
+`perfcomparator` et la commande principale `perfcomparator`. La commande
+`benchmark-mac` reste disponible comme alias pendant la transition. Le module
+Python interne reste `benchmark_mac`, et le protocole de mesure reste `0.3.0` :
+les rapports demeurent compatibles avec ceux de la famille `0.3.x` reconnue.
+L'installateur remplace aussi l'ancien paquet enregistré par `uv`.
+
+Cette candidate n'est pas encore publiée. Après publication du dépôt et du tag
+`v0.4.0.dev0`, ses installateurs seront accessibles aux adresses suivantes :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.ps1 | iex
+```
 
 ## Versions publiées
 
@@ -68,13 +89,13 @@ Les mesures GPU utilisent `wgpu-py`, une petite couche WebGPU qui choisit Metal,
 Direct3D 12 ou Vulkan selon le système. Elles ne nécessitent ni Blender, ni
 fenêtre graphique, ni scène externe.
 
-Une machine peut exposer plusieurs GPU. `benchmark-mac info` les numérote ; par
+Une machine peut exposer plusieurs GPU. `perfcomparator info` les numérote ; par
 défaut, la suite choisit d'abord un GPU dédié, puis un GPU intégré. Pour mesurer
 chaque carte séparément, produire un rapport par indice :
 
 ```bash
-benchmark-mac run --group gpu --gpu 0 --label "Portable — GPU 0"
-benchmark-mac run --group gpu --gpu 1 --label "Portable — GPU 1"
+perfcomparator run --group gpu --gpu 0 --label "Portable — GPU 0"
+perfcomparator run --group gpu --gpu 1 --label "Portable — GPU 1"
 ```
 
 Le GPU effectivement choisi est annoncé avant la campagne et enregistré dans
@@ -164,11 +185,13 @@ installateur nécessite un contournement détaillé dans la
 Vérifier ensuite l'installation :
 
 ```bash
-benchmark-mac --version
+perfcomparator --version
 uv tool list
-benchmark-mac list
-benchmark-mac compare --help
+perfcomparator list
+perfcomparator compare --help
 ```
+
+Avec une version `0.3.x`, employer l'ancienne commande `benchmark-mac`.
 
 ## Installation depuis le dossier de développement
 
@@ -180,7 +203,7 @@ ou simplement :
 
 ```bash
 uv sync
-uv run benchmark-mac list
+uv run perfcomparator list
 ```
 
 ## Lancer les benchmarks
@@ -196,7 +219,7 @@ Avant de lancer une campagne comparable :
 4. conserver le même profil, le même nombre de passages et, pour le stockage,
    le même type d'emplacement `--work-dir`.
 
-Au démarrage, `benchmark-mac` observe pendant une seconde la charge CPU, la
+Au démarrage, PerfComparator observe pendant une seconde la charge CPU, la
 mémoire, l'échange et les processus actifs. Il affiche un avertissement si le
 point de départ paraît éloigné du repos, puis poursuit la mesure. Ce contrôle
 ponctuel aide à repérer une mauvaise campagne ; il ne peut pas prouver que la
@@ -205,33 +228,33 @@ machine a atteint son potentiel maximal.
 Toute la suite, avec le profil standard :
 
 ```bash
-benchmark-mac run --label "MacBook Pro M4 Pro"
+perfcomparator run --label "MacBook Pro M4 Pro"
 ```
 
 Chaque test est exécuté trois fois par défaut et le rapport conserve la médiane,
 le minimum, le maximum et la dispersion. Le nombre de passages est réglable :
 
 ```bash
-benchmark-mac run --repeat 5 --profile thorough
+perfcomparator run --repeat 5 --profile thorough
 ```
 
 Un groupe ou plusieurs groupes :
 
 ```bash
-benchmark-mac run --group cpu
-benchmark-mac run --group memory --group storage --profile thorough
-benchmark-mac run --group gpu --profile standard
+perfcomparator run --group cpu
+perfcomparator run --group memory --group storage --profile thorough
+perfcomparator run --group gpu --profile standard
 ```
 
 Un ou plusieurs tests individuels :
 
 ```bash
-benchmark-mac run cpu.integer
-benchmark-mac run cpu.hash memory.copy application.sqlite --profile quick
+perfcomparator run cpu.integer
+perfcomparator run cpu.hash memory.copy application.sqlite --profile quick
 ```
 
-Le catalogue complet est fourni par `benchmark-mac list`. La commande
-`benchmark-mac describe cpu.hash` affiche le protocole, les limites et les
+Le catalogue complet est fourni par `perfcomparator list`. La commande
+`perfcomparator describe cpu.hash` affiche le protocole, les limites et les
 références d'un test. Les profils `quick`, `standard` et `thorough` augmentent
 progressivement les durées et volumes.
 
@@ -241,13 +264,13 @@ Copier les rapports JSON dans un même dossier, puis utiliser le premier comme
 référence :
 
 ```bash
-benchmark-mac compare mac-m4.json pc-ryzen.json
+perfcomparator compare mac-m4.json pc-ryzen.json
 ```
 
 Pour obtenir le rapport visuel autonome et adapter le résultat à ses usages :
 
 ```bash
-benchmark-mac compare mac-m4.json pc-ryzen.json pc-intel.json \
+perfcomparator compare mac-m4.json pc-ryzen.json pc-intel.json \
   --weight developpement=50 \
   --weight creation=30 \
   --weight quotidien=20 \
@@ -261,7 +284,7 @@ machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
-`0.3.1`, `0.3.2.dev0` et `0.3.2` sont compatibles entre elles. Les rapports sont
+`0.3.1`, `0.3.2.dev0`, `0.3.2` et `0.4.0.dev0` sont compatibles entre elles. Les rapports sont
 enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
 séparément la version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent

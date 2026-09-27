@@ -1,4 +1,4 @@
-"""Suite de benchmark locale pour macOS, Windows et Linux."""
+"""PerfComparator, suite locale pour macOS, Windows et Linux."""
 
 from .models import BenchmarkReport, BenchmarkResult, SystemSnapshot
 
@@ -8,5 +8,5 @@ __all__ = [
     "BenchmarkResult",
     "SystemSnapshot",
 ]
-__version__ = "0.3.2"
+__version__ = "0.4.0.dev0"
 BENCHMARK_PROTOCOL_VERSION = "0.3.0"

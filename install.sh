@@ -1,11 +1,11 @@
 #!/bin/sh
-# Installe benchmark-mac pour le compte courant (macOS ou Linux).
+# Installe PerfComparator pour le compte courant (macOS ou Linux).
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 set -eu
 
-release_version="${BENCHMARK_MAC_VERSION:-v0.3.2}"
+release_version="${PERFCOMPARATOR_VERSION:-${BENCHMARK_MAC_VERSION:-v0.4.0.dev0}}"
 python_version="3.14.4"
-source_url="${BENCHMARK_MAC_SOURCE:-https://github.com/frchalaoux/benchmark-mac/archive/refs/tags/${release_version}.tar.gz}"
+source_url="${PERFCOMPARATOR_SOURCE:-${BENCHMARK_MAC_SOURCE:-https://github.com/frchalaoux/perfcomparator/archive/refs/tags/${release_version}.tar.gz}}"
 script_dir=""
 if [ -f "$0" ]; then
     script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd || true)
@@ -59,12 +59,20 @@ if ! "$uv_command" python install "$python_version"; then
         exit 1
     fi
 fi
-echo "Installation de benchmark-mac ${release_version}..."
-"$uv_command" tool install --managed-python --python "$python_version" --reinstall "$source_url"
+legacy_tool_installed=false
+if "$uv_command" tool list 2>/dev/null | grep -q '^benchmark-mac v'; then
+    legacy_tool_installed=true
+fi
+if [ "$legacy_tool_installed" = true ]; then
+    echo "Nettoyage de l'ancien enregistrement benchmark-mac..."
+    "$uv_command" tool uninstall benchmark-mac
+fi
+echo "Installation de PerfComparator ${release_version}..."
+"$uv_command" tool install --managed-python --python "$python_version" --force --reinstall "$source_url"
 
 echo
-if command -v benchmark-mac >/dev/null 2>&1; then
-    echo "benchmark-mac est installe. Lancez : benchmark-mac list"
+if command -v perfcomparator >/dev/null 2>&1; then
+    echo "PerfComparator est installe. Lancez : perfcomparator list"
 else
-    echo "benchmark-mac est installe. Fermez et rouvrez le terminal, puis lancez : benchmark-mac list"
+    echo "PerfComparator est installe. Fermez et rouvrez le terminal, puis lancez : perfcomparator list"
 fi

@@ -23,7 +23,7 @@ besoin pour signaler les plages min–max chevauchantes.
 
 Chaque identifiant possède aussi une entrée dans `BENCHMARK_DOCUMENTATION`.
 Méthode, limites et références sont embarquées dans le rapport JSON et exposées
-par `benchmark-mac describe`.
+par `perfcomparator describe`.
 
 Ajouter ensuite sa `BenchmarkDefinition` à `DEFINITIONS`. Les groupes et le
 catalogue en découlent automatiquement. Toute évolution incompatible du JSON

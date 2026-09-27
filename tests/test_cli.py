@@ -14,7 +14,7 @@ def test_version_option_displays_installed_version() -> None:
     result = runner.invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == f"benchmark-mac {__version__}"
+    assert result.stdout.strip() == f"PerfComparator {__version__}"
 
 
 def test_list_displays_groups_profiles_and_individual_benchmarks() -> None:

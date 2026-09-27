@@ -6,6 +6,28 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
+### `v0.4.0.dev0` — candidate locale, non publiée
+
+Cette candidate réalise le changement de nom vers **PerfComparator** sans
+modifier le protocole de mesure `0.3.0`. Le paquet devient `perfcomparator` et
+la commande principale devient `perfcomparator`; `benchmark-mac` reste un alias
+de compatibilité. La stable publiée reste `v0.3.2` tant que cette candidate n'a
+pas été publiée. Lors d'une mise à niveau, l'installateur retire l'ancien
+enregistrement `uv`, puis installe PerfComparator avec l'alias historique.
+
+Après publication du dépôt et du tag, les commandes d'installation seront :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.ps1 | iex
+```
+
+Le contrôle `perfcomparator --version` devra afficher
+`PerfComparator 0.4.0.dev0`.
+
 ### `v0.3.2` — stable actuelle
 
 [Consulter le code source de `v0.3.2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2)
@@ -63,8 +85,9 @@ validés dans les préversions `dev1` et `dev2`. Elle refuse les moteurs WebGPU
 logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
 Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
-`0.3.2.dev0` et `0.3.2` emploient le même protocole de mesure et peuvent être
-comparés entre eux. `0.3.0.dev0` reste exclue de ce groupe de compatibilité.
+`0.3.2.dev0`, `0.3.2` et `0.4.0.dev0` emploient le même protocole de mesure et
+peuvent être comparés entre eux. `0.3.0.dev0` reste exclue de ce groupe de
+compatibilité.
 
 ### `v0.3.0.dev2` — développement antérieur
 

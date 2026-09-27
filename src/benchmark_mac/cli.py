@@ -1,4 +1,4 @@
-"""Interface en ligne de commande de benchmark-mac."""
+"""Interface en ligne de commande de PerfComparator."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ app = typer.Typer(
 
 def _version_callback(value: bool) -> None:
     if value:
-        typer.echo(f"benchmark-mac {__version__}")
+        typer.echo(f"PerfComparator {__version__}")
         raise typer.Exit()
 
 
@@ -103,7 +103,7 @@ def list_benchmarks() -> None:
     typer.secho("\nBENCHMARKS", bold=True)
     for definition in DEFINITIONS:
         typer.echo(f"  {definition.benchmark_id:<24} {definition.name} — {definition.description}")
-    typer.echo("\nDétail : benchmark-mac describe IDENTIFIANT")
+    typer.echo("\nDétail : perfcomparator describe IDENTIFIANT")
 
 
 @app.command("describe")
@@ -193,7 +193,7 @@ def run(
         typer.Option(
             "--gpu",
             min=0,
-            help="Indice de l'adaptateur WebGPU affiché par `benchmark-mac info`.",
+            help="Indice de l'adaptateur WebGPU affiché par `perfcomparator info`.",
         ),
     ] = None,
 ) -> None:

@@ -211,7 +211,7 @@ def render_html(analysis: ComparisonAnalysis) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comparaison benchmark-mac</title>
+<title>Comparaison PerfComparator</title>
 <style>
 :root {{ --ink:#172033; --muted:#667085; --paper:#f6f7fb; --accent:#315efb; --accent2:#19a974; }}
 * {{ box-sizing:border-box; }}
@@ -243,7 +243,7 @@ code {{ color:#45506a; }}
 </style>
 </head>
 <body><main>
-<header><p class="muted">benchmark-mac · rapport autonome</p><h1>Ce que ces performances changent au quotidien</h1>
+<header><p class="muted">PerfComparator · rapport autonome</p><h1>Ce que ces performances changent au quotidien</h1>
 <p class="lead">Référence : <strong>{_e(analysis.baseline_label)}</strong>, ramenée à l'indice 100. Les temps sont des équivalences relatives, pas des durées applicatives observées.</p></header>
 <section class="cards">{_machine_cards(analysis)}</section>
 <section><h2>Lecture en langage courant</h2>{narratives}<div class="notice"><strong>Pondération :</strong> {_e(weights)}<ul>{warnings}</ul></div></section>

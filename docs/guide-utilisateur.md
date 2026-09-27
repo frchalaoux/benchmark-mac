@@ -3,7 +3,7 @@
 ## Préparer une machine
 
 L'installateur GitHub installe `uv` si nécessaire. `uv` installe ensuite sa
-propre version de CPython 3.14.4 et isole `benchmark-mac` du Python du système.
+propre version de CPython 3.14.4 et isole PerfComparator du Python du système.
 Il n'est donc pas nécessaire d'installer Python séparément.
 
 À partir de `0.3.0.dev1`, si un `uv` déjà présent est trop ancien pour connaître
@@ -15,13 +15,18 @@ notamment nécessaire avec d'anciennes versions telles que `uv 0.5.1`.
 La version réellement exécutée se vérifie avec :
 
 ```bash
-benchmark-mac --version
+perfcomparator --version
 ```
 
 Pour une installation GitHub, utiliser le nom affiché dans la
 [fiche des versions](versions.md). La stable actuelle est `v0.3.2`; sa
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
+
+La candidate locale `0.4.0.dev0` prépare le changement de nom. Sa commande
+principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
+alias de compatibilité. Avec une version publiée `0.3.x`, employer
+`benchmark-mac`.
 
 Avant une mesure :
 
@@ -52,19 +57,19 @@ temps CPU inoccupé et non une application concurrente.
 
 ## Choisir l'étendue
 
-`benchmark-mac list` affiche les identifiants, groupes et profils disponibles.
-`benchmark-mac describe IDENTIFIANT` donne le protocole détaillé, ses limites et
+`perfcomparator list` affiche les identifiants, groupes et profils disponibles.
+`perfcomparator describe IDENTIFIANT` donne le protocole détaillé, ses limites et
 ses références bibliographiques.
 
-- `benchmark-mac run` lance les 16 tests ;
-- `benchmark-mac run --group cpu` lance le groupe CPU ;
-- `benchmark-mac run --group gpu` lance les quatre mesures GPU hors écran ;
-- `benchmark-mac run cpu.integer` lance un seul test ;
+- `perfcomparator run` lance les 16 tests ;
+- `perfcomparator run --group cpu` lance le groupe CPU ;
+- `perfcomparator run --group gpu` lance les quatre mesures GPU hors écran ;
+- `perfcomparator run cpu.integer` lance un seul test ;
 - plusieurs `--group` et plusieurs identifiants peuvent être réunis sans doublon.
 
 ### Machines équipées de plusieurs GPU
 
-`benchmark-mac info` affiche les adaptateurs WebGPU avec un indice, leur nom,
+`perfcomparator info` affiche les adaptateurs WebGPU avec un indice, leur nom,
 leur type et le backend utilisé. Sans option, la sélection automatique préfère
 un GPU dédié, puis un GPU intégré. Elle est affichée avant toute mesure GPU.
 
@@ -73,11 +78,11 @@ sans ambiguïté. Pour comparer les cartes d'une même machine ou forcer le GPU
 intégré d'un portable hybride, exécuter deux campagnes distinctes :
 
 ```bash
-benchmark-mac run --group gpu --gpu 0 --label "PC hybride — GPU 0"
-benchmark-mac run --group gpu --gpu 1 --label "PC hybride — GPU 1"
+perfcomparator run --group gpu --gpu 0 --label "PC hybride — GPU 0"
+perfcomparator run --group gpu --gpu 1 --label "PC hybride — GPU 1"
 ```
 
-Les indices sont propres à la machine : vérifier `benchmark-mac info` sur
+Les indices sont propres à la machine : vérifier `perfcomparator info` sur
 chacune d'elles au lieu de supposer que `0` désigne toujours le GPU dédié.
 
 Dans une machine virtuelle sans GPU transmis, `Microsoft Basic Render Driver`
@@ -103,14 +108,14 @@ temporaires sont supprimés après chaque mesure, y compris en cas d'erreur.
 Nommer clairement chaque configuration :
 
 ```bash
-benchmark-mac run --profile standard --label "Mac mini M4 16 Go"
-benchmark-mac history
+perfcomparator run --profile standard --label "Mac mini M4 16 Go"
+perfcomparator history
 ```
 
 Copier ensuite les JSON produits vers la machine qui fera la comparaison :
 
 ```bash
-benchmark-mac compare rapports/mac-mini.json rapports/pc-ryzen.json
+perfcomparator compare rapports/mac-mini.json rapports/pc-ryzen.json
 ```
 
 Le pourcentage est calculé par rapport au premier fichier. Tous les scores
@@ -121,7 +126,7 @@ actuels suivent la règle « plus haut est meilleur ».
 Le rapport HTML fonctionne hors ligne et n'envoie aucune donnée :
 
 ```bash
-benchmark-mac compare rapports/mac.json rapports/pc.json \
+perfcomparator compare rapports/mac.json rapports/pc.json \
   --html comparaison.html
 ```
 
@@ -134,7 +139,7 @@ Les scénarios disponibles sont `quotidien`, `developpement`, `calcul-intensif`,
 même poids. Une pondération personnelle s'écrit ainsi :
 
 ```bash
-benchmark-mac compare mac.json pc.json \
+perfcomparator compare mac.json pc.json \
   --weight developpement=50 \
   --weight creation=30 \
   --weight quotidien=20 \
