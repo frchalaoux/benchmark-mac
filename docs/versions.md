@@ -1,21 +1,23 @@
 # Versions disponibles et installation
 
-La page GitHub [Tags](https://github.com/frchalaoux/benchmark-mac/tags) est la
+La page GitHub [Tags](https://github.com/frchalaoux/perfcomparator/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.4.0.dev0` — candidate locale, non publiée
+### `v0.4.0.dev0` — développement actuel
 
-Cette candidate réalise le changement de nom vers **PerfComparator** sans
+[Consulter le code source de `v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0)
+
+Cette préversion réalise le changement de nom vers **PerfComparator** sans
 modifier le protocole de mesure `0.3.0`. Le paquet devient `perfcomparator` et
 la commande principale devient `perfcomparator`; `benchmark-mac` reste un alias
-de compatibilité. La stable publiée reste `v0.3.2` tant que cette candidate n'a
-pas été publiée. Lors d'une mise à niveau, l'installateur retire l'ancien
+de compatibilité. La stable recommandée reste `v0.3.2`. Lors d'une mise à
+niveau, l'installateur retire l'ancien
 enregistrement `uv`, puis installe PerfComparator avec l'alias historique.
 
-Après publication du dépôt et du tag, les commandes d'installation seront :
+Commandes d'installation :
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/install.sh | sh
@@ -30,7 +32,7 @@ Le contrôle `perfcomparator --version` devra afficher
 
 ### `v0.3.2` — stable actuelle
 
-[Consulter le code source de `v0.3.2`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2)
+[Consulter le code source de `v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2)
 
 Cette stable reprend `protocol_version` sans modifier le protocole de mesure
 `0.3.0`. Elle reste compatible avec les rapports historiques reconnus de cette
@@ -49,11 +51,11 @@ ce champ restent pris en charge par la table historique.
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2.dev0/install.sh | sh
 ```
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2.dev0/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2.dev0/install.ps1 | iex
 ```
 
 Le contrôle `benchmark-mac --version` doit afficher `benchmark-mac 0.3.2.dev0`.
@@ -229,13 +231,13 @@ Python, l'installateur met automatiquement `uv` à niveau et réessaie.
 ### macOS et Linux
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2/install.sh | sh
 ```
 
 ### Windows PowerShell
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/benchmark-mac/v0.3.2/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.3.2/install.ps1 | iex
 ```
 
 Le contrôle suivant doit afficher `benchmark-mac 0.3.2` :

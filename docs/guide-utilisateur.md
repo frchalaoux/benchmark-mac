@@ -23,7 +23,7 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La candidate locale `0.4.0.dev0` prépare le changement de nom. Sa commande
+La préversion `0.4.0.dev0` réalise le changement de nom. Sa commande
 principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
 alias de compatibilité. Avec une version publiée `0.3.x`, employer
 `benchmark-mac`.
