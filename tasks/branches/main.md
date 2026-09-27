@@ -17,8 +17,7 @@ nouveaux JSON; sa fonctionnalité est intégrée par la pull request nº 9
 
 # Next Concrete Action
 
-Aucun travail bloquant. Choisir une prochaine évolution avant de créer une
-nouvelle branche; options connues : CI multiplateforme ou validation GPU Linux.
+Préparer la branche stable `release/0.3.2`.
 
 # Validation Snapshot
 
@@ -31,6 +30,11 @@ nouvelle branche; options connues : CI multiplateforme ou validation GPU Linux.
   `main` au commit `a3debdd`; GitHub Release marquée `Latest`.
 - Préversion `v0.3.2.dev0` publiée sur `5bffb42`; fonctionnalité fusionnée par
   la pull request nº 9 (`ff307fd`).
+- Comparaison mixte distante réussie entre `0.3.0.dev2`, `0.3.1` et
+  `0.3.2.dev0`, avec 16 benchmarks communs et le protocole déclaré `0.3.0`.
+- Smoke test Ubuntu 24.04 Docker réussi depuis le tag distant `v0.3.2.dev0` :
+  installation complète, catalogue de 16 tests et JSON Linux conforme après
+  une exécution rapide de `cpu.integer`.
 - Ruff, format, 50 tests, source et wheel `0.3.1` validés.
 - Validations fonctionnelles macOS, Windows 11 et Linux amd64 réalisées.
 
