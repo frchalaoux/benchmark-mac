@@ -23,6 +23,8 @@
 - La branche `feat/report-protocol-version` ajoute un champ optionnel
   `protocol_version` aux nouveaux rapports. `suite_version` reste exacte et les
   archives antérieures utilisent la table de compatibilité historique.
+- Cette branche ouvre la préversion locale `0.3.2.dev0`, non encore publiée,
+  tout en conservant le protocole de mesure `0.3.0`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
@@ -61,9 +63,9 @@
 - Stable `0.3.1` : 50 tests réussis, source et wheel construites, archive sans
   rapport HTML et wheel exécutée isolément avec la version attendue.
 - Branche `feat/report-protocol-version` : Ruff réussi, 53 tests réussis,
-  comparaison réelle de trois anciens rapports réussie et wheel exécutée
-  isolément; le JSON produit distingue `suite_version: "0.3.1"` et
-  `protocol_version: "0.3.0"`.
+  comparaison réelle de trois anciens rapports réussie et wheel `0.3.2.dev0`
+  exécutée isolément; le JSON produit contient `suite_version: "0.3.2.dev0"`,
+  `protocol_version: "0.3.0"` et `schema_version: 4`.
 - Validation depuis l'archive GitHub du tag : version `0.3.1.dev0` confirmée et
   comparaison CLI réelle de trois rapports complets réussie, avec une conclusion
   distincte pour chacune des deux machines candidates sur les 16 benchmarks.

@@ -7,8 +7,9 @@ versions logicielles différentes mais compatibles.
 # Current Status
 
 Implémentation locale terminée sur `feat/report-protocol-version`. Les nouvelles
-campagnes écrivent `protocol_version: "0.3.0"`; les anciens rapports restent
-comparables par la table historique.
+campagnes `0.3.2.dev0` écrivent `protocol_version: "0.3.0"`; les anciens
+rapports restent comparables par la table historique. La préversion n'est pas
+encore publiée.
 
 # Next Concrete Action
 
@@ -17,14 +18,14 @@ Relire le diff final et préparer le commit local.
 # Validation Snapshot
 
 - Les rapports historiques restent pris en charge par une table de repli.
-- Une campagne réelle écrit `suite_version: "0.3.1"`,
-  `protocol_version: "0.3.0"` et `schema_version: 4`.
+- La wheel isolée produit un rapport avec `suite_version: "0.3.2.dev0"`,
+  `protocol_version: "0.3.0"`, `schema_version: 4`, un résultat et zéro échec.
 - Une comparaison réelle de trois archives `0.3.0.dev2` produit encore les 16
   benchmarks détaillés.
 - `uv run ruff format --check .` et `uv run ruff check .` réussissent.
 - Les 53 tests réussissent, notamment le cas mixte ancien/nouveau.
-- La source et la wheel `0.3.1` se construisent avec le nouveau champ; aucun
-  rapport HTML n'est embarqué.
+- La source et la wheel `0.3.2.dev0` se construisent avec le nouveau champ;
+  aucun rapport HTML n'est embarqué.
 
 # Key Files
 
