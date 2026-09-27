@@ -132,13 +132,12 @@
   commit `d2bc4e8`.
 - Branche `feat/report-protocol-version` et tag annoté `v0.3.2.dev0` publiés
   ensemble sur le commit `5bffb42`; archive distante et installateurs vérifiés.
-- Pull request nº 9 ouverte vers `main`.
+- Pull request nº 9 fusionnée dans `main` au commit `ff307fd`.
 
 ## Prochaine étape possible
 
-Relire puis fusionner la pull request nº 9 après confirmation explicite.
-Améliorations futures possibles : validation GPU matérielle sous Linux et ajout
-d'une CI GitHub macOS, Windows et Linux.
+Aucun travail bloquant identifié. Améliorations futures possibles : validation
+GPU matérielle sous Linux et ajout d'une CI GitHub macOS, Windows et Linux.
 
 ## Points de vigilance
 

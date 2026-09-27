@@ -9,12 +9,12 @@ versions logicielles différentes mais compatibles.
 Implémentation locale terminée sur `feat/report-protocol-version`. Les nouvelles
 campagnes `0.3.2.dev0` écrivent `protocol_version: "0.3.0"`; les anciens
 rapports restent comparables par la table historique. La branche et le tag
-annoté `v0.3.2.dev0` sont publiés sur `5bffb42`; la pull request nº 9 est ouverte
-vers `main`.
+annoté `v0.3.2.dev0` sont publiés sur `5bffb42`; la pull request nº 9 est
+fusionnée dans `main` au commit `ff307fd`.
 
 # Next Concrete Action
 
-Relire puis fusionner la pull request nº 9 après confirmation explicite.
+Aucune action requise; la fonctionnalité est publiée et intégrée dans `main`.
 
 # Validation Snapshot
 
