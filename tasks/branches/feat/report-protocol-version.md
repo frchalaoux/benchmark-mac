@@ -8,13 +8,13 @@ versions logicielles différentes mais compatibles.
 
 Implémentation locale terminée sur `feat/report-protocol-version`. Les nouvelles
 campagnes `0.3.2.dev0` écrivent `protocol_version: "0.3.0"`; les anciens
-rapports restent comparables par la table historique. La branche et le tag sont
-prêts pour une publication coordonnée après confirmation explicite.
+rapports restent comparables par la table historique. La branche et le tag
+annoté `v0.3.2.dev0` sont publiés sur `5bffb42`; la pull request nº 9 est ouverte
+vers `main`.
 
 # Next Concrete Action
 
-Vérifier l'absence du tag distant, puis publier ensemble la branche et le tag
-annoté après confirmation explicite.
+Relire puis fusionner la pull request nº 9 après confirmation explicite.
 
 # Validation Snapshot
 
@@ -27,6 +27,8 @@ annoté après confirmation explicite.
 - Les 53 tests réussissent, notamment le cas mixte ancien/nouveau.
 - La source et la wheel `0.3.2.dev0` se construisent avec le nouveau champ;
   aucun rapport HTML n'est embarqué.
+- L'archive distante du tag installe bien `benchmark-mac 0.3.2.dev0`; les deux
+  installateurs bruts sont accessibles et ciblent le bon tag.
 
 # Key Files
 

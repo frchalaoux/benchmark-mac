@@ -23,8 +23,9 @@
 - La branche `feat/report-protocol-version` ajoute un champ optionnel
   `protocol_version` aux nouveaux rapports. `suite_version` reste exacte et les
   archives antérieures utilisent la table de compatibilité historique.
-- Cette branche prépare la préversion `0.3.2.dev0` tout en conservant le
-  protocole de mesure `0.3.0`.
+- La préversion `v0.3.2.dev0` est publiée depuis la branche
+  `feat/report-protocol-version` tout en conservant le protocole de mesure
+  `0.3.0`.
 - Sept scénarios, dont `jeu-3d`; GPU intégré à `calcul-intensif` et `creation`.
 - Rapport HTML intitulé « Ce que ces performances changent au quotidien ».
 - `benchmark-mac --version` affiche la version réellement exécutée.
@@ -129,12 +130,15 @@
   revérifiés après publication.
 - Close-out documentaire fusionné dans `main` par la pull request nº 7 au
   commit `d2bc4e8`.
+- Branche `feat/report-protocol-version` et tag annoté `v0.3.2.dev0` publiés
+  ensemble sur le commit `5bffb42`; archive distante et installateurs vérifiés.
+- Pull request nº 9 ouverte vers `main`.
 
 ## Prochaine étape possible
 
-Relire et intégrer la branche locale `feat/report-protocol-version` après
-validation. Améliorations futures possibles : validation GPU matérielle sous
-Linux et ajout d'une CI GitHub macOS, Windows et Linux.
+Relire puis fusionner la pull request nº 9 après confirmation explicite.
+Améliorations futures possibles : validation GPU matérielle sous Linux et ajout
+d'une CI GitHub macOS, Windows et Linux.
 
 ## Points de vigilance
 
