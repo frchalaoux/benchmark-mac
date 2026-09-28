@@ -258,6 +258,28 @@ Le catalogue complet est fourni par `perfcomparator list`. La commande
 références d'un test. Les profils `quick`, `standard` et `thorough` augmentent
 progressivement les durées et volumes.
 
+## Exporter un rapport public
+
+Un rapport de campagne privé contient des informations de diagnostic qui ne
+doivent pas être publiées directement. La commande `export-public` reconstruit
+un fichier distinct depuis une liste blanche, localement et sans envoi réseau :
+
+```bash
+perfcomparator export-public data/results/benchmark_….json \
+  --output rapport-public.json \
+  --accept-cc0
+```
+
+`--accept-cc0` confirme que les données exportées pourront être diffusées sous
+licence CC0 1.0. L'export retire notamment le label libre, la date précise, les
+chemins, processus, PID, messages d'échec, versions détaillées du système et
+informations de disque. Il porte un identifiant de contenu déterministe et la
+mention `community-unverified` : l'anonymisation et la validation du format ne
+certifient jamais les performances déclarées.
+
+Le [contrat complet du format public](docs/format-rapport-public.md) précise les
+données conservées et les limites de confidentialité.
+
 ## Comparer plusieurs machines
 
 Copier les rapports JSON dans un même dossier, puis utiliser le premier comme

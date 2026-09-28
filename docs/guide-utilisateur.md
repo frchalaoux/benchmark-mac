@@ -121,6 +121,25 @@ perfcomparator compare rapports/mac-mini.json rapports/pc-ryzen.json
 Le pourcentage est calculé par rapport au premier fichier. Tous les scores
 actuels suivent la règle « plus haut est meilleur ».
 
+### Préparer un rapport destiné au catalogue communautaire
+
+Ne jamais publier directement le JSON produit par `run` : il contient des
+informations utiles au diagnostic local, dont le chemin de Python, le label
+libre, la date précise et les processus observés.
+
+Créer à la place un export public :
+
+```bash
+perfcomparator export-public data/results/benchmark_….json \
+  --output rapport-public.json \
+  --accept-cc0
+```
+
+La commande ne réalise aucun envoi réseau. L'option `--accept-cc0` est requise
+pour confirmer la licence CC0 1.0 des données destinées au partage. Relire le
+fichier produit avant toute contribution. Le format et sa politique de
+confidentialité sont détaillés dans [Format des rapports publics](format-rapport-public.md).
+
 ## Rapport visuel et priorités
 
 Le rapport HTML fonctionne hors ligne et n'envoie aucune donnée :

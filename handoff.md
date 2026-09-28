@@ -26,6 +26,27 @@ communautaire distant avant d'avoir défini et testé ce format.
 - Le changement de nom a été validé sous macOS, Ubuntu 24.04 et Windows 10.
 - Aucune pull request n'est ouverte.
 
+## État local du premier livrable
+
+La branche contient désormais, sans commit supplémentaire ni opération distante :
+
+- le modèle fermé `perfcomparator-public-report` version 1 ;
+- un export fondé sur une liste blanche et un identifiant SHA-256 déterministe ;
+- la commande locale `perfcomparator export-public SOURCE --output DESTINATION
+  --accept-cc0` ;
+- le consentement explicite à la licence de données `CC0-1.0` ;
+- le marquage obligatoire `community-unverified` ;
+- la validation du schéma privé 4, du protocole 0.3.0, des unités, paramètres,
+  passages, résultats et échecs ;
+- la documentation de la politique de confidentialité et de ses limites ;
+- des tests de non-divulgation des labels, dates, chemins, PID, processus,
+  avertissements, messages d'échec et détails système privés.
+
+Validations acquises sur cet arbre : Ruff réussi, 69 tests réussis et export des
+12 rapports locaux macOS/Windows compatibles avec 12 identifiants distincts.
+Le chemin Linux est couvert par un rapport synthétique ; aucun rapport Linux
+réel n'est présent localement. Aucun fichier privé n'a été publié ou versionné.
+
 ## Travail PyPI différé
 
 La publication PyPI est volontairement mise de côté. Elle n'est pas nécessaire
@@ -163,18 +184,11 @@ vers un stockage d'objets et conserver seulement l'index sur GitHub :
 
 ## Prochaine action concrète
 
-Dans `feat/community-report-catalog` :
-
-1. inspecter le modèle `BenchmarkReport` et plusieurs rapports réels sans les
-   publier ;
-2. proposer le schéma minimal `public_report` et sa politique de confidentialité ;
-3. écrire des tests de liste blanche et de non-divulgation ;
-4. implémenter `perfcomparator export-public SOURCE --output DESTINATION` ;
-5. valider l'export sur des rapports macOS, Linux et Windows existants ;
-6. seulement ensuite proposer la création du dépôt communautaire séparé.
-
-Ne pas implémenter simultanément le site, le dépôt distant et le CLI catalogue.
-Le premier livrable doit être uniquement un export public sûr et documenté.
+Relire le premier livrable local, puis le committer sur
+`feat/community-report-catalog`. Valider ensuite l'export sur un rapport Linux
+réel dès qu'un tel rapport est disponible. Seulement après cette validation,
+concevoir localement la structure et le validateur du dépôt communautaire
+séparé ; ne créer aucun dépôt distant sans confirmation explicite actuelle.
 
 ## Critères d'acceptation du premier livrable
 
