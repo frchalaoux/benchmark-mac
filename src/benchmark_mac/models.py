@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SystemSnapshot(BaseModel):
@@ -104,3 +105,60 @@ class BenchmarkReport(BaseModel):
     readiness: ReadinessSnapshot | None = None
     results: list[BenchmarkResult]
     failures: list[BenchmarkFailure] = Field(default_factory=list)
+
+
+class PublicSystemSnapshot(BaseModel):
+    """Inventaire matériel minimal autorisé dans un rapport public."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    operating_system: str
+    architecture: str
+    processor: str
+    physical_cpu_count: int | None = Field(default=None, gt=0)
+    logical_cpu_count: int = Field(gt=0)
+    memory_bytes: int | None = Field(default=None, gt=0)
+    gpu_devices: list[str] = Field(default_factory=list)
+    python_version: str
+    python_implementation: str
+
+
+class PublicBenchmarkResult(BaseModel):
+    """Données numériques strictement nécessaires aux comparaisons."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    benchmark_id: str
+    group: str
+    name: str
+    value: float = Field(gt=0)
+    unit: str
+    higher_is_better: bool = True
+    parameters: dict[str, int | float | str] = Field(default_factory=dict)
+    repetitions: int = Field(gt=0)
+    sample_values: list[float]
+    minimum: float | None = Field(default=None, gt=0)
+    maximum: float | None = Field(default=None, gt=0)
+    relative_spread_percent: float | None = Field(default=None, ge=0)
+
+
+class PublicBenchmarkReport(BaseModel):
+    """Format public fermé, déterministe et indépendant du rapport privé."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    format: Literal["perfcomparator-public-report"] = "perfcomparator-public-report"
+    format_version: Literal[1] = 1
+    report_id: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    license: Literal["CC0-1.0"] = "CC0-1.0"
+    verification: Literal["community-unverified"] = "community-unverified"
+    source_schema_version: Literal[4] = 4
+    suite_version: str
+    protocol_version: Literal["0.3.0"] = "0.3.0"
+    profile: str
+    repetitions: int = Field(gt=0)
+    requested_benchmarks: list[str]
+    system: PublicSystemSnapshot
+    readiness_suitable: bool | None = None
+    results: list[PublicBenchmarkResult]
+    failed_benchmarks: list[str] = Field(default_factory=list)

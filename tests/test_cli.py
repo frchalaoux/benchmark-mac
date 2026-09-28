@@ -102,3 +102,59 @@ def test_compare_writes_a_weighted_autonomous_html_report(tmp_path: Path) -> Non
     assert "Rapport HTML" in result.stdout
     assert output.exists()
     assert "Carte thermique" in output.read_text(encoding="utf-8")
+
+
+def test_export_public_requires_explicit_license_acceptance(tmp_path: Path) -> None:
+    report = sample_report().model_copy(
+        update={"suite_version": "0.4.0.dev0", "protocol_version": "0.3.0"}
+    )
+    report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
+    source = JsonReportRepository(tmp_path / "private").save(report)
+
+    result = runner.invoke(
+        app,
+        ["export-public", str(source), "--output", str(tmp_path / "public.json")],
+    )
+
+    assert result.exit_code == 2
+    assert "--accept-cc0" in result.output
+    assert not (tmp_path / "public.json").exists()
+
+
+def test_export_public_writes_only_the_requested_local_file(tmp_path: Path) -> None:
+    report = sample_report(label="Private label").model_copy(
+        update={"suite_version": "0.4.0.dev0", "protocol_version": "0.3.0"}
+    )
+    report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
+    source = JsonReportRepository(tmp_path / "private").save(report)
+    output = tmp_path / "exports" / "public.json"
+
+    result = runner.invoke(
+        app,
+        [
+            "export-public",
+            str(source),
+            "--output",
+            str(output),
+            "--accept-cc0",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert output.exists()
+    assert "Private label" not in output.read_text(encoding="utf-8")
+    assert "CC0-1.0" in result.stdout
+
+    validation = runner.invoke(app, ["validate-public", str(output)])
+
+    assert validation.exit_code == 0
+    assert "Rapport public valide" in validation.stdout
+    assert "performances non certifiées" in validation.stdout

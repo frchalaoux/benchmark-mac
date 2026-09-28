@@ -6,7 +6,7 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.4.0.dev0` — développement actuel
+### `v0.4.0.dev0` — développement publié
 
 [Consulter le code source de `v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0)
 
