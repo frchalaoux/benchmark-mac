@@ -80,6 +80,15 @@ def test_public_export_is_deterministic(tmp_path) -> None:
     assert first_path.read_bytes() == second_path.read_bytes()
 
 
+def test_public_export_supports_schema_3_without_readiness_data() -> None:
+    report = exportable_report().model_copy(update={"schema_version": 3, "readiness": None})
+
+    exported = export_public_report(report)
+
+    assert exported.source_schema_version == 3
+    assert exported.readiness_suitable is None
+
+
 def test_report_id_changes_with_comparative_content() -> None:
     first = export_public_report(exportable_report())
     changed = exportable_report()
@@ -103,7 +112,7 @@ def test_public_schema_rejects_unknown_fields() -> None:
 @pytest.mark.parametrize(
     ("changes", "message"),
     [
-        ({"schema_version": 3}, "schéma privé 3"),
+        ({"schema_version": 2}, "schéma privé 2"),
         ({"protocol_version": "0.2.0"}, "protocole 0.2.0"),
         ({"results": []}, "sans résultat"),
     ],

@@ -234,7 +234,12 @@ def test_contribute_guides_a_user_without_exposing_the_private_report(
 
 def test_contribute_dry_run_never_connects_to_github(tmp_path: Path, monkeypatch) -> None:
     report = sample_report().model_copy(
-        update={"suite_version": "0.4.0.dev2", "protocol_version": "0.3.0"}
+        update={
+            "schema_version": 3,
+            "suite_version": "0.3.0.dev2",
+            "protocol_version": None,
+            "readiness": None,
+        }
     )
     report.results[0].parameters = {"workers": 1}
     report.results[0].sample_values = [10]

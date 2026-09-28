@@ -9,6 +9,31 @@ Le catalogue accepte des rapports communautaires non certifiés. Ses contrôles
 prouvent la conformité et l'intégrité du fichier, pas l'identité de la machine
 ni l'exactitude de ses performances.
 
+## Ce qui se passe réellement
+
+`perfcomparator contribute` ne publie pas immédiatement le rapport dans le
+catalogue. La commande prépare une proposition que le catalogue contrôle avant
+de l'accepter :
+
+| Étape | État du rapport | Responsable |
+| --- | --- | --- |
+| `perfcomparator contribute` termine | Pull request ouverte, rapport absent du site | Participant |
+| Le contrôle `validate` réussit | Rapport conforme, mais toujours absent du site | GitHub Actions |
+| La pull request conforme est fusionnée dans `main` | Rapport intégré au catalogue | GitHub Actions |
+| Le déploiement Pages réussit | Rapport visible et téléchargeable dans l'interface web | GitHub Actions |
+
+Le message **Contribution envoyée** signifie donc « pull request créée », pas
+« rapport déjà publié ». Aucune action supplémentaire n'est demandée si le
+contrôle réussit : le dépôt fusionne automatiquement une contribution qui
+contient uniquement le nouveau rapport et l'index généré, puis redéploie le
+site. Si le contrôle échoue, la pull request reste ouverte et affiche l'erreur.
+Pour la toute première contribution provenant d'un fork, GitHub peut demander
+au mainteneur d'autoriser le démarrage du contrôle. Une fois `validate` lancé,
+la fusion et la publication ne demandent plus d'intervention.
+
+L'interface publique est disponible ici :
+<https://frchalaoux.github.io/perfcomparator-results/>.
+
 ## Parcours guidé recommandé
 
 À partir de `0.4.0.dev2`, toute la contribution tient dans une commande :
@@ -20,8 +45,9 @@ perfcomparator contribute
 Le menu choisit un rapport récent, demande le consentement CC0, affiche les
 données publiques, prépare GitHub CLI et ouvre le navigateur pour connecter ou
 créer le compte GitHub. Il annonce ensuite précisément la création ou la
-réutilisation du fork, la branche distante créée et la pull request, puis attend une
-confirmation explicite.
+réutilisation du fork, la branche distante créée et la pull request, puis attend
+une confirmation explicite. Conservez l'adresse de la pull request affichée à
+la fin : elle permet de suivre la validation et la fusion.
 
 Pour s'entraîner sans connexion ni modification GitHub :
 
@@ -143,14 +169,25 @@ peut rester reconnaissable.
    Ouvrir ensuite la pull request suggérée par GitHub. Le contrôle automatique
    répète la validation du format, du nom, de l'emplacement et de l'index.
 
-Après fusion, GitHub Pages reconstruit le
-[catalogue public](https://frchalaoux.github.io/perfcomparator-results/). Le
-rapport devient téléchargeable depuis sa fiche.
+La création de la pull request termine le travail du participant. Elle ne
+publie pas encore le rapport. Le contrôle `validate` vérifie les données ; si
+la contribution contient uniquement le nouveau rapport et l'index généré, un
+second workflow la fusionne automatiquement dans `main` et demande le
+déploiement GitHub Pages. Lorsque **Deploy GitHub Pages** est vert, le rapport
+apparaît dans le
+[catalogue public](https://frchalaoux.github.io/perfcomparator-results/).
 
 ## 5. Télécharger et comparer
 
-Télécharger au moins un rapport depuis le catalogue, par exemple sous le nom
-`catalogue-machine.json`, puis vérifier le fichier reçu :
+1. Ouvrir le
+   [catalogue public](https://frchalaoux.github.io/perfcomparator-results/).
+2. Filtrer éventuellement par système ou profil.
+3. Cliquer sur **Télécharger le JSON** dans la fiche choisie. Le navigateur
+   enregistre un fichier dont le nom est l'identifiant du rapport.
+4. Placer ce fichier dans le dossier depuis lequel la commande sera exécutée,
+   ou conserver son chemin complet.
+
+Vérifier ensuite le fichier reçu :
 
 ```bash
 perfcomparator validate-public catalogue-machine.json
@@ -170,10 +207,12 @@ Deux rapports publics téléchargés peuvent être comparés de la même façon.
 un rapport public, le processeur remplace le label libre retiré lors de
 l'export.
 
-La comparaison exige le même protocole, le même profil, le même schéma et la
-même version de Python. Elle ne compare que les benchmarks présents dans tous
-les fichiers. Les plages min–max qui se chevauchent produisent une conclusion
-prudente, et le rapport HTML reste entièrement local.
+La comparaison exige le même protocole, le même profil et la même version de
+Python. Elle ne compare que les benchmarks présents dans tous les fichiers. Les
+plages min–max qui se chevauchent produisent une conclusion prudente, et le
+rapport HTML reste entièrement local. Si le catalogue n'affiche pas encore le
+rapport, vérifier d'abord que sa pull request est fusionnée et que le workflow
+**Deploy GitHub Pages** a réussi.
 
 ## En cas de refus
 

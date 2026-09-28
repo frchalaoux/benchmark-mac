@@ -7,10 +7,11 @@ pour le futur catalogue communautaire. Il est construit depuis un rapport privé
 par `perfcomparator export-public`; le fichier privé ne doit jamais être ajouté
 au catalogue.
 
-Cette première version accepte uniquement le schéma privé `4` et le protocole
-de mesure `0.3.0`. Un format inconnu, un protocole incompatible, un benchmark
-inconnu, un résultat dupliqué ou un rapport sans résultat est refusé plutôt que
-d'être exporté avec une anonymisation incertaine.
+Cette première version accepte les schémas privés `3` et `4` du protocole de
+mesure `0.3.0`. Le schéma `3` ne contenant pas le contrôle préalable, son état
+de préparation est publié avec la valeur `null`. Un format inconnu, un protocole
+incompatible, un benchmark inconnu, un résultat dupliqué ou un rapport sans
+résultat est refusé plutôt que d'être exporté avec une anonymisation incertaine.
 
 ## Liste blanche
 

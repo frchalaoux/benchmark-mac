@@ -347,10 +347,28 @@ PerfComparator, depuis une archive officielle épinglée et vérifiée par SHA-2
 La création éventuelle du compte et la vérification de son adresse restent dans
 le navigateur.
 
+**Contribution envoyée** signifie que la pull request a été créée. Le catalogue
+enchaîne ensuite automatiquement sa validation, sa fusion si elle ne contient
+que le rapport et l'index attendu, puis le déploiement GitHub Pages. Le rapport
+devient alors visible dans le
+[catalogue web](https://frchalaoux.github.io/perfcomparator-results/). Une
+contribution invalide reste ouverte avec son erreur.
+GitHub peut encore demander au mainteneur d'autoriser le contrôle initial de la
+première contribution provenant d'un fork ; après ce contrôle, la suite est
+automatique.
+
 Un essai strictement local s'exécute ainsi :
 
 ```bash
 perfcomparator contribute --dry-run
+```
+
+Depuis le catalogue web, le bouton **Télécharger le JSON** fournit un rapport
+directement utilisable :
+
+```bash
+perfcomparator compare mon-rapport-local.json rapport-telecharge.json \
+  --html comparaison.html
 ```
 
 ## Comparer plusieurs machines

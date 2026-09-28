@@ -152,7 +152,7 @@ class PublicBenchmarkReport(BaseModel):
     report_id: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
     license: Literal["CC0-1.0"] = "CC0-1.0"
     verification: Literal["community-unverified"] = "community-unverified"
-    source_schema_version: Literal[4] = 4
+    source_schema_version: Literal[3, 4] = 4
     suite_version: str
     protocol_version: Literal["0.3.0"] = "0.3.0"
     profile: str
