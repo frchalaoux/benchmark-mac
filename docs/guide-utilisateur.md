@@ -23,11 +23,12 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion publiée `0.4.0.dev2` ajoute la soumission guidée au parcours du
-catalogue communautaire introduit par `0.4.0.dev1`. Sa commande
-principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
-alias de compatibilité. Avec une version publiée `0.3.x`, employer
-`benchmark-mac`.
+La préversion publiée `0.4.0.dev3` accepte les rapports privés compatibles de
+schéma `3` ou `4` et clarifie la publication automatique dans le catalogue. La
+soumission guidée vient de `0.4.0.dev2` et le catalogue communautaire de
+`0.4.0.dev1`. La commande principale est `perfcomparator`; l'ancienne commande
+`benchmark-mac` reste un alias de compatibilité. Avec une version publiée
+`0.3.x`, employer `benchmark-mac`.
 
 Avant une mesure :
 
