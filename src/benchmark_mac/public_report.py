@@ -25,7 +25,7 @@ from .models import (
 PUBLIC_FORMAT_VERSION = 1
 PUBLIC_LICENSE = "CC0-1.0"
 MAX_PUBLIC_REPORT_BYTES = 2 * 1_048_576
-SUPPORTED_PRIVATE_SCHEMA = 4
+SUPPORTED_PRIVATE_SCHEMAS = frozenset({3, 4})
 SUPPORTED_PROTOCOL = "0.3.0"
 SUITE_VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:\.dev\d+)?$")
 PRIVATE_PATH_PATTERNS = (
@@ -343,7 +343,7 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
 
 def export_public_report(report: BenchmarkReport) -> PublicBenchmarkReport:
     """Reconstruit un rapport public depuis une liste blanche de champs."""
-    if report.schema_version != SUPPORTED_PRIVATE_SCHEMA:
+    if report.schema_version not in SUPPORTED_PRIVATE_SCHEMAS:
         raise ValueError(
             f"Le schéma privé {report.schema_version} ne peut pas être exporté sûrement."
         )
