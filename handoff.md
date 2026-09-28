@@ -1,104 +1,207 @@
-# Handoff — transition progressive du nom du projet
+# Handoff — catalogue communautaire PerfComparator
 
-## Objectif
+## Objectif unique de la prochaine session
 
-Remplacer progressivement le nom public `benchmark-mac` par `PerfComparator`,
-un nom réellement multiplateforme, sans casser les installations existantes ni la compatibilité
-des rapports JSON.
+Concevoir la première version sobre d'un catalogue communautaire de rapports
+PerfComparator hébergé sur GitHub et affiché avec GitHub Pages.
 
-Ne traiter aucun autre chantier pendant cette session : ni catalogue public de
-rapports, ni nouveaux benchmarks, ni CI générale, ni changement de protocole.
+Le site reste statique : les contributions passent par des pull requests, puis
+une automatisation valide les JSON et régénère l'index. Aucun serveur payant,
+compte utilisateur ou base de données n'est prévu pour cette première version.
 
-## État courant
+Commencer par l'export public anonymisé dans le CLI. Ne pas créer le dépôt
+communautaire distant avant d'avoir défini et testé ce format.
 
-- Branche de publication : `release/0.4.0.dev0`, créée depuis `main` au commit
-  `3c86581` après la fusion de la PR nº13.
-- Stable publiée : `v0.3.2`, taguée sur `57c7598` et marquée `Latest`.
-- Dépôt actuel : `https://github.com/frchalaoux/perfcomparator`.
-- Préversion publiée : `v0.4.0.dev0`, taguée sur `d4fee69` et proposée par la
-  release GitHub « PerfComparator v0.4.0.dev0 ».
-- Paquet : `perfcomparator`.
-- Commande principale : `perfcomparator`.
-- Alias de transition : `benchmark-mac`.
-- Module Python interne : `benchmark_mac`.
-- La suite fonctionne sous macOS, Windows et Linux; son nom actuel est donc
-  devenu trop restrictif.
-- Nom retenu et publié : `PerfComparator`; dépôt, paquet et commande :
-  `perfcomparator`.
-- Le dépôt distant a été renommé en `perfcomparator`; les anciennes URL GitHub
-  et les installateurs historiques redirigent encore correctement.
+## État du projet source
 
-## Décisions déjà prises
+- Dépôt : `https://github.com/frchalaoux/perfcomparator`.
+- Branche distante par défaut : `main` au commit `a11eab9`.
+- Branche locale préparée pour ce chantier : `feat/community-report-catalog`.
+- Stable actuelle : `v0.3.2`, marquée `Latest`.
+- Préversion du changement de nom : `v0.4.0.dev0`, taguée sur `d4fee69`.
+- Nom public et commande principale : `PerfComparator` / `perfcomparator`.
+- Alias conservé pendant la transition : `benchmark-mac`.
+- Module Python interne conservé : `benchmark_mac`.
+- Protocole de mesure : `0.3.0` ; schéma JSON : `4`.
+- Le changement de nom a été validé sous macOS, Ubuntu 24.04 et Windows 10.
+- Aucune pull request n'est ouverte.
 
-1. Procéder par transition douce dans la série `0.4.0`, en commençant par
-   `0.4.0.dev0`.
-2. Le nom `PerfComparator` a été vérifié comme disponible sur PyPI, dans
-   l'espace GitHub du projet et en `.com`; aucune réservation n'a été faite.
-3. Renommer l'identité publique, le dépôt, le paquet et la commande de façon
-   coordonnée.
-4. Conserver temporairement `benchmark-mac` comme alias de commande afin de ne
-   pas casser les usages existants.
-5. Garder dans un premier temps le module interne `benchmark_mac`; son renommage
-   apporterait peu de valeur et augmenterait fortement le risque.
-6. Ne modifier ni `protocol_version` (`0.3.0`) ni `schema_version` (`4`) pour un
-   simple changement de nom.
-7. Préserver tous les anciens tags et vérifier que leurs installateurs restent
-   utilisables après le renommage du dépôt.
-8. Ne réaliser aucune opération distante sans annoncer toute la séquence et
-   obtenir une confirmation explicite actuelle.
+## Travail PyPI différé
 
-## Travail local réalisé
+La publication PyPI est volontairement mise de côté. Elle n'est pas nécessaire
+au catalogue ni aux installateurs GitHub.
 
-- identité publique, distribution et commande principale renommées ;
-- alias `benchmark-mac` conservé et module `benchmark_mac` inchangé ;
-- version portée à `0.4.0.dev0`, sans changement du protocole `0.3.0` ni du
-  schéma 4 ;
-- installateurs adaptés au nouveau dépôt et capables de remplacer proprement
-  l'ancien outil enregistré par `uv` ;
-- CLI, rapports HTML, documentation, tests et verrou adaptés ;
-- rapports historiques et liens des versions `0.3.x` préservés.
+Le travail préparatoire reste sauvegardé localement sur
+`chore/pypi-trusted-publishing` :
 
-## Validations acquises
+- `27b8a5a` — workflow Trusted Publishing ;
+- `8d142bf` — ancien handoff PyPI.
 
-- `ruff format --check` et `ruff check` réussis ;
-- 54 tests réussis ;
-- wheel et archive source `perfcomparator-0.4.0.dev0` construites et inspectées ;
-- les deux commandes sont présentes dans la wheel ;
-- aucun rapport utilisateur n'est inclus dans les distributions ;
-- migration réelle isolée depuis l'archive distante `v0.3.2` réussie sur macOS :
-  un seul outil `perfcomparator 0.4.0.dev0` enregistré, avec les commandes
-  `perfcomparator` et `benchmark-mac` fonctionnelles ;
-- installation et smoke test réussis depuis l'installateur distant du tag
-  `v0.4.0.dev0` ;
-- installateur PowerShell vérifié par tests statiques, faute de PowerShell local.
+Cette branche n'a pas été poussée. Ne pas la fusionner ni reprendre PyPI sans
+une nouvelle demande explicite de l'utilisateur.
+
+## Architecture recommandée
+
+Créer à terme un dépôt séparé, nom de travail `perfcomparator-results`, afin de
+ne pas alourdir le dépôt du logiciel :
+
+```text
+perfcomparator-results/
+├── reports/
+│   └── protocol-0.3.0/
+│       ├── apple/
+│       ├── amd/
+│       └── intel/
+├── catalog/
+│   └── index.json
+├── site/
+└── .github/workflows/validate-report.yml
+```
+
+Le nom du dépôt reste à vérifier avant toute création distante. Une autre
+classification pourra être retenue si un rapport combine plusieurs fabricants
+CPU et GPU ; ne pas figer `apple/amd/intel` avant d'avoir défini les clés du
+catalogue.
+
+Fonctionnement visé :
+
+1. `perfcomparator export-public` produit un JSON anonymisé.
+2. L'utilisateur ajoute ce fichier au dépôt communautaire par une pull request.
+3. Un workflow vérifie le rapport sans secret et avec un jeton en lecture seule.
+4. Après fusion, l'index et le site GitHub Pages sont régénérés.
+5. Chacun recherche et télécharge seulement les rapports qui l'intéressent.
+6. Les rapports téléchargés restent comparables localement avec sa machine.
+
+GitHub Pages héberge des fichiers HTML, CSS et JavaScript statiques et peut les
+déployer par GitHub Actions :
+https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+
+## Première étape indispensable : export public anonymisé
+
+Les rapports actuels ne doivent pas être publiés tels quels. Ils peuvent
+contenir des informations identifiantes ou trop détaillées :
+
+- `python_executable`, dont le chemin peut révéler un nom d'utilisateur ;
+- PID et noms des processus actifs ;
+- label libre fourni par l'utilisateur ;
+- date et heure précises ;
+- détails du système non nécessaires à la comparaison.
+
+Créer un format public fondé sur une **liste blanche**, jamais sur une liste de
+champs à retirer. Conserver uniquement ce qui est nécessaire :
+
+- identifiant et version du format public ;
+- `protocol_version`, `schema_version` et `suite_version` ;
+- processeur, mémoire, GPU et système sous une forme normalisée ;
+- profil, répétitions et paramètres comparatifs utiles ;
+- résultats, unités, valeurs brutes ou dispersion nécessaires à l'analyse ;
+- état global de la campagne et échecs de benchmarks, sans processus ni chemin.
+
+À décider explicitement avant implémentation :
+
+- précision temporelle conservée, éventuellement mois seul ou aucune date ;
+- génération d'un identifiant de rapport non traçant ;
+- traitement du label libre : suppression, remplacement ou validation stricte ;
+- informations exactes sur le système et le matériel autorisées ;
+- licence associée au rapport public et consentement explicite de l'auteur.
+
+Ajouter des tests de non-divulgation : un chemin utilisateur, un PID, un nom de
+processus et un label sensible injectés dans un rapport privé ne doivent jamais
+apparaître dans l'export public.
+
+## Validation automatique des contributions
+
+Le workflow du futur dépôt doit contrôler au minimum :
+
+- schéma et version du format public ;
+- protocole reconnu ;
+- cohérence des benchmarks, unités, paramètres et répétitions ;
+- absence de champs privés ou inconnus ;
+- taille maximale du fichier ;
+- unicité de l'identifiant et du contenu ;
+- conditions de mesure et avertissements ;
+- résultats manquants ou en échec ;
+- nom et emplacement normalisés du fichier.
+
+Pour les contributions issues de forks, utiliser `pull_request`, sans secret et
+avec des permissions en lecture seule. Ne pas utiliser `pull_request_target`
+pour exécuter du contenu non fiable :
+https://docs.github.com/en/actions/reference/security/secure-use
+
+Le workflow valide mais ne certifie pas les performances. Un rapport peut être
+falsifié. Le site doit afficher « rapport communautaire non certifié », garder
+le lien vers la pull request d'origine et ne jamais présenter le catalogue
+comme un classement officiel.
+
+## Catalogue et distribution sobres
+
+Le site statique pourra charger `catalog/index.json`, filtrer localement les
+machines et proposer le téléchargement direct des JSON.
+
+Évolution CLI envisagée, hors première étape :
+
+```text
+perfcomparator catalog search "Mac mini M4"
+perfcomparator catalog download ID
+perfcomparator compare mon-rapport.json rapport-communautaire.json
+```
+
+Le CLI doit télécharger uniquement l'index léger puis les rapports sélectionnés,
+jamais cloner toute la base.
+
+Ne pas utiliser les artefacts GitHub Actions comme stockage permanent : leur
+durée de conservation est limitée. Les rapports acceptés doivent être des
+fichiers Git normaux au début :
+https://docs.github.com/en/actions/how-tos/manage-workflow-runs/download-workflow-artifacts
+
+GitHub recommande de limiter la taille des dépôts et GitHub Pages recommande un
+site et une source sous 1 Go. Si le volume devient important, déplacer les JSON
+vers un stockage d'objets et conserver seulement l'index sur GitHub :
+
+- https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits
+- https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
 
 ## Prochaine action concrète
 
-Pousser ce dernier état documentaire sur `release/0.4.0.dev0`, fusionner la PR
-nº14 dans `main`, puis supprimer la branche distante. Le tag `v0.4.0.dev0`
-reste fixé sur `d4fee69` et ne doit pas être déplacé.
+Dans `feat/community-report-catalog` :
 
-## Critères d'acceptation
+1. inspecter le modèle `BenchmarkReport` et plusieurs rapports réels sans les
+   publier ;
+2. proposer le schéma minimal `public_report` et sa politique de confidentialité ;
+3. écrire des tests de liste blanche et de non-divulgation ;
+4. implémenter `perfcomparator export-public SOURCE --output DESTINATION` ;
+5. valider l'export sur des rapports macOS, Linux et Windows existants ;
+6. seulement ensuite proposer la création du dépôt communautaire séparé.
 
-- La nouvelle commande installe et exécute toute la suite.
-- `benchmark-mac` continue de fonctionner comme alias pendant la transition.
-- Les anciens rapports restent comparables avec les nouveaux lorsque leur
-  protocole est compatible.
-- Les anciens tags ne sont ni déplacés ni recréés.
-- Les installateurs macOS/Linux et Windows utilisent le bon dépôt et la bonne
-  version.
-- Le README indique clairement le nouveau nom et la période de compatibilité de
-  l'ancien nom.
-- Les tests, la construction des distributions et le smoke test de migration
-  depuis la stable distante réussissent.
+Ne pas implémenter simultanément le site, le dépôt distant et le CLI catalogue.
+Le premier livrable doit être uniquement un export public sûr et documenté.
+
+## Critères d'acceptation du premier livrable
+
+- Aucun chemin utilisateur, PID, processus actif ou label libre non validé.
+- Format public versionné et documenté.
+- Protocole et données comparatives suffisants pour réutiliser le moteur actuel.
+- Export déterministe à partir du même rapport source.
+- Refus clair d'un rapport invalide ou trop ancien pour être exporté sûrement.
+- Tests couvrant explicitement les données sensibles.
+- Aucun envoi réseau effectué par `export-public`.
+
+## Fichiers clés
+
+- `src/benchmark_mac/models.py` : schéma privé actuel.
+- `src/benchmark_mac/cli.py` : future commande `export-public`.
+- `src/benchmark_mac/comparison.py` : données requises pour comparer.
+- `src/benchmark_mac/repository.py` : lecture et écriture atomique des JSON.
+- `tests/` : tests de schéma, CLI et non-divulgation à ajouter.
+- `data/results/` : rapports locaux privés, ignorés et à ne jamais versionner.
 
 ## Points de vigilance
 
-- La distribution n'est pas publiée sur PyPI ; les installateurs utilisent
-  directement l'archive GitHub du tag.
-- Ne pas confondre nom du dépôt, nom de distribution Python, commande CLI et
-  module importable.
-- Vérifier l'aide réelle des commandes avant les tests; ne pas deviner leurs
-  options.
-- Éviter une pull request documentaire de close-out : conserver dans Git
-  uniquement les informations durables.
+- Aucune opération distante sans annonce précise puis confirmation explicite et
+  actuelle de l'utilisateur.
+- Ne jamais publier les rapports locaux existants ni les HTML de comparaison.
+- Ne jamais considérer une validation de schéma comme une preuve d'authenticité.
+- Ne pas collecter d'adresse IP, compte, télémétrie ou identifiant matériel.
+- Ne pas réutiliser de mémoire ou de conventions SMB dans ce projet.
+- Préserver la compatibilité des rapports et le protocole `0.3.0` pendant ce
+  chantier ; le format public possède sa propre version.
