@@ -6,7 +6,7 @@ from pathlib import Path
 from benchmark_mac import __version__
 
 ROOT = Path(__file__).parents[1]
-PUBLISHED_DEVELOPMENT_VERSION = "0.4.0.dev1"
+PUBLISHED_DEVELOPMENT_VERSION = "0.4.0.dev2"
 EXPECTED_TAG = f"v{PUBLISHED_DEVELOPMENT_VERSION}"
 
 
@@ -34,6 +34,8 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
     assert "BENCHMARK_MAC_VERSION" in windows_installer
     assert "tool uninstall benchmark-mac" in posix_installer
     assert "tool uninstall benchmark-mac" in windows_installer
+    assert "setup-contribution --yes" in posix_installer
+    assert "setup-contribution --yes" in windows_installer
     assert "Install-CurrentUv" in windows_installer
     assert "-File $installerPath" in windows_installer
     assert "irm https://astral.sh/uv/install.ps1 | iex" not in windows_installer
@@ -97,6 +99,37 @@ def test_posix_installer_honors_an_explicit_source(tmp_path: Path) -> None:
     subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
 
     assert source in log.read_text(encoding="utf-8")
+
+
+def test_posix_installer_prepares_the_guided_contribution_tool(tmp_path: Path) -> None:
+    installer = tmp_path / "install.sh"
+    installer.write_text((ROOT / "install.sh").read_text(encoding="utf-8"), encoding="utf-8")
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    uv = fake_bin / "uv"
+    uv.write_text(
+        '#!/bin/sh\ncase "$*" in "tool dir --bin") printf "%s\\n" "$FAKE_TOOL_BIN";; esac\n',
+        encoding="utf-8",
+    )
+    uv.chmod(0o755)
+    tool_bin = tmp_path / "tool-bin"
+    tool_bin.mkdir()
+    perfcomparator = tool_bin / "perfcomparator"
+    perfcomparator.write_text(
+        '#!/bin/sh\nprintf "%s\\n" "$*" >> "$CONTRIBUTION_LOG"\n',
+        encoding="utf-8",
+    )
+    perfcomparator.chmod(0o755)
+    log = tmp_path / "contribution.log"
+    environment = os.environ | {
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+        "FAKE_TOOL_BIN": str(tool_bin),
+        "CONTRIBUTION_LOG": str(log),
+    }
+
+    subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
+
+    assert log.read_text(encoding="utf-8").strip() == "setup-contribution --yes"
 
 
 def test_posix_installer_cleans_up_the_legacy_tool_after_installing(tmp_path: Path) -> None:

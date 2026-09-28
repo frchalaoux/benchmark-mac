@@ -3,7 +3,7 @@
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 set -eu
 
-release_version="${PERFCOMPARATOR_VERSION:-${BENCHMARK_MAC_VERSION:-v0.4.0.dev1}}"
+release_version="${PERFCOMPARATOR_VERSION:-${BENCHMARK_MAC_VERSION:-v0.4.0.dev2}}"
 python_version="3.14.4"
 source_url="${PERFCOMPARATOR_SOURCE:-${BENCHMARK_MAC_SOURCE:-https://github.com/frchalaoux/perfcomparator/archive/refs/tags/${release_version}.tar.gz}}"
 script_dir=""
@@ -69,6 +69,15 @@ if [ "$legacy_tool_installed" = true ]; then
 fi
 echo "Installation de PerfComparator ${release_version}..."
 "$uv_command" tool install --managed-python --python "$python_version" --force --reinstall "$source_url"
+
+tool_bin_dir=$("$uv_command" tool dir --bin)
+perfcomparator_command="${tool_bin_dir}/perfcomparator"
+if [ -x "$perfcomparator_command" ]; then
+    echo "Preparation de la contribution guidee..."
+    if ! "$perfcomparator_command" setup-contribution --yes; then
+        echo "Avertissement : GitHub CLI sera repropose lors de la premiere contribution." >&2
+    fi
+fi
 
 echo
 if command -v perfcomparator >/dev/null 2>&1; then

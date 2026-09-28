@@ -9,7 +9,7 @@ elseif ($env:BENCHMARK_MAC_VERSION) {
     $env:BENCHMARK_MAC_VERSION
 }
 else {
-    "v0.4.0.dev1"
+    "v0.4.0.dev2"
 }
 $pythonVersion = "3.14.4"
 $sourceUrl = if ($env:PERFCOMPARATOR_SOURCE) {
@@ -91,6 +91,16 @@ Write-Host "Installation de PerfComparator $releaseVersion..."
 & $uvCommand tool install --managed-python --python $pythonVersion --force --reinstall $sourceUrl
 if ($LASTEXITCODE -ne 0) {
     throw "L'installation de PerfComparator a échoué (code $LASTEXITCODE)."
+}
+
+$toolBinDirectory = & $uvCommand tool dir --bin
+$perfComparatorCommand = Join-Path $toolBinDirectory "perfcomparator.exe"
+if (Test-Path $perfComparatorCommand) {
+    Write-Host "Preparation de la contribution guidee..."
+    & $perfComparatorCommand setup-contribution --yes
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "GitHub CLI sera repropose lors de la premiere contribution."
+    }
 }
 
 Write-Host ""

@@ -5,6 +5,7 @@ from typer.testing import CliRunner
 
 from benchmark_mac import __version__
 from benchmark_mac.cli import app
+from benchmark_mac.contribution import ContributionResult
 from benchmark_mac.public_report import export_public_report, save_public_report
 from benchmark_mac.repository import JsonReportRepository
 
@@ -188,3 +189,72 @@ def test_export_public_writes_only_the_requested_local_file(tmp_path: Path) -> N
     assert validation.exit_code == 0
     assert "Rapport public valide" in validation.stdout
     assert "performances non certifiées" in validation.stdout
+
+
+def test_contribute_guides_a_user_without_exposing_the_private_report(
+    tmp_path: Path, monkeypatch
+) -> None:
+    report = sample_report(label="Private contribution label").model_copy(
+        update={"suite_version": "0.4.0.dev2", "protocol_version": "0.3.0"}
+    )
+    report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
+    private = JsonReportRepository(tmp_path / "private").save(report)
+    submitted = {}
+
+    def fake_submit(public_report, public_path, *, gh, login):
+        submitted["report"] = public_report
+        submitted["payload"] = public_path.read_text(encoding="utf-8")
+        submitted["gh"] = gh
+        submitted["login"] = login
+        return ContributionResult(
+            pull_request_url="https://github.com/example/pr/1",
+            branch="add/report-test",
+            fork="alice/perfcomparator-results",
+        )
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr("benchmark_mac.cli.github_cli_path", lambda: Path("/fake/gh"))
+    monkeypatch.setattr("benchmark_mac.cli.github_login", lambda _gh: "alice")
+    monkeypatch.setattr("benchmark_mac.cli.submit_public_report", fake_submit)
+
+    result = runner.invoke(app, ["contribute", str(private)], input="y\ny\ny\n")
+
+    assert result.exit_code == 0
+    assert "APERÇU PUBLIC" in result.stdout
+    assert "Contribution envoyée" in result.stdout
+    assert "https://github.com/example/pr/1" in result.stdout
+    assert submitted["login"] == "alice"
+    assert "Private contribution label" not in submitted["payload"]
+    assert list((tmp_path / "data" / "public").glob("*.json"))
+
+
+def test_contribute_dry_run_never_connects_to_github(tmp_path: Path, monkeypatch) -> None:
+    report = sample_report().model_copy(
+        update={"suite_version": "0.4.0.dev2", "protocol_version": "0.3.0"}
+    )
+    report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
+    private = JsonReportRepository(tmp_path / "private").save(report)
+    monkeypatch.chdir(tmp_path)
+
+    def unexpected_github_call():
+        raise AssertionError("GitHub ne doit pas être consulté pendant un essai local.")
+
+    monkeypatch.setattr("benchmark_mac.cli.github_cli_path", unexpected_github_call)
+
+    result = runner.invoke(
+        app,
+        ["contribute", str(private), "--dry-run"],
+        input="y\ny\n",
+    )
+
+    assert result.exit_code == 0
+    assert "Essai local terminé" in result.stdout
+    assert "aucune connexion ni opération GitHub" in result.stdout

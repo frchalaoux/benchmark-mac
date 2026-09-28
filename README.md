@@ -9,7 +9,25 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion publiée `v0.4.0.dev1`
+## Préversion publiée `v0.4.0.dev2`
+
+L'arbre de développement ajoute `perfcomparator contribute`, un parcours guidé
+qui choisit le rapport, construit et affiche l'export public, prépare GitHub CLI,
+connecte le compte dans le navigateur et propose la pull request après une
+confirmation distante explicite. `--dry-run` permet d'essayer tout le parcours
+local sans connexion à GitHub.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev2/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev2/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev1`
 
 La préversion `0.4.0.dev1` permet d'exporter un rapport public strict, de le
 valider, de le proposer au catalogue communautaire et de comparer directement
@@ -51,6 +69,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
 | [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
 | [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
 | [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
@@ -312,6 +331,28 @@ Cette validation borne la taille à 2 Mio, refuse les champs inconnus et vérifi
 le protocole, les unités, paramètres, échantillons, dispersions et l'identifiant
 de contenu. Elle ne constitue pas une certification des scores.
 
+### Contribution guidée
+
+À partir de `0.4.0.dev2`, aucune connaissance de Git ou du shell n'est requise :
+
+```bash
+perfcomparator contribute
+```
+
+La commande propose les rapports récents, demande le consentement CC0, conserve
+un export relisible sous `data/public/`, puis affiche précisément les opérations
+distantes avant de créer ou réutiliser le fork et d'ouvrir la pull request.
+GitHub CLI est installé dans le dossier utilisateur par l'installateur
+PerfComparator, depuis une archive officielle épinglée et vérifiée par SHA-256.
+La création éventuelle du compte et la vérification de son adresse restent dans
+le navigateur.
+
+Un essai strictement local s'exécute ainsi :
+
+```bash
+perfcomparator contribute --dry-run
+```
+
 ## Comparer plusieurs machines
 
 Copier les rapports JSON dans un même dossier, puis utiliser le premier comme
@@ -342,8 +383,8 @@ machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
-`0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0` et `0.4.0.dev1` sont compatibles
-entre elles. Les rapports sont
+`0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1` et `0.4.0.dev2` sont
+compatibles entre elles. Les rapports sont
 enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
 séparément la version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent
