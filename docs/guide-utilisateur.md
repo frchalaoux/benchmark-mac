@@ -171,6 +171,16 @@ compte peut y être créé, puis son adresse vérifiée. Avant toute modificatio
 distante, PerfComparator annonce le fork, la branche et la cible, puis demande
 une confirmation séparée.
 
+Le message **Contribution envoyée** confirme la création de la pull request.
+Le catalogue contrôle ensuite automatiquement son contenu. Si la validation
+réussit et que seuls le rapport et l'index généré ont changé, la pull request
+est fusionnée automatiquement, puis GitHub Pages est redéployé. Le rapport
+devient alors visible dans le
+[catalogue web](https://frchalaoux.github.io/perfcomparator-results/). Une
+contribution invalide reste ouverte avec son erreur.
+Pour une première contribution provenant d'un fork, GitHub peut demander au
+mainteneur d'autoriser le démarrage de `validate`; la suite reste automatique.
+
 Pour tester uniquement la sélection, l'export et l'aperçu public :
 
 ```bash
@@ -179,6 +189,17 @@ perfcomparator contribute --dry-run
 
 Ce mode ne se connecte pas à GitHub et ne crée ni fork, ni branche, ni pull
 request.
+
+Une fois le rapport publié, cliquer sur **Télécharger le JSON** dans sa fiche,
+puis comparer le fichier reçu localement :
+
+```bash
+perfcomparator compare mon-rapport-local.json rapport-telecharge.json \
+  --html comparaison.html
+```
+
+Le premier fichier constitue la référence 100. Les rapports doivent employer
+le même protocole, le même profil et la même version de Python.
 
 ## Rapport visuel et priorités
 
