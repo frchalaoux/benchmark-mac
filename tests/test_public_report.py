@@ -4,7 +4,12 @@ import pytest
 from test_repository import sample_report
 
 from benchmark_mac.models import BenchmarkFailure, ProcessLoad, ReadinessSnapshot
-from benchmark_mac.public_report import export_public_report, load_public_report, save_public_report
+from benchmark_mac.public_report import (
+    export_public_report,
+    load_public_report,
+    public_report_to_benchmark_report,
+    save_public_report,
+)
 
 
 def exportable_report():
@@ -148,6 +153,20 @@ def test_saved_public_report_can_be_loaded_and_fully_validated(tmp_path) -> None
     path = save_public_report(exported, tmp_path / "public.json")
 
     assert load_public_report(path) == exported
+
+
+def test_public_report_can_be_adapted_without_reintroducing_private_data() -> None:
+    exported = export_public_report(exportable_report())
+
+    comparable = public_report_to_benchmark_report(exported)
+
+    assert comparable.label == "Apple M4"
+    assert comparable.protocol_version == "0.3.0"
+    assert comparable.results[0].value == 10
+    assert comparable.results[0].parameters == {"workers": 1}
+    assert comparable.failures[0].message == "Échec déclaré dans le rapport public."
+    assert "Secret machine label" not in comparable.model_dump_json()
+    assert "/Users/alice/private" not in comparable.model_dump_json()
 
 
 def test_public_validation_rejects_tampered_content(tmp_path) -> None:

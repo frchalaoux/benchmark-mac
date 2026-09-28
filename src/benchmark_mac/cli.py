@@ -322,7 +322,7 @@ def compare(
 ) -> None:
     """Compare humainement des rapports ; le premier sert de référence 100."""
     try:
-        loaded = [JsonReportRepository.load_path(path) for path in reports]
+        loaded = [JsonReportRepository.load_comparable_path(path) for path in reports]
         weights = parse_scenario_weights(weight)
         analysis = analyze_reports(loaded, weights)
     except (OSError, ValueError) as error:

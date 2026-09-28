@@ -6,7 +6,7 @@ from pathlib import Path
 from benchmark_mac import __version__
 
 ROOT = Path(__file__).parents[1]
-PUBLISHED_DEVELOPMENT_VERSION = "0.4.0.dev0"
+PUBLISHED_DEVELOPMENT_VERSION = "0.4.0.dev1"
 EXPECTED_TAG = f"v{PUBLISHED_DEVELOPMENT_VERSION}"
 
 

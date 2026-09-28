@@ -9,14 +9,23 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Développement non publié `0.4.0.dev1`
+## Préversion publiée `v0.4.0.dev1`
 
-L'arbre de développement prépare l'export anonymisé et la validation locale des
-rapports destinés au catalogue communautaire. Cette version n'est pas encore
-taguée : les installateurs continuent donc volontairement de cibler la
-préversion publiée `v0.4.0.dev0`.
+La préversion `0.4.0.dev1` permet d'exporter un rapport public strict, de le
+valider, de le proposer au catalogue communautaire et de comparer directement
+un rapport téléchargé. Le protocole de mesure reste `0.3.0`.
 
-## Préversion publiée `v0.4.0.dev0`
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev1/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev1/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev0`
 
 La préversion `0.4.0.dev0` introduit le nom **PerfComparator**, le paquet
 `perfcomparator` et la commande principale `perfcomparator`. La commande
@@ -42,6 +51,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
 | [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
 | [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
 | [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
@@ -267,7 +277,7 @@ progressivement les durées et volumes.
 
 ## Exporter un rapport public
 
-Cette commande appartient au développement non publié `0.4.0.dev1`.
+Cette commande est disponible à partir de la préversion `0.4.0.dev1`.
 
 Un rapport de campagne privé contient des informations de diagnostic qui ne
 doivent pas être publiées directement. La commande `export-public` reconstruit
@@ -289,6 +299,9 @@ certifient jamais les performances déclarées.
 Le [contrat complet du format public](docs/format-rapport-public.md) précise les
 données conservées et les limites de confidentialité.
 
+Le [tutoriel catalogue de A à Z](docs/tutoriel-catalogue.md) décrit tout le
+parcours : mesure, export, contribution GitHub, téléchargement et comparaison.
+
 Un fichier reçu se contrôle localement avant toute utilisation :
 
 ```bash
@@ -307,6 +320,10 @@ référence :
 ```bash
 perfcomparator compare mac-m4.json pc-ryzen.json
 ```
+
+À partir de `0.4.0.dev1`, chaque fichier peut être un rapport privé, un rapport
+public téléchargé depuis le catalogue, ou un mélange des deux. Les rapports
+publics sont revalidés automatiquement avant le calcul.
 
 Pour obtenir le rapport visuel autonome et adapter le résultat à ses usages :
 
