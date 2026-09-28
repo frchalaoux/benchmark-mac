@@ -9,27 +9,50 @@ Le catalogue accepte des rapports communautaires non certifiés. Ses contrôles
 prouvent la conformité et l'intégrité du fichier, pas l'identité de la machine
 ni l'exactitude de ses performances.
 
+## Parcours guidé recommandé
+
+À partir de `0.4.0.dev2`, toute la contribution tient dans une commande :
+
+```bash
+perfcomparator contribute
+```
+
+Le menu choisit un rapport récent, demande le consentement CC0, affiche les
+données publiques, prépare GitHub CLI et ouvre le navigateur pour connecter ou
+créer le compte GitHub. Il annonce ensuite précisément la création ou la
+réutilisation du fork, la branche distante créée et la pull request, puis attend une
+confirmation explicite.
+
+Pour s'entraîner sans connexion ni modification GitHub :
+
+```bash
+perfcomparator contribute --dry-run
+```
+
+Les sections suivantes détaillent les mêmes opérations et conservent le parcours
+manuel utile au diagnostic.
+
 ## 1. Installer la version qui prend en charge le catalogue
 
-Ce parcours nécessite PerfComparator `0.4.0.dev1` ou une version ultérieure.
+Le parcours guidé nécessite PerfComparator `0.4.0.dev2` ou une version ultérieure.
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev1/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev2/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev1/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev2/install.ps1 | iex
 ```
 
 Contrôler l'installation :
 
 ```console
 $ perfcomparator --version
-PerfComparator 0.4.0.dev1
+PerfComparator 0.4.0.dev2
 ```
 
 ## 2. Mesurer la machine
@@ -72,7 +95,7 @@ libre, la date précise, les chemins, les processus, les PID, les messages
 d'échec et les informations de disque, mais une combinaison matérielle rare
 peut rester reconnaissable.
 
-## 4. Préparer la contribution GitHub
+## 4. Préparer manuellement la contribution GitHub
 
 1. Ouvrir le dépôt
    [`perfcomparator-results`](https://github.com/frchalaoux/perfcomparator-results)

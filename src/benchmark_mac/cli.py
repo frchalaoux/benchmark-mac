@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Annotated
 
@@ -23,9 +24,11 @@ from .comparison import (
     analyze_reports,
     parse_scenario_weights,
 )
+from .contribution import github_login, submit_public_report
+from .github_cli import GITHUB_CLI_VERSION, github_cli_path, install_managed_github_cli
 from .gpu_benchmarks import gpu_adapters, selected_gpu_adapter
 from .html_report import render_html
-from .models import BenchmarkFailure, BenchmarkResult, ReadinessSnapshot
+from .models import BenchmarkFailure, BenchmarkResult, PublicBenchmarkReport, ReadinessSnapshot
 from .public_report import export_public_report, load_public_report, save_public_report
 from .repository import JsonReportRepository
 from .service import BenchmarkService
@@ -254,6 +257,160 @@ def history(
             f"{report.recorded_at.astimezone():%Y-%m-%d %H:%M:%S} · {label} · "
             f"{report.profile} · {report.repetitions} passages · {len(report.results)} résultats"
         )
+
+
+def _select_report() -> Path:
+    paths = sorted(Path("data/results").glob("benchmark_*.json"), reverse=True)[:10]
+    if not paths:
+        raise ValueError(
+            "Aucun rapport privé trouvé. Lancez d'abord `perfcomparator run` "
+            "ou indiquez un fichier explicitement."
+        )
+    typer.secho("RAPPORTS DISPONIBLES", bold=True)
+    for index, path in enumerate(paths, start=1):
+        report = JsonReportRepository.load_path(path)
+        label = report.label or report.system.model
+        typer.echo(
+            f"  [{index}] {report.recorded_at.astimezone():%Y-%m-%d %H:%M} · "
+            f"{label} · {report.profile}"
+        )
+    selected = typer.prompt("Numéro du rapport", type=int)
+    if selected < 1 or selected > len(paths):
+        raise ValueError("Numéro de rapport invalide.")
+    return paths[selected - 1]
+
+
+def _prepare_contribution_report(source: Path) -> tuple[PublicBenchmarkReport, Path]:
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    if isinstance(payload, dict) and payload.get("format") == "perfcomparator-public-report":
+        public_report = load_public_report(source)
+    else:
+        private_report = JsonReportRepository.load_path(source)
+        public_report = export_public_report(private_report)
+    digest = public_report.report_id.removeprefix("sha256:")
+    destination = Path("data/public") / f"{digest}.json"
+    save_public_report(public_report, destination)
+    return public_report, destination
+
+
+@app.command("setup-contribution")
+def setup_contribution(
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Installe sans poser la question de confirmation."),
+    ] = False,
+) -> None:
+    """Prépare GitHub CLI, utilisé uniquement pour proposer un rapport."""
+    existing = github_cli_path()
+    if existing is not None:
+        typer.secho(f"GitHub CLI est disponible : {existing}", fg=typer.colors.GREEN)
+        return
+    typer.echo(
+        f"PerfComparator peut installer GitHub CLI {GITHUB_CLI_VERSION} dans son dossier "
+        "utilisateur, sans droits administrateur."
+    )
+    if not yes and not typer.confirm("Installer GitHub CLI maintenant ?", default=True):
+        raise typer.Abort()
+    try:
+        installed = install_managed_github_cli()
+    except (OSError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.secho(f"GitHub CLI installé : {installed}", fg=typer.colors.GREEN)
+
+
+@app.command("contribute")
+def contribute(
+    source: Annotated[
+        Path | None,
+        typer.Argument(
+            exists=True,
+            readable=True,
+            dir_okay=False,
+            help="Rapport privé ou public ; un menu est proposé si omis.",
+        ),
+    ] = None,
+    dry_run: Annotated[
+        bool,
+        typer.Option(
+            "--dry-run",
+            help="Prépare et affiche l'export, sans connexion ni opération GitHub.",
+        ),
+    ] = False,
+) -> None:
+    """Guide la publication d'un rapport dans le catalogue communautaire."""
+    try:
+        selected = source or _select_report()
+        if not typer.confirm(
+            "Autorisez-vous la diffusion de l'export public sous CC0-1.0 ?",
+            default=False,
+        ):
+            raise typer.Abort()
+        report, public_path = _prepare_contribution_report(selected)
+    except typer.Abort:
+        raise
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        raise typer.BadParameter(str(error)) from error
+
+    typer.secho("\nAPERÇU PUBLIC", bold=True)
+    typer.echo(f"  Fichier : {public_path}")
+    typer.echo(f"  Identifiant : {report.report_id}")
+    typer.echo(
+        f"  Machine : {report.system.processor} · {report.system.architecture} · "
+        f"{_size(report.system.memory_bytes)} de mémoire"
+    )
+    typer.echo(
+        f"  Campagne : profil {report.profile} · {report.repetitions} passage(s) · "
+        f"{len(report.results)} résultat(s)"
+    )
+    typer.echo("  Statut : communautaire et non certifié")
+    if not typer.confirm("Avez-vous relu ces données publiques ?", default=False):
+        raise typer.Abort()
+    if dry_run:
+        typer.secho(
+            "\nEssai local terminé : aucune connexion ni opération GitHub n'a été effectuée.",
+            fg=typer.colors.GREEN,
+        )
+        return
+
+    gh = github_cli_path()
+    if gh is None:
+        typer.echo("\nGitHub CLI est nécessaire pour préparer la pull request.")
+        if not typer.confirm("L'installer maintenant sans droits administrateur ?", default=True):
+            raise typer.Abort()
+        try:
+            gh = install_managed_github_cli()
+        except (OSError, ValueError) as error:
+            raise typer.BadParameter(str(error)) from error
+
+    typer.echo(
+        "\nConnexion GitHub : un navigateur va s'ouvrir si nécessaire. "
+        "Un nouveau compte peut y être créé et son adresse électronique vérifiée."
+    )
+    try:
+        login = github_login(gh)
+    except (TypeError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.secho(f"Compte GitHub : {login}", fg=typer.colors.GREEN)
+    destination = (
+        "le dépôt mainteneur"
+        if login == "frchalaoux"
+        else f"le fork {login}/perfcomparator-results"
+    )
+    typer.echo(
+        f"\nOpérations distantes prévues : utiliser {destination}, créer une branche "
+        "contenant uniquement "
+        "ce rapport public et l'index, puis ouvrir une pull request vers "
+        "frchalaoux/perfcomparator-results:main."
+    )
+    if not typer.confirm("Soumettre maintenant ce rapport public ?", default=False):
+        raise typer.Abort()
+    try:
+        result = submit_public_report(report, public_path, gh=gh, login=login)
+    except (OSError, TypeError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.secho("\nContribution envoyée.", fg=typer.colors.GREEN, bold=True)
+    typer.echo(f"Pull request : {result.pull_request_url}")
+    typer.echo("Les contrôles du catalogue valident le format, jamais les performances.")
 
 
 @app.command("export-public")

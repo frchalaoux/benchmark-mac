@@ -23,8 +23,8 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion publiée `0.4.0.dev1` ajoute le parcours du catalogue
-communautaire au changement de nom introduit par `0.4.0.dev0`. Sa commande
+La préversion publiée `0.4.0.dev2` ajoute la soumission guidée au parcours du
+catalogue communautaire introduit par `0.4.0.dev1`. Sa commande
 principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
 alias de compatibilité. Avec une version publiée `0.3.x`, employer
 `benchmark-mac`.
@@ -155,6 +155,30 @@ de la machine ni des performances.
 Le [tutoriel catalogue de A à Z](tutoriel-catalogue.md) déroule ensuite la
 contribution GitHub, la publication dans le catalogue, le téléchargement et la
 comparaison locale d'un rapport public.
+
+### Soumettre sans connaître Git
+
+À partir de `0.4.0.dev2`, le parcours interactif choisit un rapport récent,
+prépare son export public et automatise le fork et la pull request :
+
+```bash
+perfcomparator contribute
+```
+
+GitHub CLI est préparé sans droits administrateur dans le dossier utilisateur.
+Si aucun compte n'est connecté, l'authentification ouvre le navigateur ; un
+compte peut y être créé, puis son adresse vérifiée. Avant toute modification
+distante, PerfComparator annonce le fork, la branche et la cible, puis demande
+une confirmation séparée.
+
+Pour tester uniquement la sélection, l'export et l'aperçu public :
+
+```bash
+perfcomparator contribute --dry-run
+```
+
+Ce mode ne se connecte pas à GitHub et ne crée ni fork, ni branche, ni pull
+request.
 
 ## Rapport visuel et priorités
 
