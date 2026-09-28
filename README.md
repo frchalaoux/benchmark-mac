@@ -9,9 +9,26 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion publiée `v0.4.0.dev2`
+## Préversion publiée `v0.4.0.dev3`
 
-L'arbre de développement ajoute `perfcomparator contribute`, un parcours guidé
+La préversion `0.4.0.dev3` accepte l'export sûr des rapports privés de schéma
+`3` ou `4` qui utilisent le protocole `0.3.0`. Elle clarifie aussi chaque état
+de la contribution : pull request, validation, fusion automatique, déploiement
+Pages, téléchargement puis comparaison locale.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev3/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev3/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev2`
+
+La préversion `0.4.0.dev2` ajoute `perfcomparator contribute`, un parcours guidé
 qui choisit le rapport, construit et affiche l'export public, prépare GitHub CLI,
 connecte le compte dans le navigateur et propose la pull request après une
 confirmation distante explicite. `--dry-run` permet d'essayer tout le parcours
@@ -69,6 +86,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
 | [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
 | [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
 | [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
@@ -401,10 +419,10 @@ machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
-`0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1` et `0.4.0.dev2` sont
-compatibles entre elles. Les rapports sont
-enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
-séparément la version exacte de la suite (`suite_version`) et celle du protocole
+`0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
+`0.4.0.dev3` sont compatibles entre elles. Les rapports sont enregistrés dans
+`data/results/` par défaut. Les nouvelles campagnes conservent séparément la
+version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent
 donc comparables lorsqu'elles déclarent le même protocole. Pour les anciens
 rapports sans ce champ, la table de compatibilité historique reste appliquée.
