@@ -23,7 +23,8 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion publiée `0.4.0.dev0` réalise le changement de nom. Sa commande
+La préversion publiée `0.4.0.dev1` ajoute le parcours du catalogue
+communautaire au changement de nom introduit par `0.4.0.dev0`. Sa commande
 principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
 alias de compatibilité. Avec une version publiée `0.3.x`, employer
 `benchmark-mac`.
@@ -123,7 +124,7 @@ actuels suivent la règle « plus haut est meilleur ».
 
 ### Préparer un rapport destiné au catalogue communautaire
 
-Cette fonction appartient au développement non publié `0.4.0.dev1`.
+Cette fonction est disponible à partir de la préversion `0.4.0.dev1`.
 
 Ne jamais publier directement le JSON produit par `run` : il contient des
 informations utiles au diagnostic local, dont le chemin de Python, le label
@@ -151,6 +152,10 @@ perfcomparator validate-public rapport-public.json
 Un succès confirme le format et l'identifiant de contenu, jamais l'authenticité
 de la machine ni des performances.
 
+Le [tutoriel catalogue de A à Z](tutoriel-catalogue.md) déroule ensuite la
+contribution GitHub, la publication dans le catalogue, le téléchargement et la
+comparaison locale d'un rapport public.
+
 ## Rapport visuel et priorités
 
 Le rapport HTML fonctionne hors ligne et n'envoie aucune donnée :
@@ -159,6 +164,10 @@ Le rapport HTML fonctionne hors ligne et n'envoie aucune donnée :
 perfcomparator compare rapports/mac.json rapports/pc.json \
   --html comparaison.html
 ```
+
+Depuis `0.4.0.dev1`, les arguments peuvent être des rapports privés produits
+par `run`, des rapports publics validés, ou un mélange des deux. Un rapport
+public est toujours revalidé avant la comparaison.
 
 Il présente une référence 100, des indices par catégorie et scénario, les temps
 équivalents pour des tâches de 10 secondes, 2 minutes, 30 minutes et 4 heures,

@@ -5,6 +5,7 @@ from typer.testing import CliRunner
 
 from benchmark_mac import __version__
 from benchmark_mac.cli import app
+from benchmark_mac.public_report import export_public_report, save_public_report
 from benchmark_mac.repository import JsonReportRepository
 
 runner = CliRunner()
@@ -102,6 +103,35 @@ def test_compare_writes_a_weighted_autonomous_html_report(tmp_path: Path) -> Non
     assert "Rapport HTML" in result.stdout
     assert output.exists()
     assert "Carte thermique" in output.read_text(encoding="utf-8")
+
+
+def test_compare_accepts_a_downloaded_public_report(tmp_path: Path) -> None:
+    baseline_report = sample_report().model_copy(
+        update={"suite_version": "0.4.0.dev1", "protocol_version": "0.3.0"}
+    )
+    baseline_report.results[0].parameters = {"workers": 1}
+    baseline_report.results[0].sample_values = [10]
+    baseline_report.results[0].minimum = 10
+    baseline_report.results[0].maximum = 10
+    baseline_report.results[0].relative_spread_percent = 0
+    baseline = JsonReportRepository(tmp_path / "baseline").save(baseline_report)
+
+    candidate_report = baseline_report.model_copy(deep=True)
+    candidate_report.results[0].value = 15
+    candidate_report.results[0].sample_values = [15]
+    candidate_report.results[0].minimum = 15
+    candidate_report.results[0].maximum = 15
+    public = save_public_report(
+        export_public_report(candidate_report),
+        tmp_path / "downloaded-public.json",
+    )
+
+    result = runner.invoke(app, ["compare", str(baseline), str(public)])
+
+    assert result.exit_code == 0
+    assert "Mac test" in result.stdout
+    assert "Apple M4" in result.stdout
+    assert "+50.0 %" in result.stdout
 
 
 def test_export_public_requires_explicit_license_acceptance(tmp_path: Path) -> None:

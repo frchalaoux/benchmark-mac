@@ -6,16 +6,20 @@ import hashlib
 import json
 import math
 import re
+from datetime import UTC, datetime
 from pathlib import Path
 from statistics import median
 
-from .benchmarks import CATALOG, PROFILES
+from .benchmarks import BENCHMARK_DOCUMENTATION, CATALOG, PROFILES, REFERENCE_LIBRARY
 from .comparison import report_protocol
 from .models import (
+    BenchmarkFailure,
     BenchmarkReport,
+    BenchmarkResult,
     PublicBenchmarkReport,
     PublicBenchmarkResult,
     PublicSystemSnapshot,
+    SystemSnapshot,
 )
 
 PUBLIC_FORMAT_VERSION = 1
@@ -267,6 +271,74 @@ def load_public_report(
         raise ValueError(f"Le rapport public dépasse la limite de {maximum_bytes} octets.")
     report = PublicBenchmarkReport.model_validate_json(source.read_text(encoding="utf-8"))
     return validate_public_report(report)
+
+
+def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> BenchmarkReport:
+    """Adapte un rapport public validé au moteur de comparaison existant."""
+    validate_public_report(report)
+    results: list[BenchmarkResult] = []
+    for result in report.results:
+        definition = CATALOG[result.benchmark_id]
+        documentation = BENCHMARK_DOCUMENTATION[result.benchmark_id]
+        results.append(
+            BenchmarkResult(
+                benchmark_id=result.benchmark_id,
+                group=result.group,
+                name=result.name,
+                description=definition.description,
+                value=result.value,
+                unit=result.unit,
+                higher_is_better=result.higher_is_better,
+                elapsed_seconds=1,
+                parameters=result.parameters,
+                methodology=documentation.methodology,
+                limitations=documentation.limitations,
+                references=[
+                    REFERENCE_LIBRARY[reference_id] for reference_id in documentation.reference_ids
+                ],
+                repetitions=result.repetitions,
+                sample_values=result.sample_values,
+                minimum=result.minimum,
+                maximum=result.maximum,
+                relative_spread_percent=result.relative_spread_percent,
+            )
+        )
+
+    return BenchmarkReport(
+        schema_version=report.source_schema_version,
+        suite_version=report.suite_version,
+        protocol_version=report.protocol_version,
+        recorded_at=datetime(1970, 1, 1, tzinfo=UTC),
+        label=report.system.processor,
+        profile=report.profile,
+        repetitions=report.repetitions,
+        requested_benchmarks=report.requested_benchmarks,
+        system=SystemSnapshot(
+            system=report.system.operating_system,
+            release="rapport public",
+            version="rapport public",
+            machine=report.system.architecture,
+            model=report.system.processor,
+            processor=report.system.processor,
+            physical_cpu_count=report.system.physical_cpu_count,
+            logical_cpu_count=report.system.logical_cpu_count,
+            memory_bytes=report.system.memory_bytes,
+            gpu_devices=report.system.gpu_devices,
+            python_version=report.system.python_version,
+            python_implementation=report.system.python_implementation,
+            python_executable="rapport public",
+            disk_total_bytes=1,
+            disk_free_bytes=0,
+        ),
+        results=results,
+        failures=[
+            BenchmarkFailure(
+                benchmark_id=benchmark_id,
+                message="Échec déclaré dans le rapport public.",
+            )
+            for benchmark_id in report.failed_benchmarks
+        ],
+    )
 
 
 def export_public_report(report: BenchmarkReport) -> PublicBenchmarkReport:

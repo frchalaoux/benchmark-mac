@@ -43,3 +43,18 @@ class JsonReportRepository:
         """Charge un rapport explicite, notamment pour une comparaison."""
         source = Path(path)
         return BenchmarkReport.model_validate_json(source.read_text(encoding="utf-8"))
+
+    @staticmethod
+    def load_comparable_path(path: Path | str) -> BenchmarkReport:
+        """Charge un rapport privé ou adapte un rapport public validé."""
+        source = Path(path)
+        payload = json.loads(source.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            report_format = payload.get("format")
+            if report_format == "perfcomparator-public-report":
+                from .public_report import load_public_report, public_report_to_benchmark_report
+
+                return public_report_to_benchmark_report(load_public_report(source))
+            if report_format is not None:
+                raise ValueError(f"Format de rapport inconnu : {report_format}")
+        return BenchmarkReport.model_validate(payload)
