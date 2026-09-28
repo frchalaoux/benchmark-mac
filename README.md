@@ -9,7 +9,14 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion `v0.4.0.dev0`
+## Développement non publié `0.4.0.dev1`
+
+L'arbre de développement prépare l'export anonymisé et la validation locale des
+rapports destinés au catalogue communautaire. Cette version n'est pas encore
+taguée : les installateurs continuent donc volontairement de cibler la
+préversion publiée `v0.4.0.dev0`.
+
+## Préversion publiée `v0.4.0.dev0`
 
 La préversion `0.4.0.dev0` introduit le nom **PerfComparator**, le paquet
 `perfcomparator` et la commande principale `perfcomparator`. La commande
@@ -35,7 +42,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement actuel | Tester le changement de nom et la migration | Préversion |
+| [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
 | [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
 | [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable antérieure | Comparer clairement plusieurs machines | Remplacée par `v0.3.2` |
@@ -260,6 +267,8 @@ progressivement les durées et volumes.
 
 ## Exporter un rapport public
 
+Cette commande appartient au développement non publié `0.4.0.dev1`.
+
 Un rapport de campagne privé contient des informations de diagnostic qui ne
 doivent pas être publiées directement. La commande `export-public` reconstruit
 un fichier distinct depuis une liste blanche, localement et sans envoi réseau :
@@ -279,6 +288,16 @@ certifient jamais les performances déclarées.
 
 Le [contrat complet du format public](docs/format-rapport-public.md) précise les
 données conservées et les limites de confidentialité.
+
+Un fichier reçu se contrôle localement avant toute utilisation :
+
+```bash
+perfcomparator validate-public rapport-public.json
+```
+
+Cette validation borne la taille à 2 Mio, refuse les champs inconnus et vérifie
+le protocole, les unités, paramètres, échantillons, dispersions et l'identifiant
+de contenu. Elle ne constitue pas une certification des scores.
 
 ## Comparer plusieurs machines
 
@@ -306,7 +325,8 @@ machines, des chronologies et un résumé en langage courant.
 
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
-`0.3.1`, `0.3.2.dev0`, `0.3.2` et `0.4.0.dev0` sont compatibles entre elles. Les rapports sont
+`0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0` et `0.4.0.dev1` sont compatibles
+entre elles. Les rapports sont
 enregistrés dans `data/results/` par défaut. Les nouvelles campagnes conservent
 séparément la version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent

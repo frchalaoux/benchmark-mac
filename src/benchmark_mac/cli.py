@@ -26,7 +26,7 @@ from .comparison import (
 from .gpu_benchmarks import gpu_adapters, selected_gpu_adapter
 from .html_report import render_html
 from .models import BenchmarkFailure, BenchmarkResult, ReadinessSnapshot
-from .public_report import export_public_report, save_public_report
+from .public_report import export_public_report, load_public_report, save_public_report
 from .repository import JsonReportRepository
 from .service import BenchmarkService
 from .system_info import machine_readiness, system_snapshot
@@ -288,6 +288,20 @@ def export_public(
     typer.secho(f"Rapport public : {destination}", fg=typer.colors.GREEN)
     typer.echo(f"Identifiant : {public_report.report_id}")
     typer.echo("Licence des données : CC0-1.0 · rapport communautaire non certifié")
+
+
+@app.command("validate-public")
+def validate_public(
+    source: Annotated[Path, typer.Argument(exists=True, readable=True, dir_okay=False)],
+) -> None:
+    """Valide localement un rapport public sans certifier ses performances."""
+    try:
+        report = load_public_report(source)
+    except (OSError, ValueError) as error:
+        raise typer.BadParameter(str(error)) from error
+    typer.secho("Rapport public valide.", fg=typer.colors.GREEN)
+    typer.echo(f"Identifiant : {report.report_id}")
+    typer.echo("Validation de format uniquement · performances non certifiées")
 
 
 @app.command("compare")

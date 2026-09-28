@@ -19,6 +19,7 @@ communautaire distant avant d'avoir défini et testé ce format.
 - Branche locale préparée pour ce chantier : `feat/community-report-catalog`.
 - Stable actuelle : `v0.3.2`, marquée `Latest`.
 - Préversion du changement de nom : `v0.4.0.dev0`, taguée sur `d4fee69`.
+- Version locale du chantier catalogue : `0.4.0.dev1`, non taguée et non publiée.
 - Nom public et commande principale : `PerfComparator` / `perfcomparator`.
 - Alias conservé pendant la transition : `benchmark-mac`.
 - Module Python interne conservé : `benchmark_mac`.
@@ -26,9 +27,9 @@ communautaire distant avant d'avoir défini et testé ce format.
 - Le changement de nom a été validé sous macOS, Ubuntu 24.04 et Windows 10.
 - Aucune pull request n'est ouverte.
 
-## État local du premier livrable
+## État local du chantier
 
-La branche contient désormais, sans commit supplémentaire ni opération distante :
+Le premier livrable est enregistré dans le commit local `9b11ae1` :
 
 - le modèle fermé `perfcomparator-public-report` version 1 ;
 - un export fondé sur une liste blanche et un identifiant SHA-256 déterministe ;
@@ -42,10 +43,20 @@ La branche contient désormais, sans commit supplémentaire ni opération distan
 - des tests de non-divulgation des labels, dates, chemins, PID, processus,
   avertissements, messages d'échec et détails système privés.
 
-Validations acquises sur cet arbre : Ruff réussi, 69 tests réussis et export des
-12 rapports locaux macOS/Windows compatibles avec 12 identifiants distincts.
-Le chemin Linux est couvert par un rapport synthétique ; aucun rapport Linux
-réel n'est présent localement. Aucun fichier privé n'a été publié ou versionné.
+La seconde tranche locale non encore committée ajoute :
+
+- `perfcomparator validate-public SOURCE` ;
+- une limite de 2 Mio avant lecture ;
+- la validation sémantique complète des systèmes, benchmarks, unités,
+  paramètres, répétitions, échantillons, médianes, bornes et dispersions ;
+- le recalcul et la vérification de l'identifiant de contenu ;
+- le refus des chemins privés et des données non canoniques.
+
+Validations acquises sur cet arbre : Ruff réussi, 73 tests réussis, export puis
+validation des 12 rapports locaux macOS/Windows compatibles, et campagne Linux
+x86_64 réelle sous CPython 3.14.4 avec export puis validation réussis. Les
+rapports Linux privé et public sont restés dans un répertoire temporaire hors
+Git. Aucun fichier privé n'a été publié ou versionné.
 
 ## Travail PyPI différé
 
@@ -63,26 +74,38 @@ une nouvelle demande explicite de l'utilisateur.
 
 ## Architecture recommandée
 
-Créer à terme un dépôt séparé, nom de travail `perfcomparator-results`, afin de
-ne pas alourdir le dépôt du logiciel :
+Un dépôt séparé local, nom de travail `perfcomparator-results`, a été créé dans
+`../perfcomparator-results` afin de ne pas alourdir le dépôt du logiciel. Ses
+étapes sont conservées dans son propre historique Git ; aucun remote n'est
+configuré.
 
 ```text
 perfcomparator-results/
 ├── reports/
 │   └── protocol-0.3.0/
-│       ├── apple/
-│       ├── amd/
-│       └── intel/
+│       └── <identifiant-sha256>.json
 ├── catalog/
 │   └── index.json
-├── site/
-└── .github/workflows/validate-report.yml
+├── scripts/
+│   └── build_catalog.py
+└── tests/
 ```
 
-Le nom du dépôt reste à vérifier avant toute création distante. Une autre
-classification pourra être retenue si un rapport combine plusieurs fabricants
-CPU et GPU ; ne pas figer `apple/amd/intel` avant d'avoir défini les clés du
-catalogue.
+Le rangement plat par protocole et identifiant évite de classer arbitrairement
+les machines combinant plusieurs fabricants. Le nom du dépôt reste à vérifier
+avant toute création distante.
+
+Le dépôt local délègue la validation sémantique à `perfcomparator
+validate-public`, contrôle l'emplacement, le nom et l'unicité des rapports, puis
+génère un index minimal et déterministe. Ruff, 4 tests, la validation du
+catalogue vide et le contrôle de son index réussissent.
+
+Les commits locaux suivants ajoutent une première page statique sans framework,
+un artefact Pages autonome et deux workflows préparés mais non publiés :
+validation des pull requests en lecture seule et déploiement depuis `main`.
+Recherche, filtres, compteurs, téléchargements et avertissement « rapports
+communautaires non certifiés » sont couverts par quatre tests JavaScript. Un
+smoke test HTTP a confirmé la page, le CSS, les modules et l'index.
 
 Fonctionnement visé :
 
@@ -184,11 +207,10 @@ vers un stockage d'objets et conserver seulement l'index sur GitHub :
 
 ## Prochaine action concrète
 
-Relire le premier livrable local, puis le committer sur
-`feat/community-report-catalog`. Valider ensuite l'export sur un rapport Linux
-réel dès qu'un tel rapport est disponible. Seulement après cette validation,
-concevoir localement la structure et le validateur du dépôt communautaire
-séparé ; ne créer aucun dépôt distant sans confirmation explicite actuelle.
+Préparer le workflow `pull_request` en lecture seule dès qu'une révision
+publiquement installable de PerfComparator contient `validate-public`, puis le
+déploiement GitHub Pages. Ne créer aucun dépôt, aucune branche distante et aucun
+déploiement sans confirmation explicite actuelle.
 
 ## Critères d'acceptation du premier livrable
 

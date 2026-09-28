@@ -109,6 +109,10 @@ def test_export_public_requires_explicit_license_acceptance(tmp_path: Path) -> N
         update={"suite_version": "0.4.0.dev0", "protocol_version": "0.3.0"}
     )
     report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
     source = JsonReportRepository(tmp_path / "private").save(report)
 
     result = runner.invoke(
@@ -126,6 +130,10 @@ def test_export_public_writes_only_the_requested_local_file(tmp_path: Path) -> N
         update={"suite_version": "0.4.0.dev0", "protocol_version": "0.3.0"}
     )
     report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
     source = JsonReportRepository(tmp_path / "private").save(report)
     output = tmp_path / "exports" / "public.json"
 
@@ -144,3 +152,9 @@ def test_export_public_writes_only_the_requested_local_file(tmp_path: Path) -> N
     assert output.exists()
     assert "Private label" not in output.read_text(encoding="utf-8")
     assert "CC0-1.0" in result.stdout
+
+    validation = runner.invoke(app, ["validate-public", str(output)])
+
+    assert validation.exit_code == 0
+    assert "Rapport public valide" in validation.stdout
+    assert "performances non certifiées" in validation.stdout

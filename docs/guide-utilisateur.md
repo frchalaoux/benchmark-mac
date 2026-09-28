@@ -23,7 +23,7 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion `0.4.0.dev0` réalise le changement de nom. Sa commande
+La préversion publiée `0.4.0.dev0` réalise le changement de nom. Sa commande
 principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
 alias de compatibilité. Avec une version publiée `0.3.x`, employer
 `benchmark-mac`.
@@ -123,6 +123,8 @@ actuels suivent la règle « plus haut est meilleur ».
 
 ### Préparer un rapport destiné au catalogue communautaire
 
+Cette fonction appartient au développement non publié `0.4.0.dev1`.
+
 Ne jamais publier directement le JSON produit par `run` : il contient des
 informations utiles au diagnostic local, dont le chemin de Python, le label
 libre, la date précise et les processus observés.
@@ -139,6 +141,15 @@ La commande ne réalise aucun envoi réseau. L'option `--accept-cc0` est requise
 pour confirmer la licence CC0 1.0 des données destinées au partage. Relire le
 fichier produit avant toute contribution. Le format et sa politique de
 confidentialité sont détaillés dans [Format des rapports publics](format-rapport-public.md).
+
+Avant de comparer ou transmettre un rapport public reçu, valider son intégrité :
+
+```bash
+perfcomparator validate-public rapport-public.json
+```
+
+Un succès confirme le format et l'identifiant de contenu, jamais l'authenticité
+de la machine ni des performances.
 
 ## Rapport visuel et priorités
 

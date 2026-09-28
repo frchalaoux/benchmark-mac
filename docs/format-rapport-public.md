@@ -62,3 +62,25 @@ L'export retire les données locales inutiles, mais ne promet pas l'anonymat fac
 Enfin, un rapport conforme peut être falsifié. `community-unverified` signifie
 que le schéma est exploitable, pas que les performances ou la machine ont été
 certifiées.
+
+## Validation d'un fichier reçu
+
+La commande suivante effectue les contrôles prévus pour les futures
+contributions au catalogue :
+
+```bash
+perfcomparator validate-public rapport-public.json
+```
+
+Elle refuse notamment :
+
+- un fichier supérieur à 2 Mio ou contenant un champ inconnu ;
+- un format, schéma source, protocole, système ou environnement Python inconnu ;
+- un benchmark, profil, groupe, intitulé, unité ou paramètre incohérent ;
+- des résultats dupliqués, manquants ou également déclarés en échec ;
+- des échantillons non finis, non positifs ou incompatibles avec la médiane,
+  le minimum, le maximum et la dispersion annoncés ;
+- un chemin utilisateur dans un texte autorisé ;
+- un `report_id` qui ne correspond pas exactement au contenu canonique.
+
+La commande ne réalise aucune connexion réseau et ne modifie pas le fichier.

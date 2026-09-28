@@ -4,7 +4,7 @@ import pytest
 from test_repository import sample_report
 
 from benchmark_mac.models import BenchmarkFailure, ProcessLoad, ReadinessSnapshot
-from benchmark_mac.public_report import export_public_report, save_public_report
+from benchmark_mac.public_report import export_public_report, load_public_report, save_public_report
 
 
 def exportable_report():
@@ -43,6 +43,10 @@ def exportable_report():
     report.system.version = "private system version"
     report.system.release = "private release"
     report.results[0].parameters = {"workers": 1}
+    report.results[0].sample_values = [10]
+    report.results[0].minimum = 10
+    report.results[0].maximum = 10
+    report.results[0].relative_spread_percent = 0
     return report
 
 
@@ -75,6 +79,9 @@ def test_report_id_changes_with_comparative_content() -> None:
     first = export_public_report(exportable_report())
     changed = exportable_report()
     changed.results[0].value = 12
+    changed.results[0].sample_values = [12]
+    changed.results[0].minimum = 12
+    changed.results[0].maximum = 12
 
     assert export_public_report(changed).report_id != first.report_id
 
@@ -134,3 +141,40 @@ def test_saved_public_report_is_valid_json(tmp_path) -> None:
     assert payload["format"] == "perfcomparator-public-report"
     assert payload["license"] == "CC0-1.0"
     assert payload["verification"] == "community-unverified"
+
+
+def test_saved_public_report_can_be_loaded_and_fully_validated(tmp_path) -> None:
+    exported = export_public_report(exportable_report())
+    path = save_public_report(exported, tmp_path / "public.json")
+
+    assert load_public_report(path) == exported
+
+
+def test_public_validation_rejects_tampered_content(tmp_path) -> None:
+    exported = export_public_report(exportable_report())
+    path = save_public_report(exported, tmp_path / "public.json")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["results"][0]["value"] = 999
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Médiane incohérente"):
+        load_public_report(path)
+
+
+def test_public_validation_rejects_a_wrong_content_id(tmp_path) -> None:
+    exported = export_public_report(exportable_report())
+    path = save_public_report(exported, tmp_path / "public.json")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["report_id"] = f"sha256:{'0' * 64}"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="identifiant ne correspond pas"):
+        load_public_report(path)
+
+
+def test_public_validation_rejects_oversized_files(tmp_path) -> None:
+    path = tmp_path / "public.json"
+    path.write_text("{}", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="dépasse la limite"):
+        load_public_report(path, maximum_bytes=1)
