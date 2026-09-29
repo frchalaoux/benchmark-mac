@@ -9,7 +9,24 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion publiée `v0.4.0.dev5`
+## Préversion préparée `v0.4.0.dev6`
+
+La préversion `0.4.0.dev6` simplifie les contributions au catalogue : une pull
+request ne contient plus que le rapport public. L'index est calculé depuis les
+rapports lors du déploiement du site et n'est plus versionné, ce qui supprime
+les échecs dus à un index périmé.
+
+Ses installateurs seront :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev5`
 
 La préversion `0.4.0.dev5` détecte, confirme et publie facultativement la
 référence commerciale ou SKU de la machine. Windows utilise
@@ -121,6 +138,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement préparé | Soumettre un seul rapport sans maintenir d'index | Préversion à publier |
 | [`v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5) | Développement publié | Identifier une configuration par sa référence commerciale facultative | Préversion |
 | [`v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4) | Développement publié | Identifier les machines par leur nom commercial confirmé | Préversion |
 | [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
@@ -414,8 +432,8 @@ le navigateur.
 
 **Contribution envoyée** signifie que la pull request a été créée. Le catalogue
 enchaîne ensuite automatiquement sa validation, sa fusion si elle ne contient
-que le rapport et l'index attendu, puis le déploiement GitHub Pages. Le rapport
-devient alors visible dans le
+que le rapport public attendu, la génération de l'index, puis le déploiement
+GitHub Pages. Le rapport devient alors visible dans le
 [catalogue web](https://frchalaoux.github.io/perfcomparator-results/). Une
 contribution invalide reste ouverte avec son erreur.
 GitHub peut encore demander au mainteneur d'autoriser le contrôle initial de la
@@ -467,7 +485,8 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
 `0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3`, `0.4.0.dev4` et `0.4.0.dev5` sont compatibles entre elles. Les
+`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5` et `0.4.0.dev6` sont compatibles entre
+elles. Les
 rapports sont enregistrés dans
 `data/results/` par défaut. Les nouvelles campagnes conservent séparément la
 version exacte de la suite (`suite_version`) et celle du protocole

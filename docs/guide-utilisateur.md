@@ -23,12 +23,14 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion publiée `0.4.0.dev5` ajoute une référence commerciale ou SKU
-facultative. Le nom commercial confirmé vient de `0.4.0.dev4`, la compatibilité
-des anciens rapports de `0.4.0.dev3`, la soumission guidée de `0.4.0.dev2` et le
-catalogue communautaire de `0.4.0.dev1`. Aucun numéro de série, UUID matériel
-ni nom d'hôte n'est exporté. La commande principale est `perfcomparator` ;
-l'ancienne commande `benchmark-mac` reste un alias de compatibilité.
+La préversion préparée `0.4.0.dev6` soumet uniquement le rapport public et
+laisse le catalogue générer son index au déploiement. La référence commerciale
+facultative vient de `0.4.0.dev5`, le nom commercial confirmé de `0.4.0.dev4`,
+la compatibilité des anciens rapports de `0.4.0.dev3`, la soumission guidée de
+`0.4.0.dev2` et le catalogue communautaire de `0.4.0.dev1`. Aucun numéro de
+série, UUID matériel ni nom d'hôte n'est exporté. La commande principale est
+`perfcomparator` ; l'ancienne commande `benchmark-mac` reste un alias de
+compatibilité.
 
 Avant une mesure :
 
@@ -183,8 +185,9 @@ référence commerciale facultative. Ils restent modifiables avant tout envoi.
 
 Le message **Contribution envoyée** confirme la création de la pull request.
 Le catalogue contrôle ensuite automatiquement son contenu. Si la validation
-réussit et que seuls le rapport et l'index généré ont changé, la pull request
-est fusionnée automatiquement, puis GitHub Pages est redéployé. Le rapport
+réussit et que seul le rapport attendu a été ajouté, la pull request est
+fusionnée automatiquement. L'index est alors généré dans l'artefact GitHub
+Pages, sans être versionné, puis le site est redéployé. Le rapport
 devient alors visible dans le
 [catalogue web](https://frchalaoux.github.io/perfcomparator-results/). Une
 contribution invalide reste ouverte avec son erreur.

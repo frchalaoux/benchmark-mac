@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 import subprocess
 import time
@@ -129,48 +128,6 @@ def _ensure_fork(gh: Path, login: str) -> str:
     return fork
 
 
-def _catalog_entry(report: PublicBenchmarkReport, path: str) -> dict[str, object]:
-    system = report.system
-    return {
-        "report_id": report.report_id,
-        "path": path,
-        "protocol_version": report.protocol_version,
-        "suite_version": report.suite_version,
-        "profile": report.profile,
-        "benchmark_count": len(report.results),
-        "failed_benchmark_count": len(report.failed_benchmarks),
-        "system": {
-            "operating_system": system.operating_system,
-            "architecture": system.architecture,
-            "processor": system.processor,
-            "physical_cpu_count": system.physical_cpu_count,
-            "logical_cpu_count": system.logical_cpu_count,
-            "memory_bytes": system.memory_bytes,
-            "gpu_devices": system.gpu_devices,
-        },
-    }
-
-
-def _updated_index(gh: Path, report: PublicBenchmarkReport, report_path: str) -> str:
-    response = _api_json(
-        gh,
-        f"repos/{CATALOG_REPOSITORY}/contents/catalog/index.json?ref=main",
-    )
-    try:
-        current = json.loads(base64.b64decode(str(response["content"])).decode())
-        reports = current["reports"]
-    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
-        raise ValueError("L'index public du catalogue est illisible.") from error
-    if not isinstance(reports, list):
-        raise TypeError("La liste des rapports du catalogue est invalide.")
-    if any(entry.get("report_id") == report.report_id for entry in reports):
-        raise ValueError("Ce rapport figure déjà dans le catalogue.")
-    reports.append(_catalog_entry(report, report_path))
-    reports.sort(key=lambda entry: str(entry["report_id"]))
-    current["report_count"] = len(reports)
-    return json.dumps(current, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-
-
 def _create_blob(gh: Path, fork: str, content: str) -> str:
     response = _api_json(
         gh,
@@ -193,7 +150,6 @@ def submit_public_report(
     digest = report.report_id.removeprefix("sha256:")
     branch = f"add/report-{digest[:12]}-{datetime.now(UTC):%Y%m%d%H%M%S}"
     report_path = f"reports/protocol-{report.protocol_version}/{digest}.json"
-    index_content = _updated_index(gh, report, report_path)
     report_content = public_path.read_text(encoding="utf-8")
 
     base = _api_json(gh, f"repos/{CATALOG_REPOSITORY}/commits/main")
@@ -204,7 +160,6 @@ def submit_public_report(
         raise ValueError("La branche principale du catalogue est illisible.") from error
 
     report_blob = _create_blob(gh, fork, report_content)
-    index_blob = _create_blob(gh, fork, index_content)
     tree = _api_json(
         gh,
         f"repos/{fork}/git/trees",
@@ -213,12 +168,6 @@ def submit_public_report(
             "base_tree": base_tree,
             "tree": [
                 {"path": report_path, "mode": "100644", "type": "blob", "sha": report_blob},
-                {
-                    "path": "catalog/index.json",
-                    "mode": "100644",
-                    "type": "blob",
-                    "sha": index_blob,
-                },
             ],
         },
     )

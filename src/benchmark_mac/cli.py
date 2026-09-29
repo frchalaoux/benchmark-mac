@@ -436,8 +436,7 @@ def contribute(
     )
     typer.echo(
         f"\nOpérations distantes prévues : utiliser {destination}, créer une branche "
-        "contenant uniquement "
-        "ce rapport public et l'index, puis ouvrir une pull request vers "
+        "contenant uniquement ce rapport public, puis ouvrir une pull request vers "
         "frchalaoux/perfcomparator-results:main."
     )
     if not typer.confirm("Soumettre maintenant ce rapport public ?", default=False):

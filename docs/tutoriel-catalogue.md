@@ -25,8 +25,9 @@ de l'accepter :
 Le message **Contribution envoyée** signifie donc « pull request créée », pas
 « rapport déjà publié ». Aucune action supplémentaire n'est demandée si le
 contrôle réussit : le dépôt fusionne automatiquement une contribution qui
-contient uniquement le nouveau rapport et l'index généré, puis redéploie le
-site. Si le contrôle échoue, la pull request reste ouverte et affiche l'erreur.
+contient uniquement le nouveau rapport, génère l'index lors du déploiement,
+puis redéploie le site. Si le contrôle échoue, la pull request reste ouverte et
+affiche l'erreur.
 Pour la toute première contribution provenant d'un fork, GitHub peut demander
 au mainteneur d'autoriser le démarrage du contrôle. Une fois `validate` lancé,
 la fusion et la publication ne demandent plus d'intervention.
@@ -63,25 +64,26 @@ manuel utile au diagnostic.
 ## 1. Installer la version qui prend en charge le catalogue
 
 Le parcours guidé nécessite PerfComparator `0.4.0.dev2` ou une version
-ultérieure. La version publiée recommandée pour ce tutoriel est `0.4.0.dev5`.
+ultérieure. La version préparée recommandée pour ce tutoriel est
+`0.4.0.dev6`.
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev5/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev5/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.ps1 | iex
 ```
 
 Contrôler l'installation :
 
 ```console
 $ perfcomparator --version
-PerfComparator 0.4.0.dev5
+PerfComparator 0.4.0.dev6
 ```
 
 ## 2. Mesurer la machine
@@ -156,34 +158,32 @@ le nom d'hôte, mais une combinaison matérielle rare peut rester reconnaissable
    ```bash
    uv sync --locked --dev
    uv run python scripts/build_catalog.py validate
-   uv run python scripts/build_catalog.py build
-   uv run python scripts/build_catalog.py check
    uv run pytest -q
    node --test tests/test_catalog_ui.mjs
    ```
 
-   `build` met à jour `catalog/index.json`; il faut inclure ce fichier dans la
-   contribution.
+   Le déploiement construit l'index à partir des rapports validés. Cet index
+   n'est pas versionné et ne doit pas être ajouté à la contribution.
 
-5. Vérifier que seul le rapport public et l'index attendu sont ajoutés, puis
-   proposer la pull request :
+5. Vérifier que seul le rapport public attendu est ajouté, puis proposer la
+   pull request :
 
    ```bash
    git status --short
-   git add reports/protocol-0.3.0/*.json catalog/index.json
+   git add reports/protocol-0.3.0/*.json
    git commit -m "Add community benchmark report"
    git push -u origin add/community-report
    ```
 
    Ouvrir ensuite la pull request suggérée par GitHub. Le contrôle automatique
-   répète la validation du format, du nom, de l'emplacement et de l'index.
+   répète la validation du format, du nom et de l'emplacement.
 
 La création de la pull request termine le travail du participant. Elle ne
 publie pas encore le rapport. Le contrôle `validate` vérifie les données ; si
-la contribution contient uniquement le nouveau rapport et l'index généré, un
-second workflow la fusionne automatiquement dans `main` et demande le
-déploiement GitHub Pages. Lorsque **Deploy GitHub Pages** est vert, le rapport
-apparaît dans le
+la contribution contient uniquement le nouveau rapport, un second workflow la
+fusionne automatiquement dans `main` et demande le déploiement GitHub Pages.
+Celui-ci génère l'index depuis les rapports présents. Lorsque **Deploy GitHub
+Pages** est vert, le rapport apparaît dans le
 [catalogue public](https://frchalaoux.github.io/perfcomparator-results/).
 
 ## 5. Télécharger et comparer
@@ -234,8 +234,8 @@ rapport, vérifier d'abord que sa pull request est fusionnée et que le workflow
   `protocol_version`, actuellement `reports/protocol-0.3.0/`.
 - **Rapports incompatibles** : refaire les campagnes avec le même profil et
   une version de PerfComparator qui emploie le même protocole.
-- **Index périmé** : relancer `build`, puis `check`, et inclure
-  `catalog/index.json` dans le commit.
+- **Index du site incorrect** : vérifier les rapports présents dans `main`,
+  puis relancer le déploiement Pages ; aucun index n'est à modifier dans Git.
 
 Le [format public](format-rapport-public.md) détaille le contrat de données et
 le [guide utilisateur](guide-utilisateur.md) explique les conditions de mesure
