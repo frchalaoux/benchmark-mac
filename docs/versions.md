@@ -6,6 +6,26 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
+### `v0.4.0.dev6` — développement préparé
+
+[Consulter le code source de `v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6)
+
+Cette préversion simplifie la contribution au catalogue. La pull request ne
+contient plus que le rapport public ; l'index est généré depuis les rapports au
+moment du déploiement GitHub Pages et n'est plus versionné. Le protocole de
+mesure reste `0.3.0`.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.ps1 | iex
+```
+
+Après publication, le contrôle `perfcomparator --version` devra afficher
+`PerfComparator 0.4.0.dev6`.
+
 ### `v0.4.0.dev5` — développement publié
 
 [Consulter le code source de `v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5)
@@ -204,7 +224,7 @@ logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
 Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
 `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2`,
-`0.4.0.dev3`, `0.4.0.dev4` et `0.4.0.dev5` emploient le
+`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5` et `0.4.0.dev6` emploient le
 même protocole de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste
 exclue de ce groupe de compatibilité.
 
