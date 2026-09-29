@@ -6,6 +6,30 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
+### `v0.4.0.dev4` — développement publié
+
+[Consulter le code source de `v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4)
+
+Cette préversion détecte le fabricant, le nom du produit et l'identifiant de
+modèle sur macOS, Windows et Linux. Le parcours de contribution demande de
+confirmer ou corriger le nom commercial public avant l'export. Le format public
+v2 expose cette identité non unique, mais jamais le numéro de série, les UUID
+matériels ni le nom d'hôte. Les rapports publics v1 restent acceptés. Le
+protocole de mesure reste `0.3.0` et la stable recommandée reste `v0.3.2`.
+
+Commandes d'installation :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.ps1 | iex
+```
+
+Le contrôle `perfcomparator --version` devra afficher
+`PerfComparator 0.4.0.dev4`.
+
 ### `v0.4.0.dev3` — développement publié
 
 [Consulter le code source de `v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3)
@@ -157,8 +181,8 @@ validés dans les préversions `dev1` et `dev2`. Elle refuse les moteurs WebGPU
 logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
 Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
-`0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3` emploient le
+`0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2`,
+`0.4.0.dev3` et `0.4.0.dev4` emploient le
 même protocole de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste
 exclue de ce groupe de compatibilité.
 

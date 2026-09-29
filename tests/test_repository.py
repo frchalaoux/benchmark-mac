@@ -17,6 +17,8 @@ def sample_report(*, value: float = 10.0, label: str = "Mac test") -> BenchmarkR
             version="test",
             machine="arm64",
             model="Mac16,1",
+            manufacturer="Apple",
+            product_name="MacBook Pro",
             processor="Apple M4",
             physical_cpu_count=10,
             logical_cpu_count=10,

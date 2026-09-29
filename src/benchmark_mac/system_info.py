@@ -10,11 +10,21 @@ import shutil
 import subprocess
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
 import psutil
 
 from .models import EnvironmentSnapshot, ProcessLoad, ReadinessSnapshot, SystemSnapshot
+
+
+@dataclass(frozen=True)
+class MachineIdentity:
+    """Identité matérielle non unique, sans numéro de série ni UUID."""
+
+    manufacturer: str | None
+    product_name: str
+    model_identifier: str
 
 
 def _command(*command: str, timeout: float = 10) -> str:
@@ -50,28 +60,60 @@ def _memory_bytes() -> int | None:
     return None
 
 
-def _model() -> str:
+def _hardware_text(path: str) -> str:
+    try:
+        return Path(path).read_text(encoding="utf-8").strip("\x00\n ")
+    except OSError:
+        return ""
+
+
+def _machine_identity() -> MachineIdentity:
     if sys.platform == "darwin":
-        return _sysctl("hw.model") or platform.node() or "inconnu"
+        output = _command("system_profiler", "SPHardwareDataType", "-json")
+        try:
+            item = json.loads(output).get("SPHardwareDataType", [])[0]
+        except AttributeError, IndexError, json.JSONDecodeError, TypeError:
+            item = {}
+        if not isinstance(item, dict):
+            item = {}
+        product_name = item.get("machine_name")
+        model = item.get("machine_model") or _sysctl("hw.model")
+        return MachineIdentity(
+            manufacturer="Apple",
+            product_name=product_name if isinstance(product_name, str) else "Mac",
+            model_identifier=model if isinstance(model, str) and model else "Mac",
+        )
     if sys.platform == "win32":
         output = _command(
             "powershell",
             "-NoProfile",
             "-Command",
-            "(Get-CimInstance Win32_ComputerSystem | Select-Object -ExpandProperty Model)",
+            "Get-CimInstance Win32_ComputerSystem | "
+            "Select-Object Manufacturer,Model | ConvertTo-Json -Compress",
         )
-        return output or platform.node() or "inconnu"
-    for candidate in (
-        "/sys/devices/virtual/dmi/id/product_name",
-        "/sys/firmware/devicetree/base/model",
-    ):
         try:
-            value = Path(candidate).read_text(encoding="utf-8").strip("\x00\n ")
-        except OSError:
-            continue
-        if value:
-            return value
-    return platform.node() or "inconnu"
+            item = json.loads(output)
+        except json.JSONDecodeError, TypeError:
+            item = {}
+        if not isinstance(item, dict):
+            item = {}
+        manufacturer = item.get("Manufacturer")
+        model = item.get("Model")
+        return MachineIdentity(
+            manufacturer=manufacturer if isinstance(manufacturer, str) else None,
+            product_name=model if isinstance(model, str) and model else "PC Windows",
+            model_identifier=model if isinstance(model, str) and model else "inconnu",
+        )
+    manufacturer = _hardware_text("/sys/devices/virtual/dmi/id/sys_vendor") or None
+    product_name = _hardware_text("/sys/devices/virtual/dmi/id/product_name")
+    if not product_name:
+        product_name = _hardware_text("/sys/firmware/devicetree/base/model")
+    product_name = product_name or "Machine Linux"
+    return MachineIdentity(
+        manufacturer=manufacturer,
+        product_name=product_name,
+        model_identifier=product_name,
+    )
 
 
 def _processor() -> str:
@@ -142,12 +184,15 @@ def _gpu_devices() -> list[str]:
 def system_snapshot(work_dir: Path | str = ".") -> SystemSnapshot:
     """Capture le matériel, l'OS et l'interpréteur utilisés pour le rapport."""
     usage = shutil.disk_usage(Path(work_dir).resolve())
+    identity = _machine_identity()
     return SystemSnapshot(
         system=platform.system(),
         release=platform.release(),
         version=platform.version(),
         machine=platform.machine(),
-        model=_model(),
+        model=identity.model_identifier,
+        manufacturer=identity.manufacturer,
+        product_name=identity.product_name,
         processor=_processor(),
         physical_cpu_count=_physical_cpu_count(),
         logical_cpu_count=os.cpu_count() or 1,

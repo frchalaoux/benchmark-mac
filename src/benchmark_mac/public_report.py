@@ -22,10 +22,10 @@ from .models import (
     SystemSnapshot,
 )
 
-PUBLIC_FORMAT_VERSION = 1
+PUBLIC_FORMAT_VERSION = 2
 PUBLIC_LICENSE = "CC0-1.0"
 MAX_PUBLIC_REPORT_BYTES = 2 * 1_048_576
-SUPPORTED_PRIVATE_SCHEMAS = frozenset({3, 4})
+SUPPORTED_PRIVATE_SCHEMAS = frozenset({3, 4, 5})
 SUPPORTED_PROTOCOL = "0.3.0"
 SUITE_VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:\.dev\d+)?$")
 PRIVATE_PATH_PATTERNS = (
@@ -173,6 +173,44 @@ def _content_id(payload: dict[str, object]) -> str:
     return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
 
 
+def suggest_public_machine_name(report: BenchmarkReport) -> str:
+    """Propose un nom commercial non unique, modifiable avant publication."""
+    manufacturer = (report.system.manufacturer or "").strip()
+    product_name = (report.system.product_name or "").strip()
+    model = report.system.model.strip()
+    if report.system.system == "Darwin":
+        manufacturer = manufacturer or "Apple"
+        if not product_name:
+            family = re.sub(r"\d.*$", "", model)
+            product_name = {
+                "MacBook": "MacBook",
+                "MacBookAir": "MacBook Air",
+                "MacBookPro": "MacBook Pro",
+                "Macmini": "Mac mini",
+                "MacPro": "Mac Pro",
+                "iMac": "iMac",
+                "iMacPro": "iMac Pro",
+            }.get(family, re.sub(r"(?<=[a-z])(?=[A-Z])", " ", family))
+        product_name = product_name or "Mac"
+        base = f"{manufacturer} {product_name}".strip()
+        return f"{base} ({model})" if model and model not in base else base
+    base = " ".join(value for value in (manufacturer, product_name) if value)
+    if not base:
+        base = model if model and model != "inconnu" else report.system.processor
+    return " ".join(base.split())
+
+
+def _public_payload(report: PublicBenchmarkReport) -> dict[str, object]:
+    """Préserve le contenu canonique des rapports publics historiques v1."""
+    payload = report.model_dump(mode="json")
+    if report.format_version == 1:
+        system = payload["system"]
+        assert isinstance(system, dict)
+        for field in ("manufacturer", "commercial_name", "model_identifier"):
+            system.pop(field, None)
+    return payload
+
+
 def _validate_public_result(result: PublicBenchmarkResult, *, campaign_repetitions: int) -> None:
     definition = CATALOG.get(result.benchmark_id)
     if definition is None:
@@ -225,6 +263,19 @@ def validate_public_report(report: PublicBenchmarkReport) -> PublicBenchmarkRepo
         raise ValueError(f"Système inconnu : {report.system.operating_system}")
     if report.system.python_implementation != "CPython" or report.system.python_version != "3.14.4":
         raise ValueError("L'environnement Python ne correspond pas au protocole 0.3.0.")
+    identity = (
+        report.system.manufacturer,
+        report.system.commercial_name,
+        report.system.model_identifier,
+    )
+    if report.format_version == 1 and (
+        report.source_schema_version == 5 or any(value is not None for value in identity)
+    ):
+        raise ValueError("Un rapport public v1 ne peut pas contenir l'identité commerciale.")
+    if report.format_version == 2 and (
+        report.system.commercial_name is None or report.system.model_identifier is None
+    ):
+        raise ValueError("Un rapport public v2 doit identifier le modèle de la machine.")
     for field, value in (
         ("operating_system", report.system.operating_system),
         ("architecture", report.system.architecture),
@@ -237,6 +288,13 @@ def validate_public_report(report: PublicBenchmarkReport) -> PublicBenchmarkRepo
     for device in report.system.gpu_devices:
         if _clean_public_text(device, field="gpu_devices") != device:
             raise ValueError("Texte non canonique dans gpu_devices.")
+    for field, value in (
+        ("manufacturer", report.system.manufacturer),
+        ("commercial_name", report.system.commercial_name),
+        ("model_identifier", report.system.model_identifier),
+    ):
+        if value is not None and _clean_public_text(value, field=field) != value:
+            raise ValueError(f"Texte non canonique dans {field}.")
 
     result_ids = [result.benchmark_id for result in report.results]
     if not result_ids or len(result_ids) != len(set(result_ids)):
@@ -254,7 +312,8 @@ def validate_public_report(report: PublicBenchmarkReport) -> PublicBenchmarkRepo
     for result in report.results:
         _validate_public_result(result, campaign_repetitions=report.repetitions)
 
-    content = report.model_dump(mode="json", exclude={"report_id"})
+    content = _public_payload(report)
+    content.pop("report_id")
     if report.report_id != _content_id(content):
         raise ValueError("L'identifiant ne correspond pas au contenu du rapport public.")
     return report
@@ -309,7 +368,7 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
         suite_version=report.suite_version,
         protocol_version=report.protocol_version,
         recorded_at=datetime(1970, 1, 1, tzinfo=UTC),
-        label=report.system.processor,
+        label=report.system.commercial_name or report.system.processor,
         profile=report.profile,
         repetitions=report.repetitions,
         requested_benchmarks=report.requested_benchmarks,
@@ -318,7 +377,9 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
             release="rapport public",
             version="rapport public",
             machine=report.system.architecture,
-            model=report.system.processor,
+            model=report.system.model_identifier or report.system.processor,
+            manufacturer=report.system.manufacturer,
+            product_name=report.system.commercial_name,
             processor=report.system.processor,
             physical_cpu_count=report.system.physical_cpu_count,
             logical_cpu_count=report.system.logical_cpu_count,
@@ -341,7 +402,11 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
     )
 
 
-def export_public_report(report: BenchmarkReport) -> PublicBenchmarkReport:
+def export_public_report(
+    report: BenchmarkReport,
+    *,
+    commercial_name: str | None = None,
+) -> PublicBenchmarkReport:
     """Reconstruit un rapport public depuis une liste blanche de champs."""
     if report.schema_version not in SUPPORTED_PRIVATE_SCHEMAS:
         raise ValueError(
@@ -367,6 +432,16 @@ def export_public_report(report: BenchmarkReport) -> PublicBenchmarkReport:
     public_system = PublicSystemSnapshot(
         operating_system=_clean_public_text(report.system.system, field="operating_system"),
         architecture=_clean_public_text(report.system.machine, field="architecture"),
+        manufacturer=(
+            _clean_public_text(report.system.manufacturer, field="manufacturer")
+            if report.system.manufacturer
+            else ("Apple" if report.system.system == "Darwin" else None)
+        ),
+        commercial_name=_clean_public_text(
+            commercial_name or suggest_public_machine_name(report),
+            field="commercial_name",
+        ),
+        model_identifier=_clean_public_text(report.system.model, field="model_identifier"),
         processor=_clean_public_text(report.system.processor, field="processor"),
         physical_cpu_count=report.system.physical_cpu_count,
         logical_cpu_count=report.system.logical_cpu_count,
@@ -416,7 +491,7 @@ def save_public_report(report: PublicBenchmarkReport, path: Path | str) -> Path:
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(destination.suffix + ".tmp")
     payload = json.dumps(
-        report.model_dump(mode="json"),
+        _public_payload(report),
         ensure_ascii=False,
         indent=2,
         sort_keys=True,

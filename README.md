@@ -9,7 +9,24 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion publiée `v0.4.0.dev3`
+## Préversion publiée `v0.4.0.dev4`
+
+La préversion `0.4.0.dev4` détecte le fabricant, le nom du produit et
+l'identifiant de modèle sur macOS, Windows et Linux. Avant une contribution,
+l'utilisateur confirme ou corrige le nom commercial public affiché dans le
+catalogue. Aucun numéro de série, UUID matériel ni nom d'hôte n'est exporté.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev3`
 
 La préversion `0.4.0.dev3` accepte l'export sûr des rapports privés de schéma
 `3` ou `4` qui utilisent le protocole `0.3.0`. Elle clarifie aussi chaque état
@@ -86,6 +103,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4) | Développement publié | Identifier les machines par leur nom commercial confirmé | Préversion |
 | [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
 | [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
 | [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
@@ -323,15 +341,19 @@ un fichier distinct depuis une liste blanche, localement et sans envoi réseau :
 ```bash
 perfcomparator export-public data/results/benchmark_….json \
   --output rapport-public.json \
+  --machine-name "Apple MacBook Pro 15 pouces (2018)" \
   --accept-cc0
 ```
 
 `--accept-cc0` confirme que les données exportées pourront être diffusées sous
-licence CC0 1.0. L'export retire notamment le label libre, la date précise, les
-chemins, processus, PID, messages d'échec, versions détaillées du système et
-informations de disque. Il porte un identifiant de contenu déterministe et la
-mention `community-unverified` : l'anonymisation et la validation du format ne
-certifient jamais les performances déclarées.
+licence CC0 1.0. `--machine-name` permet de confirmer le nom commercial affiché
+dans le catalogue ; sans cette option, PerfComparator emploie sa proposition
+matérielle. L'export retire notamment le label libre, la date précise, les
+chemins, processus, PID, messages d'échec, versions détaillées du système,
+informations de disque, numéro de série, UUID matériels et nom d'hôte. Il porte
+un identifiant de contenu déterministe et la mention `community-unverified` :
+l'anonymisation et la validation du format ne certifient jamais le nom de la
+machine ni les performances déclarées.
 
 Le [contrat complet du format public](docs/format-rapport-public.md) précise les
 données conservées et les limites de confidentialité.
@@ -357,9 +379,11 @@ de contenu. Elle ne constitue pas une certification des scores.
 perfcomparator contribute
 ```
 
-La commande propose les rapports récents, demande le consentement CC0, conserve
-un export relisible sous `data/public/`, puis affiche précisément les opérations
-distantes avant de créer ou réutiliser le fork et d'ouvrir la pull request.
+La commande propose les rapports récents, demande le consentement CC0, puis
+fait confirmer un nom commercial public proposé à partir du matériel détecté.
+Elle conserve un export relisible sous `data/public/`, puis affiche précisément
+les opérations distantes avant de créer ou réutiliser le fork et d'ouvrir la
+pull request.
 GitHub CLI est installé dans le dossier utilisateur par l'installateur
 PerfComparator, depuis une archive officielle épinglée et vérifiée par SHA-256.
 La création éventuelle du compte et la vérification de son adresse restent dans
@@ -420,7 +444,7 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
 `0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3` sont compatibles entre elles. Les rapports sont enregistrés dans
+`0.4.0.dev3` et `0.4.0.dev4` sont compatibles entre elles. Les rapports sont enregistrés dans
 `data/results/` par défaut. Les nouvelles campagnes conservent séparément la
 version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent
