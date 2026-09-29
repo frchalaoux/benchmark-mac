@@ -9,7 +9,25 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion publiée `v0.4.0.dev4`
+## Préversion publiée `v0.4.0.dev5`
+
+La préversion `0.4.0.dev5` détecte, confirme et publie facultativement la
+référence commerciale ou SKU de la machine. Windows utilise
+`SystemSKUNumber`, Linux le champ DMI `product_sku`, et macOS la référence
+officielle lorsqu'elle est exposée. Les UUID, numéros de série et références
+Apple génériques contenant `xx` ne sont jamais collectés ou sont refusés.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev5/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev5/install.ps1 | iex
+```
+
+## Préversion antérieure `v0.4.0.dev4`
 
 La préversion `0.4.0.dev4` détecte le fabricant, le nom du produit et
 l'identifiant de modèle sur macOS, Windows et Linux. Avant une contribution,
@@ -103,6 +121,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5) | Développement publié | Identifier une configuration par sa référence commerciale facultative | Préversion |
 | [`v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4) | Développement publié | Identifier les machines par leur nom commercial confirmé | Préversion |
 | [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
 | [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
@@ -342,13 +361,16 @@ un fichier distinct depuis une liste blanche, localement et sans envoi réseau :
 perfcomparator export-public data/results/benchmark_….json \
   --output rapport-public.json \
   --machine-name "Apple MacBook Pro 15 pouces (2018)" \
+  --machine-sku "MR942FN/A" \
   --accept-cc0
 ```
 
 `--accept-cc0` confirme que les données exportées pourront être diffusées sous
 licence CC0 1.0. `--machine-name` permet de confirmer le nom commercial affiché
-dans le catalogue ; sans cette option, PerfComparator emploie sa proposition
-matérielle. L'export retire notamment le label libre, la date précise, les
+dans le catalogue. `--machine-sku` ajoute facultativement la référence exacte
+de la configuration, jamais son numéro de série. Sans ces options,
+PerfComparator emploie les informations matérielles disponibles. L'export
+retire notamment le label libre, la date précise, les
 chemins, processus, PID, messages d'échec, versions détaillées du système,
 informations de disque, numéro de série, UUID matériels et nom d'hôte. Il porte
 un identifiant de contenu déterministe et la mention `community-unverified` :
@@ -380,7 +402,8 @@ perfcomparator contribute
 ```
 
 La commande propose les rapports récents, demande le consentement CC0, puis
-fait confirmer un nom commercial public proposé à partir du matériel détecté.
+fait confirmer un nom commercial public et une référence commerciale
+facultative proposés à partir du matériel détecté.
 Elle conserve un export relisible sous `data/public/`, puis affiche précisément
 les opérations distantes avant de créer ou réutiliser le fork et d'ouvrir la
 pull request.
@@ -444,7 +467,8 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
 `0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3` et `0.4.0.dev4` sont compatibles entre elles. Les rapports sont enregistrés dans
+`0.4.0.dev3`, `0.4.0.dev4` et `0.4.0.dev5` sont compatibles entre elles. Les
+rapports sont enregistrés dans
 `data/results/` par défaut. Les nouvelles campagnes conservent séparément la
 version exacte de la suite (`suite_version`) et celle du protocole
 de mesure (`protocol_version`). Deux versions différentes de la suite restent

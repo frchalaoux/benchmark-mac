@@ -23,13 +23,12 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion publiée `0.4.0.dev4` ajoute le nom commercial confirmé des
-machines au catalogue, sans numéro de série, UUID matériel ni nom d'hôte. La
-compatibilité des anciens rapports vient de `0.4.0.dev3`, la soumission guidée
-de `0.4.0.dev2` et le catalogue communautaire de `0.4.0.dev1`. La commande
-principale est `perfcomparator`; l'ancienne commande `benchmark-mac` reste un
-alias de compatibilité. Avec une version publiée `0.3.x`, employer
-`benchmark-mac`.
+La préversion publiée `0.4.0.dev5` ajoute une référence commerciale ou SKU
+facultative. Le nom commercial confirmé vient de `0.4.0.dev4`, la compatibilité
+des anciens rapports de `0.4.0.dev3`, la soumission guidée de `0.4.0.dev2` et le
+catalogue communautaire de `0.4.0.dev1`. Aucun numéro de série, UUID matériel
+ni nom d'hôte n'est exporté. La commande principale est `perfcomparator` ;
+l'ancienne commande `benchmark-mac` reste un alias de compatibilité.
 
 Avant une mesure :
 
@@ -138,11 +137,13 @@ Créer à la place un export public :
 perfcomparator export-public data/results/benchmark_….json \
   --output rapport-public.json \
   --machine-name "Apple MacBook Pro 15 pouces (2018)" \
+  --machine-sku "MR942FN/A" \
   --accept-cc0
 ```
 
 La commande ne réalise aucun envoi réseau. `--machine-name` confirme le nom
-commercial public ; sans cette option, PerfComparator utilise sa proposition.
+commercial public. `--machine-sku` ajoute facultativement la référence exacte
+de la configuration et ne doit jamais contenir le numéro de série.
 L'option `--accept-cc0` est requise pour confirmer la licence CC0 1.0 des
 données destinées au partage. Relire le fichier produit avant toute
 contribution. Le numéro de série, les UUID matériels et le nom d'hôte ne sont
@@ -177,8 +178,8 @@ compte peut y être créé, puis son adresse vérifiée. Avant toute modificatio
 distante, PerfComparator annonce le fork, la branche et la cible, puis demande
 une confirmation séparée.
 
-Après le consentement CC0, la commande propose un nom commercial public et
-demande sa confirmation. Il reste modifiable avant tout envoi.
+Après le consentement CC0, la commande propose un nom commercial public et une
+référence commerciale facultative. Ils restent modifiables avant tout envoi.
 
 Le message **Contribution envoyée** confirme la création de la pull request.
 Le catalogue contrôle ensuite automatiquement son contenu. Si la validation

@@ -224,7 +224,7 @@ def test_contribute_guides_a_user_without_exposing_the_private_report(
     result = runner.invoke(
         app,
         ["contribute", str(private)],
-        input="y\nApple MacBook Pro 15 pouces (2018)\ny\ny\n",
+        input="y\nApple MacBook Pro 15 pouces (2018)\nMR942FN/A\ny\ny\n",
     )
 
     assert result.exit_code == 0
@@ -233,6 +233,7 @@ def test_contribute_guides_a_user_without_exposing_the_private_report(
     assert "https://github.com/example/pr/1" in result.stdout
     assert submitted["login"] == "alice"
     assert submitted["report"].system.commercial_name == ("Apple MacBook Pro 15 pouces (2018)")
+    assert submitted["report"].system.product_sku == "MR942FN/A"
     assert "Private contribution label" not in submitted["payload"]
     assert list((tmp_path / "data" / "public").glob("*.json"))
 
@@ -262,7 +263,7 @@ def test_contribute_dry_run_never_connects_to_github(tmp_path: Path, monkeypatch
     result = runner.invoke(
         app,
         ["contribute", str(private), "--dry-run"],
-        input="y\n\ny\n",
+        input="y\n\n\ny\n",
     )
 
     assert result.exit_code == 0

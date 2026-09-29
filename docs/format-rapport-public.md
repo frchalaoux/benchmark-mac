@@ -2,14 +2,15 @@
 
 ## Portée
 
-Le format `perfcomparator-public-report`, version `2`, est le format courant du
+Le format `perfcomparator-public-report`, version `3`, est le format courant du
 catalogue communautaire. Il est construit depuis un rapport privé par
 `perfcomparator export-public`; le fichier privé ne doit jamais être ajouté au
-catalogue. Les rapports publics historiques en version `1` restent acceptés et
-conservent exactement leur identifiant de contenu.
+catalogue. Les rapports publics historiques en versions `1` et `2` restent
+acceptés et conservent exactement leur identifiant de contenu.
 
-La version `2` accepte les schémas privés `3`, `4` et `5` du protocole de mesure
-`0.3.0`. Le schéma `5` ajoute l'identité commerciale non unique de la machine.
+La version `3` accepte les schémas privés `3` à `6` du protocole de mesure
+`0.3.0`. Le schéma `5` ajoute l'identité commerciale non unique de la machine et
+le schéma `6` sa référence commerciale facultative.
 Pour un ancien rapport, PerfComparator propose un nom à partir des informations
 encore disponibles. Le schéma `3` ne contenant pas le contrôle préalable, son
 état de préparation est publié avec la valeur `null`. Un format inconnu, un
@@ -29,6 +30,7 @@ Le fichier public conserve seulement :
   la quantité de mémoire, les GPU et l'environnement Python ;
 - le fabricant, le nom commercial confirmé avant publication et l'identifiant
   non unique du modèle ;
+- la référence commerciale ou SKU, facultative et non unique ;
 - le booléen indiquant si le contrôle initial était satisfaisant ;
 - les scores, unités, paramètres comparatifs, échantillons et dispersions ;
 - les identifiants des benchmarks en échec, sans leur message libre.
@@ -45,7 +47,7 @@ Sont notamment absents :
 - les avertissements et messages d'erreur libres ;
 - la version détaillée du système et du noyau ;
 - les capacités totale et libre du disque ;
-- les instantanés d'alimentation et de température.
+- les instantanés d'alimentation et de température ;
 - le numéro de série, les UUID matériels et le nom d'hôte.
 
 Le nom commercial est une déclaration communautaire modifiable avant l'export,
@@ -57,8 +59,20 @@ précisé explicitement :
 perfcomparator export-public rapport-prive.json \
   --output rapport-public.json \
   --machine-name "Apple MacBook Pro 15 pouces (2018)" \
+  --machine-sku "MR942FN/A" \
   --accept-cc0
 ```
+
+La référence peut indiquer une configuration et une région de vente. Elle est
+donc facultative. Pour Apple, une référence complète se termine par `/A` ; une
+forme contenant `xx`, telle que `MGPC3xx/A`, désigne plusieurs régions et est
+refusée. Aucun numéro de série ne doit être saisi à sa place.
+
+La détection utilise `SystemSKUNumber` sous Windows et le champ DMI
+`product_sku` sous Linux. Sous macOS, elle se limite à une référence directement
+exposée par Informations système ; PerfComparator ne transmet jamais le numéro
+de série à un service de recherche. Les firmwares pouvant laisser le SKU vide
+ou générique, la confirmation humaine reste nécessaire.
 
 ## Identifiant déterministe
 
@@ -101,6 +115,7 @@ Elle refuse notamment :
 - des échantillons non finis, non positifs ou incompatibles avec la médiane,
   le minimum, le maximum et la dispersion annoncés ;
 - un chemin utilisateur dans un texte autorisé ;
+- un UUID ou une référence Apple incomplète dans `product_sku` ;
 - un `report_id` qui ne correspond pas exactement au contenu canonique.
 
 La commande ne réalise aucune connexion réseau et ne modifie pas le fichier.

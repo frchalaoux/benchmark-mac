@@ -289,13 +289,18 @@ def _prepare_contribution_report(
     source: Path,
     *,
     commercial_name: str | None = None,
+    product_sku: str | None = None,
 ) -> tuple[PublicBenchmarkReport, Path]:
     payload = json.loads(source.read_text(encoding="utf-8"))
     if isinstance(payload, dict) and payload.get("format") == "perfcomparator-public-report":
         public_report = load_public_report(source)
     else:
         private_report = JsonReportRepository.load_path(source)
-        public_report = export_public_report(private_report, commercial_name=commercial_name)
+        public_report = export_public_report(
+            private_report,
+            commercial_name=commercial_name,
+            product_sku=product_sku,
+        )
     digest = public_report.report_id.removeprefix("sha256:")
     destination = Path("data/public") / f"{digest}.json"
     save_public_report(public_report, destination)
@@ -356,6 +361,7 @@ def contribute(
             raise typer.Abort()
         payload = json.loads(selected.read_text(encoding="utf-8"))
         commercial_name = None
+        product_sku = None
         if not (
             isinstance(payload, dict) and payload.get("format") == "perfcomparator-public-report"
         ):
@@ -364,9 +370,16 @@ def contribute(
                 "Nom commercial public de la machine",
                 default=suggest_public_machine_name(private_report),
             )
+            detected_sku = private_report.system.product_sku or ""
+            product_sku = typer.prompt(
+                "Référence commerciale/SKU public (facultatif, jamais le numéro de série)",
+                default=detected_sku,
+                show_default=bool(detected_sku),
+            )
         report, public_path = _prepare_contribution_report(
             selected,
             commercial_name=commercial_name,
+            product_sku=product_sku,
         )
     except typer.Abort:
         raise
@@ -381,6 +394,8 @@ def contribute(
         f"  Matériel : {report.system.processor} · {report.system.architecture} · "
         f"{_size(report.system.memory_bytes)} de mémoire"
     )
+    if report.system.product_sku:
+        typer.echo(f"  Référence commerciale : {report.system.product_sku}")
     typer.echo(
         f"  Campagne : profil {report.profile} · {report.repetitions} passage(s) · "
         f"{len(report.results)} résultat(s)"
@@ -457,6 +472,13 @@ def export_public(
             help="Nom commercial public ; une proposition matérielle est utilisée sinon.",
         ),
     ] = None,
+    machine_sku: Annotated[
+        str | None,
+        typer.Option(
+            "--machine-sku",
+            help="Référence commerciale/SKU publique, jamais le numéro de série.",
+        ),
+    ] = None,
 ) -> None:
     """Crée localement un rapport public anonymisé, sans aucun envoi réseau."""
     if not accept_cc0:
@@ -468,7 +490,11 @@ def export_public(
         raise typer.BadParameter("La source et la destination doivent être différentes.")
     try:
         private_report = JsonReportRepository.load_path(source)
-        public_report = export_public_report(private_report, commercial_name=machine_name)
+        public_report = export_public_report(
+            private_report,
+            commercial_name=machine_name,
+            product_sku=machine_sku,
+        )
         destination = save_public_report(public_report, output)
     except (OSError, ValueError) as error:
         raise typer.BadParameter(str(error)) from error

@@ -86,16 +86,18 @@ def test_public_export_includes_a_confirmed_commercial_identity() -> None:
     report.system.model = "MacBookPro15,1"
     report.system.manufacturer = "Apple"
     report.system.product_name = "MacBook Pro"
+    report.system.product_sku = "MR942FN/A"
 
     exported = export_public_report(
         report,
         commercial_name="Apple MacBook Pro 15 pouces (2018)",
     )
 
-    assert exported.format_version == 2
+    assert exported.format_version == 3
     assert exported.system.manufacturer == "Apple"
     assert exported.system.commercial_name == "Apple MacBook Pro 15 pouces (2018)"
     assert exported.system.model_identifier == "MacBookPro15,1"
+    assert exported.system.product_sku == "MR942FN/A"
 
 
 def test_public_export_supports_schema_3_without_readiness_data() -> None:
@@ -109,6 +111,23 @@ def test_public_export_supports_schema_3_without_readiness_data() -> None:
     assert exported.source_schema_version == 3
     assert exported.readiness_suitable is None
     assert exported.system.commercial_name == "Apple MacBook Pro (MacBookPro15,1)"
+
+
+def test_public_export_rejects_an_incomplete_apple_reference() -> None:
+    report = exportable_report()
+    report.system.product_sku = "MGPC3xx/A"
+
+    with pytest.raises(ValueError, match="référence Apple doit être complète"):
+        export_public_report(report)
+
+
+def test_public_export_rejects_a_uuid_as_a_commercial_reference() -> None:
+    report = exportable_report()
+    report.system.manufacturer = "Example Computer"
+    report.system.product_sku = "123e4567-e89b-12d3-a456-426614174000"
+
+    with pytest.raises(ValueError, match="UUID"):
+        export_public_report(report)
 
 
 def test_report_id_changes_with_comparative_content() -> None:
@@ -190,7 +209,7 @@ def test_historical_public_v1_report_remains_loadable(tmp_path) -> None:
     payload = export_public_report(exportable_report()).model_dump(mode="json")
     payload["format_version"] = 1
     payload["source_schema_version"] = 4
-    for field in ("manufacturer", "commercial_name", "model_identifier"):
+    for field in ("manufacturer", "commercial_name", "model_identifier", "product_sku"):
         payload["system"].pop(field)
     content = payload | {}
     content.pop("report_id")
@@ -210,6 +229,31 @@ def test_historical_public_v1_report_remains_loadable(tmp_path) -> None:
     assert loaded.format_version == 1
     assert loaded.system.commercial_name is None
     assert "commercial_name" not in json.loads(saved.read_text(encoding="utf-8"))["system"]
+
+
+def test_historical_public_v2_report_keeps_its_content_id(tmp_path) -> None:
+    payload = export_public_report(exportable_report()).model_dump(mode="json")
+    payload["format_version"] = 2
+    payload["source_schema_version"] = 5
+    payload["system"].pop("product_sku")
+    content = payload | {}
+    content.pop("report_id")
+    canonical = json.dumps(
+        content,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode()
+    payload["report_id"] = f"sha256:{hashlib.sha256(canonical).hexdigest()}"
+    path = tmp_path / "historical-v2.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    loaded = load_public_report(path)
+    saved = save_public_report(loaded, tmp_path / "saved-v2.json")
+
+    assert loaded.format_version == 2
+    assert loaded.system.product_sku is None
+    assert "product_sku" not in json.loads(saved.read_text(encoding="utf-8"))["system"]
 
 
 def test_public_report_can_be_adapted_without_reintroducing_private_data() -> None:
