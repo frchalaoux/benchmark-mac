@@ -30,7 +30,8 @@ class FakeIdleProcess:
 def test_macos_identity_uses_non_unique_hardware_fields_only(monkeypatch) -> None:
     payload = (
         '{"SPHardwareDataType":[{"machine_name":"MacBook Pro",'
-        '"machine_model":"MacBookPro15,1","serial_number":"PRIVATE"}]}'
+        '"machine_model":"MacBookPro15,1","model_number":"MR942FN/A",'
+        '"serial_number":"PRIVATE"}]}'
     )
     monkeypatch.setattr(system_info.sys, "platform", "darwin")
     monkeypatch.setattr(system_info, "_command", lambda *_args, **_kwargs: payload)
@@ -40,11 +41,15 @@ def test_macos_identity_uses_non_unique_hardware_fields_only(monkeypatch) -> Non
     assert identity.manufacturer == "Apple"
     assert identity.product_name == "MacBook Pro"
     assert identity.model_identifier == "MacBookPro15,1"
+    assert identity.product_sku == "MR942FN/A"
     assert "PRIVATE" not in repr(identity)
 
 
 def test_windows_identity_uses_cim_manufacturer_and_model(monkeypatch) -> None:
-    payload = '{"Manufacturer":"ASUSTeK COMPUTER INC.","Model":"M1702QA"}'
+    payload = (
+        '{"Manufacturer":"ASUSTeK COMPUTER INC.","Model":"M1702QA",'
+        '"SystemSKUNumber":"VIVOBOOK-M1702QA"}'
+    )
     monkeypatch.setattr(system_info.sys, "platform", "win32")
     monkeypatch.setattr(system_info, "_command", lambda *_args, **_kwargs: payload)
 
@@ -53,12 +58,14 @@ def test_windows_identity_uses_cim_manufacturer_and_model(monkeypatch) -> None:
     assert identity.manufacturer == "ASUSTeK COMPUTER INC."
     assert identity.product_name == "M1702QA"
     assert identity.model_identifier == "M1702QA"
+    assert identity.product_sku == "VIVOBOOK-M1702QA"
 
 
 def test_linux_identity_uses_dmi_without_unique_identifiers(monkeypatch) -> None:
     values = {
         "/sys/devices/virtual/dmi/id/sys_vendor": "ASUSTeK COMPUTER INC.",
         "/sys/devices/virtual/dmi/id/product_name": "Vivobook M1702QA",
+        "/sys/devices/virtual/dmi/id/product_sku": "M1702QA-AU123W",
     }
     monkeypatch.setattr(system_info.sys, "platform", "linux")
     monkeypatch.setattr(system_info, "_hardware_text", values.get)
@@ -68,6 +75,12 @@ def test_linux_identity_uses_dmi_without_unique_identifiers(monkeypatch) -> None
     assert identity.manufacturer == "ASUSTeK COMPUTER INC."
     assert identity.product_name == "Vivobook M1702QA"
     assert identity.model_identifier == "Vivobook M1702QA"
+    assert identity.product_sku == "M1702QA-AU123W"
+
+
+def test_generic_firmware_sku_is_ignored() -> None:
+    assert system_info._product_sku("To Be Filled By O.E.M.") is None
+    assert system_info._product_sku("  SKU-123  ") == "SKU-123"
 
 
 def test_machine_readiness_warns_about_non_idle_state(monkeypatch) -> None:

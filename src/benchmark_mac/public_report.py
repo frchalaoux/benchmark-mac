@@ -22,10 +22,10 @@ from .models import (
     SystemSnapshot,
 )
 
-PUBLIC_FORMAT_VERSION = 2
+PUBLIC_FORMAT_VERSION = 3
 PUBLIC_LICENSE = "CC0-1.0"
 MAX_PUBLIC_REPORT_BYTES = 2 * 1_048_576
-SUPPORTED_PRIVATE_SCHEMAS = frozenset({3, 4, 5})
+SUPPORTED_PRIVATE_SCHEMAS = frozenset({3, 4, 5, 6})
 SUPPORTED_PROTOCOL = "0.3.0"
 SUITE_VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:\.dev\d+)?$")
 PRIVATE_PATH_PATTERNS = (
@@ -201,14 +201,38 @@ def suggest_public_machine_name(report: BenchmarkReport) -> str:
 
 
 def _public_payload(report: PublicBenchmarkReport) -> dict[str, object]:
-    """Préserve le contenu canonique des rapports publics historiques v1."""
+    """Préserve le contenu canonique des rapports publics historiques."""
     payload = report.model_dump(mode="json")
+    system = payload["system"]
+    assert isinstance(system, dict)
     if report.format_version == 1:
-        system = payload["system"]
-        assert isinstance(system, dict)
         for field in ("manufacturer", "commercial_name", "model_identifier"):
             system.pop(field, None)
+    if report.format_version < 3:
+        system.pop("product_sku", None)
     return payload
+
+
+def _clean_product_sku(value: str | None, *, manufacturer: str | None) -> str | None:
+    if value is None or not value.strip():
+        return None
+    sku = _clean_public_text(value, field="product_sku", maximum=80)
+    if re.fullmatch(
+        r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        sku,
+        re.IGNORECASE,
+    ):
+        raise ValueError("Un UUID ne peut pas être publié comme référence commerciale.")
+    if (
+        manufacturer
+        and manufacturer.casefold() == "apple"
+        and (not sku.upper().endswith("/A") or "XX/A" in sku.upper())
+    ):
+        raise ValueError(
+            "La référence Apple doit être complète, se terminer par /A et ne pas "
+            "contenir xx. N'indiquez jamais le numéro de série."
+        )
+    return sku
 
 
 def _validate_public_result(result: PublicBenchmarkResult, *, campaign_repetitions: int) -> None:
@@ -269,13 +293,22 @@ def validate_public_report(report: PublicBenchmarkReport) -> PublicBenchmarkRepo
         report.system.model_identifier,
     )
     if report.format_version == 1 and (
-        report.source_schema_version == 5 or any(value is not None for value in identity)
+        report.source_schema_version not in {3, 4}
+        or any(value is not None for value in identity)
+        or report.system.product_sku is not None
     ):
         raise ValueError("Un rapport public v1 ne peut pas contenir l'identité commerciale.")
     if report.format_version == 2 and (
+        report.source_schema_version == 6
+        or report.system.product_sku is not None
+        or report.system.commercial_name is None
+        or report.system.model_identifier is None
+    ):
+        raise ValueError("Un rapport public v2 ne peut pas contenir de référence commerciale.")
+    if report.format_version == 3 and (
         report.system.commercial_name is None or report.system.model_identifier is None
     ):
-        raise ValueError("Un rapport public v2 doit identifier le modèle de la machine.")
+        raise ValueError("Un rapport public v3 doit identifier le modèle de la machine.")
     for field, value in (
         ("operating_system", report.system.operating_system),
         ("architecture", report.system.architecture),
@@ -295,6 +328,14 @@ def validate_public_report(report: PublicBenchmarkReport) -> PublicBenchmarkRepo
     ):
         if value is not None and _clean_public_text(value, field=field) != value:
             raise ValueError(f"Texte non canonique dans {field}.")
+    if (
+        _clean_product_sku(
+            report.system.product_sku,
+            manufacturer=report.system.manufacturer,
+        )
+        != report.system.product_sku
+    ):
+        raise ValueError("Texte non canonique dans product_sku.")
 
     result_ids = [result.benchmark_id for result in report.results]
     if not result_ids or len(result_ids) != len(set(result_ids)):
@@ -380,6 +421,7 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
             model=report.system.model_identifier or report.system.processor,
             manufacturer=report.system.manufacturer,
             product_name=report.system.commercial_name,
+            product_sku=report.system.product_sku,
             processor=report.system.processor,
             physical_cpu_count=report.system.physical_cpu_count,
             logical_cpu_count=report.system.logical_cpu_count,
@@ -406,6 +448,7 @@ def export_public_report(
     report: BenchmarkReport,
     *,
     commercial_name: str | None = None,
+    product_sku: str | None = None,
 ) -> PublicBenchmarkReport:
     """Reconstruit un rapport public depuis une liste blanche de champs."""
     if report.schema_version not in SUPPORTED_PRIVATE_SCHEMAS:
@@ -442,6 +485,11 @@ def export_public_report(
             field="commercial_name",
         ),
         model_identifier=_clean_public_text(report.system.model, field="model_identifier"),
+        product_sku=_clean_product_sku(
+            report.system.product_sku if product_sku is None else product_sku,
+            manufacturer=report.system.manufacturer
+            or ("Apple" if report.system.system == "Darwin" else None),
+        ),
         processor=_clean_public_text(report.system.processor, field="processor"),
         physical_cpu_count=report.system.physical_cpu_count,
         logical_cpu_count=report.system.logical_cpu_count,

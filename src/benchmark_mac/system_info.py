@@ -25,6 +25,7 @@ class MachineIdentity:
     manufacturer: str | None
     product_name: str
     model_identifier: str
+    product_sku: str | None
 
 
 def _command(*command: str, timeout: float = 10) -> str:
@@ -67,6 +68,25 @@ def _hardware_text(path: str) -> str:
         return ""
 
 
+def _product_sku(value: object) -> str | None:
+    """Écarte les SKU absents ou les valeurs génériques laissées par le fabricant."""
+    if not isinstance(value, str):
+        return None
+    normalized = " ".join(value.split())
+    if normalized.casefold() in {
+        "",
+        "default string",
+        "none",
+        "not applicable",
+        "not specified",
+        "system product name",
+        "to be filled by o.e.m.",
+        "unknown",
+    }:
+        return None
+    return normalized
+
+
 def _machine_identity() -> MachineIdentity:
     if sys.platform == "darwin":
         output = _command("system_profiler", "SPHardwareDataType", "-json")
@@ -78,10 +98,19 @@ def _machine_identity() -> MachineIdentity:
             item = {}
         product_name = item.get("machine_name")
         model = item.get("machine_model") or _sysctl("hw.model")
+        product_sku = next(
+            (
+                _product_sku(item.get(field))
+                for field in ("model_number", "part_number", "product_sku")
+                if _product_sku(item.get(field)) is not None
+            ),
+            None,
+        )
         return MachineIdentity(
             manufacturer="Apple",
             product_name=product_name if isinstance(product_name, str) else "Mac",
             model_identifier=model if isinstance(model, str) and model else "Mac",
+            product_sku=product_sku,
         )
     if sys.platform == "win32":
         output = _command(
@@ -89,7 +118,7 @@ def _machine_identity() -> MachineIdentity:
             "-NoProfile",
             "-Command",
             "Get-CimInstance Win32_ComputerSystem | "
-            "Select-Object Manufacturer,Model | ConvertTo-Json -Compress",
+            "Select-Object Manufacturer,Model,SystemSKUNumber | ConvertTo-Json -Compress",
         )
         try:
             item = json.loads(output)
@@ -103,6 +132,7 @@ def _machine_identity() -> MachineIdentity:
             manufacturer=manufacturer if isinstance(manufacturer, str) else None,
             product_name=model if isinstance(model, str) and model else "PC Windows",
             model_identifier=model if isinstance(model, str) and model else "inconnu",
+            product_sku=_product_sku(item.get("SystemSKUNumber")),
         )
     manufacturer = _hardware_text("/sys/devices/virtual/dmi/id/sys_vendor") or None
     product_name = _hardware_text("/sys/devices/virtual/dmi/id/product_name")
@@ -113,6 +143,7 @@ def _machine_identity() -> MachineIdentity:
         manufacturer=manufacturer,
         product_name=product_name,
         model_identifier=product_name,
+        product_sku=_product_sku(_hardware_text("/sys/devices/virtual/dmi/id/product_sku")),
     )
 
 
@@ -193,6 +224,7 @@ def system_snapshot(work_dir: Path | str = ".") -> SystemSnapshot:
         model=identity.model_identifier,
         manufacturer=identity.manufacturer,
         product_name=identity.product_name,
+        product_sku=identity.product_sku,
         processor=_processor(),
         physical_cpu_count=_physical_cpu_count(),
         logical_cpu_count=os.cpu_count() or 1,
