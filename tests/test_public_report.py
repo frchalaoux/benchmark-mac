@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import pytest
@@ -80,13 +81,34 @@ def test_public_export_is_deterministic(tmp_path) -> None:
     assert first_path.read_bytes() == second_path.read_bytes()
 
 
+def test_public_export_includes_a_confirmed_commercial_identity() -> None:
+    report = exportable_report()
+    report.system.model = "MacBookPro15,1"
+    report.system.manufacturer = "Apple"
+    report.system.product_name = "MacBook Pro"
+
+    exported = export_public_report(
+        report,
+        commercial_name="Apple MacBook Pro 15 pouces (2018)",
+    )
+
+    assert exported.format_version == 2
+    assert exported.system.manufacturer == "Apple"
+    assert exported.system.commercial_name == "Apple MacBook Pro 15 pouces (2018)"
+    assert exported.system.model_identifier == "MacBookPro15,1"
+
+
 def test_public_export_supports_schema_3_without_readiness_data() -> None:
     report = exportable_report().model_copy(update={"schema_version": 3, "readiness": None})
+    report.system.manufacturer = None
+    report.system.product_name = None
+    report.system.model = "MacBookPro15,1"
 
     exported = export_public_report(report)
 
     assert exported.source_schema_version == 3
     assert exported.readiness_suitable is None
+    assert exported.system.commercial_name == "Apple MacBook Pro (MacBookPro15,1)"
 
 
 def test_report_id_changes_with_comparative_content() -> None:
@@ -164,12 +186,38 @@ def test_saved_public_report_can_be_loaded_and_fully_validated(tmp_path) -> None
     assert load_public_report(path) == exported
 
 
+def test_historical_public_v1_report_remains_loadable(tmp_path) -> None:
+    payload = export_public_report(exportable_report()).model_dump(mode="json")
+    payload["format_version"] = 1
+    payload["source_schema_version"] = 4
+    for field in ("manufacturer", "commercial_name", "model_identifier"):
+        payload["system"].pop(field)
+    content = payload | {}
+    content.pop("report_id")
+    canonical = json.dumps(
+        content,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode()
+    payload["report_id"] = f"sha256:{hashlib.sha256(canonical).hexdigest()}"
+    path = tmp_path / "historical-v1.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    loaded = load_public_report(path)
+    saved = save_public_report(loaded, tmp_path / "saved-v1.json")
+
+    assert loaded.format_version == 1
+    assert loaded.system.commercial_name is None
+    assert "commercial_name" not in json.loads(saved.read_text(encoding="utf-8"))["system"]
+
+
 def test_public_report_can_be_adapted_without_reintroducing_private_data() -> None:
     exported = export_public_report(exportable_report())
 
     comparable = public_report_to_benchmark_report(exported)
 
-    assert comparable.label == "Apple M4"
+    assert comparable.label == "Apple MacBook Pro (Mac16,1)"
     assert comparable.protocol_version == "0.3.0"
     assert comparable.results[0].value == 10
     assert comparable.results[0].parameters == {"workers": 1}

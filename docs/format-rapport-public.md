@@ -2,16 +2,20 @@
 
 ## Portée
 
-Le format `perfcomparator-public-report`, version `1`, est le seul format prévu
-pour le futur catalogue communautaire. Il est construit depuis un rapport privé
-par `perfcomparator export-public`; le fichier privé ne doit jamais être ajouté
-au catalogue.
+Le format `perfcomparator-public-report`, version `2`, est le format courant du
+catalogue communautaire. Il est construit depuis un rapport privé par
+`perfcomparator export-public`; le fichier privé ne doit jamais être ajouté au
+catalogue. Les rapports publics historiques en version `1` restent acceptés et
+conservent exactement leur identifiant de contenu.
 
-Cette première version accepte les schémas privés `3` et `4` du protocole de
-mesure `0.3.0`. Le schéma `3` ne contenant pas le contrôle préalable, son état
-de préparation est publié avec la valeur `null`. Un format inconnu, un protocole
-incompatible, un benchmark inconnu, un résultat dupliqué ou un rapport sans
-résultat est refusé plutôt que d'être exporté avec une anonymisation incertaine.
+La version `2` accepte les schémas privés `3`, `4` et `5` du protocole de mesure
+`0.3.0`. Le schéma `5` ajoute l'identité commerciale non unique de la machine.
+Pour un ancien rapport, PerfComparator propose un nom à partir des informations
+encore disponibles. Le schéma `3` ne contenant pas le contrôle préalable, son
+état de préparation est publié avec la valeur `null`. Un format inconnu, un
+protocole incompatible, un benchmark inconnu, un résultat dupliqué ou un
+rapport sans résultat est refusé plutôt que d'être exporté avec une
+anonymisation incertaine.
 
 ## Liste blanche
 
@@ -23,6 +27,8 @@ Le fichier public conserve seulement :
 - le profil, le nombre de passages et les benchmarks demandés ;
 - la famille du système, l'architecture, le processeur, les nombres de cœurs,
   la quantité de mémoire, les GPU et l'environnement Python ;
+- le fabricant, le nom commercial confirmé avant publication et l'identifiant
+  non unique du modèle ;
 - le booléen indiquant si le contrôle initial était satisfaisant ;
 - les scores, unités, paramètres comparatifs, échantillons et dispersions ;
 - les identifiants des benchmarks en échec, sans leur message libre.
@@ -40,6 +46,19 @@ Sont notamment absents :
 - la version détaillée du système et du noyau ;
 - les capacités totale et libre du disque ;
 - les instantanés d'alimentation et de température.
+- le numéro de série, les UUID matériels et le nom d'hôte.
+
+Le nom commercial est une déclaration communautaire modifiable avant l'export,
+pas une donnée certifiée par le constructeur. `perfcomparator contribute` en
+propose un et demande sa confirmation. Dans le parcours manuel, il peut être
+précisé explicitement :
+
+```bash
+perfcomparator export-public rapport-prive.json \
+  --output rapport-public.json \
+  --machine-name "Apple MacBook Pro 15 pouces (2018)" \
+  --accept-cc0
+```
 
 ## Identifiant déterministe
 

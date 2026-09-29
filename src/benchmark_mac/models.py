@@ -16,6 +16,8 @@ class SystemSnapshot(BaseModel):
     version: str
     machine: str
     model: str
+    manufacturer: str | None = None
+    product_name: str | None = None
     processor: str
     physical_cpu_count: int | None = Field(default=None, gt=0)
     logical_cpu_count: int = Field(gt=0)
@@ -90,7 +92,7 @@ class BenchmarkFailure(BaseModel):
 class BenchmarkReport(BaseModel):
     """Rapport complet, portable et comparable d'une exécution."""
 
-    schema_version: int = 4
+    schema_version: int = 5
     suite_version: str
     protocol_version: str | None = None
     recorded_at: datetime
@@ -114,6 +116,9 @@ class PublicSystemSnapshot(BaseModel):
 
     operating_system: str
     architecture: str
+    manufacturer: str | None = None
+    commercial_name: str | None = None
+    model_identifier: str | None = None
     processor: str
     physical_cpu_count: int | None = Field(default=None, gt=0)
     logical_cpu_count: int = Field(gt=0)
@@ -148,11 +153,11 @@ class PublicBenchmarkReport(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     format: Literal["perfcomparator-public-report"] = "perfcomparator-public-report"
-    format_version: Literal[1] = 1
+    format_version: Literal[1, 2] = 2
     report_id: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
     license: Literal["CC0-1.0"] = "CC0-1.0"
     verification: Literal["community-unverified"] = "community-unverified"
-    source_schema_version: Literal[3, 4] = 4
+    source_schema_version: Literal[3, 4, 5] = 5
     suite_version: str
     protocol_version: Literal["0.3.0"] = "0.3.0"
     profile: str

@@ -131,7 +131,7 @@ def test_compare_accepts_a_downloaded_public_report(tmp_path: Path) -> None:
 
     assert result.exit_code == 0
     assert "Mac test" in result.stdout
-    assert "Apple M4" in result.stdout
+    assert "Apple MacBook Pro (Mac16,1)" in result.stdout
     assert "+50.0 %" in result.stdout
 
 
@@ -221,13 +221,18 @@ def test_contribute_guides_a_user_without_exposing_the_private_report(
     monkeypatch.setattr("benchmark_mac.cli.github_login", lambda _gh: "alice")
     monkeypatch.setattr("benchmark_mac.cli.submit_public_report", fake_submit)
 
-    result = runner.invoke(app, ["contribute", str(private)], input="y\ny\ny\n")
+    result = runner.invoke(
+        app,
+        ["contribute", str(private)],
+        input="y\nApple MacBook Pro 15 pouces (2018)\ny\ny\n",
+    )
 
     assert result.exit_code == 0
     assert "APERÇU PUBLIC" in result.stdout
     assert "Contribution envoyée" in result.stdout
     assert "https://github.com/example/pr/1" in result.stdout
     assert submitted["login"] == "alice"
+    assert submitted["report"].system.commercial_name == ("Apple MacBook Pro 15 pouces (2018)")
     assert "Private contribution label" not in submitted["payload"]
     assert list((tmp_path / "data" / "public").glob("*.json"))
 
@@ -257,7 +262,7 @@ def test_contribute_dry_run_never_connects_to_github(tmp_path: Path, monkeypatch
     result = runner.invoke(
         app,
         ["contribute", str(private), "--dry-run"],
-        input="y\ny\n",
+        input="y\n\ny\n",
     )
 
     assert result.exit_code == 0

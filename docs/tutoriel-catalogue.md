@@ -42,12 +42,13 @@ L'interface publique est disponible ici :
 perfcomparator contribute
 ```
 
-Le menu choisit un rapport récent, demande le consentement CC0, affiche les
-données publiques, prépare GitHub CLI et ouvre le navigateur pour connecter ou
-créer le compte GitHub. Il annonce ensuite précisément la création ou la
-réutilisation du fork, la branche distante créée et la pull request, puis attend
-une confirmation explicite. Conservez l'adresse de la pull request affichée à
-la fin : elle permet de suivre la validation et la fusion.
+Le menu choisit un rapport récent, demande le consentement CC0, puis propose un
+nom commercial public à confirmer ou corriger. Il affiche les données
+publiques, prépare GitHub CLI et ouvre le navigateur pour connecter ou créer le
+compte GitHub. Il annonce ensuite précisément la création ou la réutilisation
+du fork, la branche distante créée et la pull request, puis attend une
+confirmation explicite. Conservez l'adresse de la pull request affichée à la
+fin : elle permet de suivre la validation et la fusion.
 
 Pour s'entraîner sans connexion ni modification GitHub :
 
@@ -61,25 +62,25 @@ manuel utile au diagnostic.
 ## 1. Installer la version qui prend en charge le catalogue
 
 Le parcours guidé nécessite PerfComparator `0.4.0.dev2` ou une version
-ultérieure. La version publiée recommandée pour ce tutoriel est `0.4.0.dev3`.
+ultérieure. La version publiée recommandée pour ce tutoriel est `0.4.0.dev4`.
 
 Sur macOS ou Linux :
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev3/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.sh | sh
 ```
 
 Sous Windows, dans PowerShell :
 
 ```powershell
-irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev3/install.ps1 | iex
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev4/install.ps1 | iex
 ```
 
 Contrôler l'installation :
 
 ```console
 $ perfcomparator --version
-PerfComparator 0.4.0.dev3
+PerfComparator 0.4.0.dev4
 ```
 
 ## 2. Mesurer la machine
@@ -103,13 +104,16 @@ Remplacer le nom ci-dessous par le chemin réellement affiché par `run` :
 ```bash
 perfcomparator export-public data/results/benchmark_20260928_120000_000000.json \
   --output rapport-public.json \
+  --machine-name "Apple MacBook Pro 15 pouces (2018)" \
   --accept-cc0
 perfcomparator validate-public rapport-public.json
 ```
 
 Sous PowerShell, écrire la première commande sur une seule ligne ou remplacer
-les `\` de continuation par des accents graves. `--accept-cc0` donne le
-consentement explicite à la diffusion de l'export sous CC0 1.0.
+les `\` de continuation par des accents graves. Adapter `--machine-name` au nom
+sous lequel la machine est vendue. Cette déclaration communautaire n'est pas
+certifiée par le constructeur. `--accept-cc0` donne le consentement explicite à
+la diffusion de l'export sous CC0 1.0.
 
 La validation affiche un identifiant de la forme :
 
@@ -119,8 +123,8 @@ Identifiant : sha256:0123456789abcdef…
 
 Relire le JSON même après validation. Le format retire notamment le label
 libre, la date précise, les chemins, les processus, les PID, les messages
-d'échec et les informations de disque, mais une combinaison matérielle rare
-peut rester reconnaissable.
+d'échec, les informations de disque, le numéro de série, les UUID matériels et
+le nom d'hôte, mais une combinaison matérielle rare peut rester reconnaissable.
 
 ## 4. Préparer manuellement la contribution GitHub
 
@@ -205,8 +209,9 @@ perfcomparator compare \
 ```
 
 Deux rapports publics téléchargés peuvent être comparés de la même façon. Pour
-un rapport public, le processeur remplace le label libre retiré lors de
-l'export.
+un rapport public v2, le nom commercial remplace le label libre retiré lors de
+l'export. Les anciens rapports v1 utilisent encore le processeur comme nom de
+repli.
 
 La comparaison exige le même protocole, le même profil et la même version de
 Python. Elle ne compare que les benchmarks présents dans tous les fichiers. Les

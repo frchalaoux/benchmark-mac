@@ -29,7 +29,12 @@ from .github_cli import GITHUB_CLI_VERSION, github_cli_path, install_managed_git
 from .gpu_benchmarks import gpu_adapters, selected_gpu_adapter
 from .html_report import render_html
 from .models import BenchmarkFailure, BenchmarkResult, PublicBenchmarkReport, ReadinessSnapshot
-from .public_report import export_public_report, load_public_report, save_public_report
+from .public_report import (
+    export_public_report,
+    load_public_report,
+    save_public_report,
+    suggest_public_machine_name,
+)
 from .repository import JsonReportRepository
 from .service import BenchmarkService
 from .system_info import machine_readiness, system_snapshot
@@ -280,13 +285,17 @@ def _select_report() -> Path:
     return paths[selected - 1]
 
 
-def _prepare_contribution_report(source: Path) -> tuple[PublicBenchmarkReport, Path]:
+def _prepare_contribution_report(
+    source: Path,
+    *,
+    commercial_name: str | None = None,
+) -> tuple[PublicBenchmarkReport, Path]:
     payload = json.loads(source.read_text(encoding="utf-8"))
     if isinstance(payload, dict) and payload.get("format") == "perfcomparator-public-report":
         public_report = load_public_report(source)
     else:
         private_report = JsonReportRepository.load_path(source)
-        public_report = export_public_report(private_report)
+        public_report = export_public_report(private_report, commercial_name=commercial_name)
     digest = public_report.report_id.removeprefix("sha256:")
     destination = Path("data/public") / f"{digest}.json"
     save_public_report(public_report, destination)
@@ -345,7 +354,20 @@ def contribute(
             default=False,
         ):
             raise typer.Abort()
-        report, public_path = _prepare_contribution_report(selected)
+        payload = json.loads(selected.read_text(encoding="utf-8"))
+        commercial_name = None
+        if not (
+            isinstance(payload, dict) and payload.get("format") == "perfcomparator-public-report"
+        ):
+            private_report = JsonReportRepository.load_path(selected)
+            commercial_name = typer.prompt(
+                "Nom commercial public de la machine",
+                default=suggest_public_machine_name(private_report),
+            )
+        report, public_path = _prepare_contribution_report(
+            selected,
+            commercial_name=commercial_name,
+        )
     except typer.Abort:
         raise
     except (OSError, ValueError, json.JSONDecodeError) as error:
@@ -355,7 +377,8 @@ def contribute(
     typer.echo(f"  Fichier : {public_path}")
     typer.echo(f"  Identifiant : {report.report_id}")
     typer.echo(
-        f"  Machine : {report.system.processor} · {report.system.architecture} · "
+        f"  Machine : {report.system.commercial_name or report.system.processor}\n"
+        f"  Matériel : {report.system.processor} · {report.system.architecture} · "
         f"{_size(report.system.memory_bytes)} de mémoire"
     )
     typer.echo(
@@ -427,6 +450,13 @@ def export_public(
             help="Confirme la publication des données exportées sous licence CC0-1.0.",
         ),
     ] = False,
+    machine_name: Annotated[
+        str | None,
+        typer.Option(
+            "--machine-name",
+            help="Nom commercial public ; une proposition matérielle est utilisée sinon.",
+        ),
+    ] = None,
 ) -> None:
     """Crée localement un rapport public anonymisé, sans aucun envoi réseau."""
     if not accept_cc0:
@@ -438,7 +468,7 @@ def export_public(
         raise typer.BadParameter("La source et la destination doivent être différentes.")
     try:
         private_report = JsonReportRepository.load_path(source)
-        public_report = export_public_report(private_report)
+        public_report = export_public_report(private_report, commercial_name=machine_name)
         destination = save_public_report(public_report, output)
     except (OSError, ValueError) as error:
         raise typer.BadParameter(str(error)) from error
