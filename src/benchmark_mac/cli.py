@@ -367,7 +367,7 @@ def contribute(
         ):
             private_report = JsonReportRepository.load_path(selected)
             commercial_name = typer.prompt(
-                "Nom commercial public de la machine",
+                "Nom commercial public de la machine (ajoutez l'année de commercialisation si vous la connaissez, par exemple « Apple MacBook Pro 15 pouces (2018) »)",
                 default=suggest_public_machine_name(private_report),
             )
             detected_sku = private_report.system.product_sku or ""

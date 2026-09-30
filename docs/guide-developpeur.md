@@ -49,6 +49,11 @@ il produit un `ReadinessSnapshot`, affiché par la CLI, persisté dans le schém
 et repris par l'analyse comparative. Toute évolution des seuils doit rester
 documentée dans la méthodologie et testée sans attente réelle.
 
+`system.model_year` est un champ facultatif dérivé de l'identifiant Apple et,
+si nécessaire, de sa référence commerciale. Il indique l'année de
+commercialisation, jamais l'année de fabrication ; il reste nul si le modèle
+est inconnu ou ambigu.
+
 Les validations locales sont :
 
 ```bash

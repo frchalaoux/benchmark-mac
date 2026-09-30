@@ -9,14 +9,32 @@ La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de l
 version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
 la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
 
-## Préversion préparée `v0.4.0.dev6`
+## Préversion publiée `v0.4.0.dev7`
+
+La préversion `0.4.0.dev7` enregistre l'année de commercialisation du Mac dans
+`system.model_year` lorsqu'elle est déterminable. Lorsqu'elle ne l'est pas,
+`contribute` explique que l'année peut être ajoutée au nom commercial si elle
+est connue. Le format du rapport public et le protocole de mesure restent
+inchangés.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.ps1 | iex
+```
+
+## Préversion antérieure publiée `v0.4.0.dev6`
 
 La préversion `0.4.0.dev6` simplifie les contributions au catalogue : une pull
 request ne contient plus que le rapport public. L'index est calculé depuis les
 rapports lors du déploiement du site et n'est plus versionné, ce qui supprime
 les échecs dus à un index périmé.
 
-Ses installateurs seront :
+Ses installateurs sont :
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.sh | sh
@@ -138,7 +156,8 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement préparé | Soumettre un seul rapport sans maintenir d'index | Préversion à publier |
+| [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev7) | Développement publié | Identifier l'année du modèle Apple et contribuer clairement | Préversion |
+| [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement publié | Soumettre un seul rapport sans maintenir d'index | Préversion |
 | [`v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5) | Développement publié | Identifier une configuration par sa référence commerciale facultative | Préversion |
 | [`v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4) | Développement publié | Identifier les machines par leur nom commercial confirmé | Préversion |
 | [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
@@ -485,7 +504,7 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
 `0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5` et `0.4.0.dev6` sont compatibles entre
+`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5`, `0.4.0.dev6` et `0.4.0.dev7` sont compatibles entre
 elles. Les
 rapports sont enregistrés dans
 `data/results/` par défaut. Les nouvelles campagnes conservent séparément la

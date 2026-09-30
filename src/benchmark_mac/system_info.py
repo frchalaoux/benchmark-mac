@@ -15,6 +15,7 @@ from pathlib import Path
 
 import psutil
 
+from .apple_models import apple_model_year
 from .models import EnvironmentSnapshot, ProcessLoad, ReadinessSnapshot, SystemSnapshot
 
 
@@ -224,6 +225,7 @@ def system_snapshot(work_dir: Path | str = ".") -> SystemSnapshot:
         model=identity.model_identifier,
         manufacturer=identity.manufacturer,
         product_name=identity.product_name,
+        model_year=apple_model_year(identity.model_identifier, identity.product_sku),
         product_sku=identity.product_sku,
         processor=_processor(),
         physical_cpu_count=_physical_cpu_count(),
