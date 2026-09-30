@@ -5,9 +5,20 @@ les performances de plusieurs machines avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de la
-version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
-la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
+La stable actuelle est [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0) ; la préversion de développement actuelle est [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0.dev7).
+Retrouver [tous les tags](https://github.com/frchalaoux/perfcomparator/tags).
+
+`v0.4.0` conserve le protocole de mesure `0.3.0` et ajoute notamment
+l'identification de l'année des Mac Apple lorsqu'elle est fiable ainsi qu'un
+parcours de contribution qui explique comment compléter manuellement le nom.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.ps1 | iex
+```
 
 ## Préversion publiée `v0.4.0.dev7`
 
@@ -156,6 +167,7 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
+| [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0) | Stable | Utiliser l'année du modèle Apple et contribuer au catalogue | Version recommandée |
 | [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev7) | Développement publié | Identifier l'année du modèle Apple et contribuer clairement | Préversion |
 | [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement publié | Soumettre un seul rapport sans maintenir d'index | Préversion |
 | [`v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5) | Développement publié | Identifier une configuration par sa référence commerciale facultative | Préversion |
@@ -164,7 +176,7 @@ ou choisir une version ci-dessous.
 | [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
 | [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
 | [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
-| [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
+| [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable antérieure | Conserver et comparer explicitement les protocoles | Remplacée par `v0.4.0` |
 | [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable antérieure | Comparer clairement plusieurs machines | Remplacée par `v0.3.2` |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
@@ -184,7 +196,7 @@ les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
 
-## Version stable `v0.3.2`
+## Version stable antérieure `v0.3.2`
 
 `v0.3.2` mémorise séparément `suite_version` et `protocol_version` dans les
 nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
