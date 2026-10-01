@@ -1,12 +1,14 @@
 # PerfComparator
 
 PerfComparator, anciennement `benchmark-mac`, est une suite locale pour comparer
-les performances de plusieurs machines avant un achat. Elle
+les performances de plusieurs machines avant un achat, ou celles de plusieurs
+systèmes d'exploitation installés en multiboot sur une même machine. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
 La stable actuelle est [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0) ; la préversion de développement actuelle est [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0.dev7).
 Retrouver [tous les tags](https://github.com/frchalaoux/perfcomparator/tags).
+Consulter la [stratégie de publication](docs/strategie-publication.md).
 
 `v0.4.0` conserve le protocole de mesure `0.3.0` et ajoute notamment
 l'identification de l'année des Mac Apple lorsqu'elle est fiable ainsi qu'un

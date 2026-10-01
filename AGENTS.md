@@ -50,3 +50,16 @@ documentation et les liens GitHub.
 Privilégier une pull request documentée pour intégrer une branche de travail,
 notamment vers `staging`, puis de `staging` vers `main`. Cette préférence ne
 constitue pas une autorisation permanente d'effectuer une opération distante.
+
+## Proactivité de clôture
+
+Quand l'utilisateur demande de finir un travail ou une publication, inventorier
+proactivement les branches, tags, releases et pull requests encore nécessaires,
+puis préparer les modifications et validations locales sans attendre une
+demande détaillée étape par étape. Présenter en une fois les opérations
+distantes restantes, avec leurs branches, tags, cibles et ordre exact, et
+demander la confirmation explicite requise juste avant leur exécution. Ne pas
+demander une revue ou une confirmation supplémentaire si aucun contrôle GitHub
+ne l'exige et si l'utilisateur a déjà confirmé cette séquence. Ne pas présenter
+une action comme achevée tant que son intégration effective dans la branche cible
+n'est pas vérifiée.
