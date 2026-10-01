@@ -6,7 +6,50 @@ réinstaller exactement la même suite sur plusieurs machines.
 
 ## Choisir une version
 
-### `v0.4.0.dev6` — développement préparé
+### `v0.4.0` — stable
+
+[Consulter le code source de `v0.4.0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0)
+
+Cette version rend disponible l'année de commercialisation du Mac dans le
+rapport local lorsqu'elle est déterminable et précise dans `contribute` que
+l'utilisateur peut compléter manuellement le nom commercial. Le protocole de
+mesure reste `0.3.0` et le format de rapport public est inchangé.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.ps1 | iex
+```
+
+Après installation, `perfcomparator --version` affiche `PerfComparator 0.4.0`.
+La préversion de développement actuelle est
+[`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev7) ;
+la page [de tous les tags](https://github.com/frchalaoux/perfcomparator/tags)
+recense les versions publiées.
+
+### `v0.4.0.dev7` — développement publié
+
+[Consulter le code source de `v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev7)
+
+Cette préversion enregistre l'année de commercialisation du Mac dans le rapport
+local lorsque l'identification est fiable. Pour les modèles ambigus, la demande
+du nom dans `contribute` indique que l'année connue peut être saisie dans le nom
+commercial. Le format public et le protocole `0.3.0` restent inchangés.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.ps1 | iex
+```
+
+Après installation, `perfcomparator --version` affiche
+`PerfComparator 0.4.0.dev7`.
+
+### `v0.4.0.dev6` — développement publié
 
 [Consulter le code source de `v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6)
 
@@ -23,7 +66,7 @@ curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.de
 irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.ps1 | iex
 ```
 
-Après publication, le contrôle `perfcomparator --version` devra afficher
+Après installation, `perfcomparator --version` affiche
 `PerfComparator 0.4.0.dev6`.
 
 ### `v0.4.0.dev5` — développement publié
@@ -166,7 +209,7 @@ irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev0/inst
 Le contrôle `perfcomparator --version` devra afficher
 `PerfComparator 0.4.0.dev0`.
 
-### `v0.3.2` — stable actuelle
+### `v0.3.2` — stable antérieure
 
 [Consulter le code source de `v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2)
 
@@ -224,7 +267,7 @@ logiciels afin de ne pas présenter un score CPU comme une performance GPU.
 
 Les rapports `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`, `0.3.1`,
 `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2`,
-`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5` et `0.4.0.dev6` emploient le
+`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5`, `0.4.0.dev6` et `0.4.0.dev7` emploient le
 même protocole de mesure et peuvent être comparés entre eux. `0.3.0.dev0` reste
 exclue de ce groupe de compatibilité.
 

@@ -5,18 +5,47 @@ les performances de plusieurs machines avant un achat. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La version stable `v0.3.2` mémorise le protocole de mesure indépendamment de la
-version de la suite. Elle conserve les 16 benchmarks et le protocole `0.3.0` de
-la stable précédente, ainsi que la comparaison CLI de plusieurs machines.
+La stable actuelle est [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0) ; la préversion de développement actuelle est [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0.dev7).
+Retrouver [tous les tags](https://github.com/frchalaoux/perfcomparator/tags).
 
-## Préversion préparée `v0.4.0.dev6`
+`v0.4.0` conserve le protocole de mesure `0.3.0` et ajoute notamment
+l'identification de l'année des Mac Apple lorsqu'elle est fiable ainsi qu'un
+parcours de contribution qui explique comment compléter manuellement le nom.
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0/install.ps1 | iex
+```
+
+## Préversion publiée `v0.4.0.dev7`
+
+La préversion `0.4.0.dev7` enregistre l'année de commercialisation du Mac dans
+`system.model_year` lorsqu'elle est déterminable. Lorsqu'elle ne l'est pas,
+`contribute` explique que l'année peut être ajoutée au nom commercial si elle
+est connue. Le format du rapport public et le protocole de mesure restent
+inchangés.
+
+Ses installateurs sont :
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev7/install.ps1 | iex
+```
+
+## Préversion antérieure publiée `v0.4.0.dev6`
 
 La préversion `0.4.0.dev6` simplifie les contributions au catalogue : une pull
 request ne contient plus que le rapport public. L'index est calculé depuis les
 rapports lors du déploiement du site et n'est plus versionné, ce qui supprime
 les échecs dus à un index périmé.
 
-Ses installateurs seront :
+Ses installateurs sont :
 
 ```bash
 curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.4.0.dev6/install.sh | sh
@@ -138,14 +167,16 @@ ou choisir une version ci-dessous.
 
 | Version | Canal | À choisir pour | État |
 | --- | --- | --- | --- |
-| [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement préparé | Soumettre un seul rapport sans maintenir d'index | Préversion à publier |
+| [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0) | Stable | Utiliser l'année du modèle Apple et contribuer au catalogue | Version recommandée |
+| [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev7) | Développement publié | Identifier l'année du modèle Apple et contribuer clairement | Préversion |
+| [`v0.4.0.dev6`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev6) | Développement publié | Soumettre un seul rapport sans maintenir d'index | Préversion |
 | [`v0.4.0.dev5`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev5) | Développement publié | Identifier une configuration par sa référence commerciale facultative | Préversion |
 | [`v0.4.0.dev4`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev4) | Développement publié | Identifier les machines par leur nom commercial confirmé | Préversion |
 | [`v0.4.0.dev3`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev3) | Développement publié | Contribuer avec un ancien rapport compatible et suivre sa publication | Préversion |
 | [`v0.4.0.dev2`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev2) | Développement publié | Soumettre un rapport sans connaître Git | Préversion |
 | [`v0.4.0.dev1`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev1) | Développement publié | Publier et comparer des rapports communautaires | Préversion |
 | [`v0.4.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.4.0.dev0) | Développement publié | Tester le changement de nom et la migration | Préversion |
-| [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable actuelle | Conserver et comparer explicitement les protocoles | Version recommandée |
+| [`v0.3.2`](https://github.com/frchalaoux/perfcomparator/tree/v0.3.2) | Stable antérieure | Conserver et comparer explicitement les protocoles | Remplacée par `v0.4.0` |
 | [`v0.3.2.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.2.dev0) | Développement antérieur | Reproduire la validation du protocole mémorisé | Préversion publiée |
 | [`v0.3.1`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1) | Stable antérieure | Comparer clairement plusieurs machines | Remplacée par `v0.3.2` |
 | [`v0.3.1.dev0`](https://github.com/frchalaoux/benchmark-mac/tree/v0.3.1.dev0) | Développement antérieur | Reproduire la validation de la correction CLI | Préversion publiée |
@@ -165,7 +196,7 @@ les commandes d'installation pour chaque système et les précautions de mise à
 jour. Les fonctionnalités décrites ci-dessous correspondent à la série `0.3` ;
 les différences avec la stable sont signalées explicitement.
 
-## Version stable `v0.3.2`
+## Version stable antérieure `v0.3.2`
 
 `v0.3.2` mémorise séparément `suite_version` et `protocol_version` dans les
 nouveaux rapports. Elle conserve le protocole de mesure `0.3.0` et reste
@@ -485,7 +516,7 @@ machines, des chronologies et un résumé en langage courant.
 La comparaison exige des versions de protocole compatibles, le même profil et
 la même version de Python. `0.3.0.dev1`, `0.3.0.dev2`, `0.3.0`, `0.3.1.dev0`,
 `0.3.1`, `0.3.2.dev0`, `0.3.2`, `0.4.0.dev0`, `0.4.0.dev1`, `0.4.0.dev2` et
-`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5` et `0.4.0.dev6` sont compatibles entre
+`0.4.0.dev3`, `0.4.0.dev4`, `0.4.0.dev5`, `0.4.0.dev6` et `0.4.0.dev7` sont compatibles entre
 elles. Les
 rapports sont enregistrés dans
 `data/results/` par défaut. Les nouvelles campagnes conservent séparément la

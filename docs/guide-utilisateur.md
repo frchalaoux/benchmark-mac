@@ -23,7 +23,7 @@ Pour une installation GitHub, utiliser le nom affiché dans la
 préversion antérieure est `v0.3.2.dev0`. Les préversions suivent la convention
 `vX.Y.Z.devK`, avec tous leurs points.
 
-La préversion préparée `0.4.0.dev6` soumet uniquement le rapport public et
+La préversion publiée `0.4.0.dev6` soumet uniquement le rapport public et
 laisse le catalogue générer son index au déploiement. La référence commerciale
 facultative vient de `0.4.0.dev5`, le nom commercial confirmé de `0.4.0.dev4`,
 la compatibilité des anciens rapports de `0.4.0.dev3`, la soumission guidée de
@@ -146,6 +146,13 @@ perfcomparator export-public data/results/benchmark_….json \
 La commande ne réalise aucun envoi réseau. `--machine-name` confirme le nom
 commercial public. `--machine-sku` ajoute facultativement la référence exacte
 de la configuration et ne doit jamais contenir le numéro de série.
+Sur Mac, la proposition de nom ajoute l'année de commercialisation lorsque
+l'identifiant du modèle permet de la déterminer sans ambiguïté. Sinon, elle
+conserve l'identifiant du modèle sans ajouter d'année.
+Le rapport local enregistre aussi cette valeur dans `system.model_year` ; elle
+vaut `null` quand les informations matérielles ne permettent pas de trancher.
+Dans `contribute`, la demande du nom précise que tu peux ajouter manuellement
+l'année si tu la connais, par exemple `Apple MacBook Pro 15 pouces (2018)`.
 L'option `--accept-cc0` est requise pour confirmer la licence CC0 1.0 des
 données destinées au partage. Relire le fichier produit avant toute
 contribution. Le numéro de série, les UUID matériels et le nom d'hôte ne sont

@@ -6,8 +6,8 @@ from pathlib import Path
 from benchmark_mac import __version__
 
 ROOT = Path(__file__).parents[1]
-PUBLISHED_DEVELOPMENT_VERSION = "0.4.0.dev6"
-EXPECTED_TAG = f"v{PUBLISHED_DEVELOPMENT_VERSION}"
+PUBLISHED_VERSION = "0.4.0"
+EXPECTED_TAG = f"v{PUBLISHED_VERSION}"
 
 
 def test_versions_are_consistent_across_package_and_installers() -> None:
@@ -46,7 +46,7 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
         f"https://raw.githubusercontent.com/frchalaoux/perfcomparator/{EXPECTED_TAG}/install.ps1"
     )
     for document in (readme, versions):
-        assert PUBLISHED_DEVELOPMENT_VERSION in document
+        assert PUBLISHED_VERSION in document
         assert expected_posix_url in document
         assert expected_windows_url in document
     assert "/v0.3.0.dev0/install.sh" in versions

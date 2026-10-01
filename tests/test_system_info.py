@@ -45,6 +45,38 @@ def test_macos_identity_uses_non_unique_hardware_fields_only(monkeypatch) -> Non
     assert "PRIVATE" not in repr(identity)
 
 
+def test_system_snapshot_persists_known_apple_model_year(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(
+        system_info,
+        "_machine_identity",
+        lambda: system_info.MachineIdentity(
+            manufacturer="Apple",
+            product_name="MacBook Pro",
+            model_identifier="MacBookPro15,1",
+            product_sku="MR942FN/A",
+        ),
+    )
+    monkeypatch.setattr(
+        system_info.shutil, "disk_usage", lambda _path: SimpleNamespace(total=2, free=1)
+    )
+    monkeypatch.setattr(system_info.platform, "system", lambda: "Darwin")
+    monkeypatch.setattr(system_info.platform, "release", lambda: "release")
+    monkeypatch.setattr(system_info.platform, "version", lambda: "version")
+    monkeypatch.setattr(system_info.platform, "machine", lambda: "arm64")
+    monkeypatch.setattr(system_info.platform, "python_version", lambda: "3.14.4")
+    monkeypatch.setattr(system_info.platform, "python_implementation", lambda: "CPython")
+    monkeypatch.setattr(system_info, "_processor", lambda: "Apple M4")
+    monkeypatch.setattr(system_info, "_physical_cpu_count", lambda: 10)
+    monkeypatch.setattr(system_info.os, "cpu_count", lambda: 10)
+    monkeypatch.setattr(system_info, "_memory_bytes", lambda: 16_000)
+    monkeypatch.setattr(system_info, "_gpu_devices", list)
+
+    snapshot = system_info.system_snapshot(tmp_path)
+
+    assert snapshot.model_year == 2018
+    assert '"model_year":2018' in snapshot.model_dump_json()
+
+
 def test_windows_identity_uses_cim_manufacturer_and_model(monkeypatch) -> None:
     payload = (
         '{"Manufacturer":"ASUSTeK COMPUTER INC.","Model":"M1702QA",'

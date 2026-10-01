@@ -228,6 +228,7 @@ def test_contribute_guides_a_user_without_exposing_the_private_report(
     )
 
     assert result.exit_code == 0
+    assert "ajoutez l'année de commercialisation si vous la connaissez" in result.stdout
     assert "APERÇU PUBLIC" in result.stdout
     assert "Contribution envoyée" in result.stdout
     assert "https://github.com/example/pr/1" in result.stdout

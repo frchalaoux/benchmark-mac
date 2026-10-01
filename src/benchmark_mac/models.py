@@ -18,6 +18,7 @@ class SystemSnapshot(BaseModel):
     model: str
     manufacturer: str | None = None
     product_name: str | None = None
+    model_year: int | None = Field(default=None, ge=1984, le=2100)
     product_sku: str | None = None
     processor: str
     physical_cpu_count: int | None = Field(default=None, gt=0)

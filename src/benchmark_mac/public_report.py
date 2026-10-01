@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from statistics import median
 
+from .apple_models import apple_model_year
 from .benchmarks import BENCHMARK_DOCUMENTATION, CATALOG, PROFILES, REFERENCE_LIBRARY
 from .comparison import report_protocol
 from .models import (
@@ -174,7 +175,7 @@ def _content_id(payload: dict[str, object]) -> str:
 
 
 def suggest_public_machine_name(report: BenchmarkReport) -> str:
-    """Propose un nom commercial non unique, modifiable avant publication."""
+    """Propose un nom modifiable, avec l'année Apple connue si elle est certaine."""
     manufacturer = (report.system.manufacturer or "").strip()
     product_name = (report.system.product_name or "").strip()
     model = report.system.model.strip()
@@ -192,6 +193,9 @@ def suggest_public_machine_name(report: BenchmarkReport) -> str:
                 "iMacPro": "iMac Pro",
             }.get(family, re.sub(r"(?<=[a-z])(?=[A-Z])", " ", family))
         product_name = product_name or "Mac"
+        year = report.system.model_year or apple_model_year(model, report.system.product_sku)
+        if year is not None:
+            return f"{manufacturer} {product_name} ({year})".strip()
         base = f"{manufacturer} {product_name}".strip()
         return f"{base} ({model})" if model and model not in base else base
     base = " ".join(value for value in (manufacturer, product_name) if value)
@@ -421,6 +425,10 @@ def public_report_to_benchmark_report(report: PublicBenchmarkReport) -> Benchmar
             model=report.system.model_identifier or report.system.processor,
             manufacturer=report.system.manufacturer,
             product_name=report.system.commercial_name,
+            model_year=apple_model_year(
+                report.system.model_identifier or "",
+                report.system.product_sku,
+            ),
             product_sku=report.system.product_sku,
             processor=report.system.processor,
             physical_cpu_count=report.system.physical_cpu_count,
