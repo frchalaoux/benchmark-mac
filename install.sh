@@ -3,7 +3,7 @@
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 set -eu
 
-release_version="${PERFCOMPARATOR_VERSION:-${BENCHMARK_MAC_VERSION:-v0.4.0}}"
+release_version="${PERFCOMPARATOR_VERSION:-${BENCHMARK_MAC_VERSION:-v0.5.0.dev0}}"
 python_version="3.14.4"
 source_url="${PERFCOMPARATOR_SOURCE:-${BENCHMARK_MAC_SOURCE:-https://github.com/frchalaoux/perfcomparator/archive/refs/tags/${release_version}.tar.gz}}"
 script_dir=""
@@ -79,9 +79,67 @@ if [ -x "$perfcomparator_command" ]; then
     fi
 fi
 
-echo
-if command -v perfcomparator >/dev/null 2>&1; then
-    echo "PerfComparator est installe. Lancez : perfcomparator list"
+if [ -x "$perfcomparator_command" ] && [ -t 1 ]; then
+    case "$(uname -s)" in
+        Darwin)
+            app_dir="$HOME/Applications/PerfComparator.app"
+            app_contents="$app_dir/Contents"
+            mkdir -p "$app_contents/MacOS"
+            printf '#!/bin/sh\nexec "%s" desktop\n' "$perfcomparator_command" \
+                > "$app_contents/MacOS/PerfComparator"
+            chmod 755 "$app_contents/MacOS/PerfComparator"
+            printf '%s\n' \
+                '<?xml version="1.0" encoding="UTF-8"?>' \
+                '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' \
+                '<plist version="1.0"><dict>' \
+                '<key>CFBundleExecutable</key><string>PerfComparator</string>' \
+                '<key>CFBundleIdentifier</key><string>org.perfcomparator.app</string>' \
+                '<key>CFBundleName</key><string>PerfComparator</string>' \
+                '<key>CFBundlePackageType</key><string>APPL</string>' \
+                '</dict></plist>' > "$app_contents/Info.plist"
+            printf 'APPL????' > "$app_contents/PkgInfo"
+            desktop_dir="$HOME/Desktop"
+            if [ -d "$desktop_dir" ] && [ ! -e "$desktop_dir/PerfComparator.app" ] && [ ! -L "$desktop_dir/PerfComparator.app" ]; then
+                ln -s "$app_dir" "$desktop_dir/PerfComparator.app"
+            fi
+            echo "Création du lanceur : $app_dir"
+            open "$app_dir"
+            ;;
+        Linux)
+            launcher="$HOME/.local/bin/perfcomparator-desktop"
+            applications_dir="$HOME/.local/share/applications"
+            desktop_dir="$HOME/Desktop"
+            if command -v xdg-user-dir >/dev/null 2>&1; then
+                desktop_dir=$(xdg-user-dir DESKTOP 2>/dev/null || printf '%s' "$desktop_dir")
+            fi
+            mkdir -p "$(dirname "$launcher")" "$applications_dir"
+            printf '#!/bin/sh\nexec "%s" desktop\n' "$perfcomparator_command" > "$launcher"
+            chmod 755 "$launcher"
+            escaped_launcher=$(printf '%s' "$launcher" | sed 's/\\/\\\\/g; s/"/\\"/g')
+            desktop_file="$applications_dir/perfcomparator.desktop"
+            printf '%s\n' \
+                '[Desktop Entry]' \
+                'Type=Application' \
+                'Name=PerfComparator' \
+                'Comment=Lancer une campagne de benchmarks' \
+                'Categories=Science;Utility;' \
+                'Terminal=false' \
+                "Exec=\"$escaped_launcher\"" \
+                'Icon=applications-science' > "$desktop_file"
+            chmod 644 "$desktop_file"
+            desktop_shortcut="$desktop_dir/PerfComparator.desktop"
+            if [ -d "$desktop_dir" ] && [ ! -e "$desktop_shortcut" ] && [ ! -L "$desktop_shortcut" ]; then
+                ln -s "$desktop_file" "$desktop_shortcut"
+            fi
+            echo "Création du lanceur : $desktop_file"
+            "$launcher"
+            ;;
+    esac
 else
-    echo "PerfComparator est installe. Fermez et rouvrez le terminal, puis lancez : perfcomparator list"
+    echo
+    if command -v perfcomparator >/dev/null 2>&1; then
+        echo "PerfComparator est installé. Lancez : perfcomparator desktop"
+    else
+        echo "PerfComparator est installé. Fermez et rouvrez le terminal, puis lancez : perfcomparator desktop"
+    fi
 fi

@@ -9,7 +9,7 @@ elseif ($env:BENCHMARK_MAC_VERSION) {
     $env:BENCHMARK_MAC_VERSION
 }
 else {
-    "v0.4.0"
+    "v0.5.0.dev0"
 }
 $pythonVersion = "3.14.4"
 $sourceUrl = if ($env:PERFCOMPARATOR_SOURCE) {
@@ -104,9 +104,29 @@ if (Test-Path $perfComparatorCommand) {
 }
 
 Write-Host ""
-if (Get-Command perfcomparator -ErrorAction SilentlyContinue) {
-    Write-Host "PerfComparator est installe. Lancez : perfcomparator list"
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcutPath = Join-Path $desktopPath "PerfComparator.lnk"
+$toolDirectory = & $uvCommand tool dir
+$pythonwPath = Join-Path $toolDirectory "perfcomparator\Scripts\pythonw.exe"
+$shortcutTarget = $perfComparatorCommand
+$shortcutArguments = "desktop"
+if (Test-Path $pythonwPath) {
+    $shortcutTarget = $pythonwPath
+    $shortcutArguments = "-m benchmark_mac.desktop_entry"
+}
+
+$shell = New-Object -ComObject WScript.Shell
+$shortcut = $shell.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $shortcutTarget
+$shortcut.Arguments = $shortcutArguments
+$shortcut.WorkingDirectory = $HOME
+$shortcut.IconLocation = "$shortcutTarget,0"
+$shortcut.Save()
+Write-Host "Icône créée sur le Bureau : $shortcutPath"
+
+if ($shortcutTarget -eq $pythonwPath) {
+    Start-Process -FilePath $shortcutTarget -ArgumentList $shortcutArguments
 }
 else {
-    Write-Host "PerfComparator est installe. Fermez et rouvrez PowerShell, puis lancez : perfcomparator list"
+    Start-Process -FilePath $shortcutTarget -ArgumentList $shortcutArguments -WindowStyle Hidden
 }

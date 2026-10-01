@@ -66,6 +66,29 @@ def main(
     """Suite de benchmarks locale pour macOS, Windows et Linux."""
 
 
+@app.command("desktop")
+def desktop() -> None:
+    """Ouvre l'interface graphique de lancement des benchmarks."""
+    try:
+        from .desktop import launch
+
+        launch()
+    except ModuleNotFoundError as error:
+        if error.name in {"_tkinter", "tkinter"}:
+            typer.secho(
+                "Tk n'est pas installé pour ce Python. Avec Python Homebrew 3.14, "
+                "installez-le avec : brew install python-tk@3.14",
+                fg=typer.colors.RED,
+                err=True,
+            )
+            raise typer.Exit(code=1) from error
+        typer.secho(f"Impossible d'ouvrir l'interface graphique : {error}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from error
+    except Exception as error:
+        typer.secho(f"Impossible d'ouvrir l'interface graphique : {error}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from error
+
+
 def service(root: Path = Path("data/results")) -> BenchmarkService:
     return BenchmarkService(JsonReportRepository(root))
 

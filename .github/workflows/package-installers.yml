@@ -1,0 +1,88 @@
+name: Package desktop installers
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    runs-on: macos-15-intel
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Build installer archive
+        run: |
+          mkdir -p package/PerfComparator
+          cp install.command install.sh package/PerfComparator/
+          printf '%s\n' "$RELEASE_TAG" > package/PerfComparator/release-version.txt
+          ditto -c -k --sequesterRsrc --keepParent package/PerfComparator PerfComparator-macOS.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-macos
+          path: PerfComparator-macOS.zip
+
+  windows:
+    runs-on: windows-latest
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Build installer archive
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path package/PerfComparator -Force | Out-Null
+          Copy-Item install.bat, install.ps1 package/PerfComparator/
+          [System.IO.File]::WriteAllText(
+            (Join-Path (Get-Location) 'package/PerfComparator/release-version.txt'),
+            $env:RELEASE_TAG,
+            [System.Text.Encoding]::ASCII
+          )
+          Compress-Archive -Path package/PerfComparator/* -DestinationPath PerfComparator-Windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-windows
+          path: PerfComparator-Windows-x64.zip
+
+  linux:
+    runs-on: ubuntu-24.04
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Build installer archive
+        run: |
+          mkdir -p package/PerfComparator
+          cp install.desktop install-linux.sh install.sh package/PerfComparator/
+          printf '%s\n' "$RELEASE_TAG" > package/PerfComparator/release-version.txt
+          chmod 755 package/PerfComparator/install-linux.sh package/PerfComparator/install.sh package/PerfComparator/install.desktop
+          tar -czf PerfComparator-Linux-x86_64.tar.gz -C package PerfComparator
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-linux
+          path: PerfComparator-Linux-x86_64.tar.gz
+
+  publish:
+    needs: [macos, windows, linux]
+    runs-on: ubuntu-24.04
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: installer-*
+          path: dist
+          merge-multiple: true
+      - name: Attach all installer archives to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" dist/PerfComparator-macOS.zip dist/PerfComparator-Windows-x64.zip dist/PerfComparator-Linux-x86_64.tar.gz

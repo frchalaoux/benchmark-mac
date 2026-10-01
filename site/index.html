@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Télécharger PerfComparator</title>
+    <style>
+      :root { font: 16px/1.5 system-ui, sans-serif; color-scheme: light dark; }
+      body { max-width: 760px; margin: 8vh auto; padding: 0 1.25rem; }
+      h1 { line-height: 1.1; }
+      .card { border: 1px solid #8886; border-radius: 14px; padding: 1.25rem; margin: 1rem 0; }
+      .recommended { border-color: #5488ff; box-shadow: 0 0 0 2px #5488ff44; }
+      .download { display: inline-block; border-radius: 8px; padding: .65rem 1rem; background: #2864dc; color: white; text-decoration: none; }
+      .download[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+      .muted { opacity: .75; }
+      #status { min-height: 1.5em; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Télécharger PerfComparator</h1>
+      <p>Choisissez l’installateur de votre système. Il préparera <code>uv</code>,
+        Python avec Tk et PerfComparator, puis ouvrira l’application.</p>
+      <p id="status" role="status" aria-live="polite">Détection du système…</p>
+      <section class="card" data-platform="macos">
+        <h2>macOS — Intel ou Apple silicon</h2>
+        <p>L’installateur crée l’application PerfComparator dans votre dossier Applications.</p>
+        <a class="download" data-asset="PerfComparator-macOS.zip" aria-disabled="true">Télécharger pour macOS</a>
+      </section>
+      <section class="card" data-platform="windows">
+        <h2>Windows</h2>
+        <p>L’installateur crée une icône PerfComparator sur le Bureau.</p>
+        <a class="download" data-asset="PerfComparator-Windows-x64.zip" aria-disabled="true">Télécharger pour Windows</a>
+      </section>
+      <section class="card" data-platform="linux">
+        <h2>Linux — x86-64</h2>
+        <p>L’installateur crée un lanceur PerfComparator dans le menu des applications et sur le Bureau.</p>
+        <a class="download" data-asset="PerfComparator-Linux-x86_64.tar.gz" aria-disabled="true">Télécharger pour Linux</a>
+      </section>
+      <p class="muted">La détection sert à mettre en évidence le bon choix ; vous pouvez toujours sélectionner un autre système. Les téléchargements ne démarrent qu’après votre clic.</p>
+      <p><a href="https://github.com/frchalaoux/perfcomparator/releases">Voir les versions et fichiers disponibles sur GitHub</a></p>
+    </main>
+    <script>
+      const platform = (() => {
+        const value = (navigator.userAgentData?.platform || navigator.platform || navigator.userAgent).toLowerCase();
+        if (value.includes("win")) return "windows";
+        if (value.includes("mac") || value.includes("iphone") || value.includes("ipad")) return "macos";
+        if (value.includes("linux") || value.includes("x11")) return "linux";
+        return null;
+      })();
+      if (platform) document.querySelector(`[data-platform="${platform}"]`)?.classList.add("recommended");
+      const status = document.querySelector("#status");
+      if (platform) {
+        status.textContent = `Système détecté : ${platform === "macos" ? "macOS" : platform === "windows" ? "Windows" : "Linux"}. Vérification de l’installateur…`;
+      } else {
+        status.textContent = "Système non détecté. Choisissez votre système ci-dessous.";
+      }
+      fetch("https://api.github.com/repos/frchalaoux/perfcomparator/releases?per_page=20", {
+        headers: { Accept: "application/vnd.github+json" }
+      }).then(response => {
+        if (!response.ok) throw new Error("Aucune version stable disponible");
+        return response.json();
+      }).then(releases => {
+        const assetNames = [...document.querySelectorAll("[data-asset]")].map(link => link.dataset.asset);
+        const hasInstallers = release => assetNames.every(name => release.assets.some(asset => asset.name === name));
+        const release = releases.find(item => !item.prerelease && hasInstallers(item))
+          || releases.find(item => item.prerelease && hasInstallers(item));
+        if (!release) {
+          status.textContent = "Aucune version ne contient encore les trois installateurs.";
+          return;
+        }
+        let available = 0;
+        document.querySelectorAll("[data-asset]").forEach(link => {
+          const asset = release.assets.find(item => item.name === link.dataset.asset);
+          if (asset) {
+            link.href = asset.browser_download_url;
+            link.removeAttribute("aria-disabled");
+            available += 1;
+          }
+        });
+        status.textContent = `${release.prerelease ? "Préversion" : "Version stable"} ${release.tag_name} : ${available} installateurs disponibles.`;
+      }).catch(() => {
+        status.textContent = "Impossible de vérifier les téléchargements. Consultez les versions GitHub.";
+      });
+    </script>
+  </body>
+</html>

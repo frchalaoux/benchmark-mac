@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Installer PerfComparator
+Comment=Installer uv, Python avec Tk et PerfComparator
+Categories=Science;Utility;
+Terminal=true
+Exec=bash -c "p=\${1#file://}; p=\${p//%%20/ }; d=\${p%/*}; exec bash \"\$d/install-linux.sh\"" _ %k
