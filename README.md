@@ -1,12 +1,23 @@
 # PerfComparator
 
 PerfComparator, anciennement `benchmark-mac`, est une suite locale pour comparer
-les performances de plusieurs machines avant un achat. Elle
+les performances de plusieurs machines avant un achat, ou celles de plusieurs
+systèmes d'exploitation installés en multiboot sur une même machine. Elle
 utilise les mêmes scénarios, paramètres et version exacte de CPython sur macOS,
 Windows et Linux, puis produit des rapports JSON portables.
 
-La stable actuelle est [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0) ; la préversion de développement actuelle est [`v0.4.0.dev7`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0.dev7).
+La stable actuelle est [`v0.4.0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.4.0) ; la préversion de développement actuelle est [`v0.5.0.dev0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.5.0.dev0).
 Retrouver [tous les tags](https://github.com/frchalaoux/perfcomparator/tags).
+Consulter la [stratégie de publication](docs/strategie-publication.md).
+Télécharger l'application depuis la [page qui détecte votre système](https://frchalaoux.github.io/perfcomparator/).
+
+## Préversion publiée `v0.5.0.dev0`
+
+Cette préversion ajoute un installateur graphique par système : il installe
+`uv`, CPython avec Tk, PerfComparator, crée un lanceur de bureau puis ouvre
+l'interface. La page de téléchargement recommande l'archive macOS, Windows ou
+Linux en fonction du système détecté. Les trois archives sont disponibles dans
+la [release GitHub `v0.5.0.dev0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.5.0.dev0).
 
 `v0.4.0` conserve le protocole de mesure `0.3.0` et ajoute notamment
 l'identification de l'année des Mac Apple lorsqu'elle est fiable ainsi qu'un

@@ -1,5 +1,26 @@
 # Versions disponibles et installation
 
+## Préversion publiée `v0.5.0.dev0`
+
+[Consulter le code source de `v0.5.0.dev0`](https://github.com/frchalaoux/perfcomparator/tree/v0.5.0.dev0)
+
+Cette version ajoute les installateurs graphiques macOS, Windows et Linux :
+ils installent `uv`, CPython avec Tk et PerfComparator, créent un raccourci de
+bureau puis lancent l'interface graphique. La page de téléchargement détecte
+le système pour recommander la bonne archive. Les trois installateurs sont
+disponibles dans la [release GitHub `v0.5.0.dev0`](https://github.com/frchalaoux/perfcomparator/releases/tag/v0.5.0.dev0).
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.5.0.dev0/install.sh | sh
+```
+
+```powershell
+irm https://raw.githubusercontent.com/frchalaoux/perfcomparator/v0.5.0.dev0/install.ps1 | iex
+```
+
+Après installation, `perfcomparator --version` affiche
+`PerfComparator 0.5.0.dev0`.
+
 La page GitHub [Tags](https://github.com/frchalaoux/perfcomparator/tags) est la
 liste de référence des versions publiées. Un tag fige le code et permet de
 réinstaller exactement la même suite sur plusieurs machines.

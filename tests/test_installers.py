@@ -8,6 +8,7 @@ from benchmark_mac import __version__
 ROOT = Path(__file__).parents[1]
 PUBLISHED_VERSION = "0.4.0"
 EXPECTED_TAG = f"v{PUBLISHED_VERSION}"
+CANDIDATE_TAG = "v0.5.0.dev0"
 
 
 def test_versions_are_consistent_across_package_and_installers() -> None:
@@ -26,8 +27,10 @@ def test_versions_are_consistent_across_package_and_installers() -> None:
         "perfcomparator": "benchmark_mac.cli:app",
         "benchmark-mac": "benchmark_mac.cli:app",
     }
-    assert EXPECTED_TAG in posix_installer
-    assert EXPECTED_TAG in windows_installer
+    assert CANDIDATE_TAG in posix_installer
+    assert CANDIDATE_TAG in windows_installer
+    assert CANDIDATE_TAG in readme
+    assert CANDIDATE_TAG in versions
     assert "PERFCOMPARATOR_VERSION" in posix_installer
     assert "PERFCOMPARATOR_VERSION" in windows_installer
     assert "BENCHMARK_MAC_VERSION" in posix_installer
@@ -75,7 +78,7 @@ def test_posix_installer_defaults_to_its_own_tag(tmp_path: Path) -> None:
     subprocess.run(["sh", str(installer)], check=True, env=environment, capture_output=True)
 
     calls = log.read_text(encoding="utf-8")
-    assert f"archive/refs/tags/{EXPECTED_TAG}.tar.gz" in calls
+    assert f"archive/refs/tags/{CANDIDATE_TAG}.tar.gz" in calls
     assert "refs/tags/v0.1.0.tar.gz" not in calls
 
 

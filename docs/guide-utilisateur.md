@@ -1,5 +1,26 @@
 # Guide utilisateur
 
+## Interface graphique
+
+L'interface graphique permet de lancer une campagne sans saisir ses options :
+choisir le profil, saisir facultativement le nom de la machine, puis cliquer
+sur **Lancer la mesure**. Elle affiche le test en cours et enregistre le rapport
+JSON dans `Documents/PerfComparator`. Le bouton **Ouvrir le rapport** affiche
+le fichier produit.
+
+Après l'installation, double-cliquer sur l'icône **PerfComparator** créée sur le
+Bureau (Windows et Linux) ou dans `Applications` (macOS). Pour la lancer depuis
+un terminal avec une installation existante :
+
+```bash
+perfcomparator desktop
+```
+
+L'installateur prépare `uv`, Python géré par `uv` et PerfComparator, puis ouvre
+l'interface. Le lanceur Windows utilise `pythonw` afin de ne pas afficher une
+fenêtre de console. Sur macOS et Linux, l'interface nécessite un environnement
+de bureau capable d'afficher Tk.
+
 ## Préparer une machine
 
 L'installateur GitHub installe `uv` si nécessaire. `uv` installe ensuite sa
