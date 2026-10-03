@@ -17,14 +17,18 @@ on:
       - tests/windows/**
 
 jobs:
-  installer-smoke-test:
+  installer-smoke-test-windows-powershell:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shell: [powershell, pwsh]
     steps:
       - uses: actions/checkout@v4
-      - name: Run installer smoke test in ${{ matrix.shell }}
-        shell: ${{ matrix.shell }}
+      - name: Run installer smoke test in Windows PowerShell 5.1
+        shell: powershell
+        run: .\tests\windows\test-install.ps1
+
+  installer-smoke-test-pwsh:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run installer smoke test in PowerShell 7
+        shell: pwsh
         run: .\tests\windows\test-install.ps1
