@@ -1,4 +1,4 @@
-# Installe PerfComparator pour le compte courant (Windows PowerShell).
+﻿# Compatible avec Windows PowerShell 5.1 et PowerShell 7.
 # Python n'a pas besoin d'être déjà installé : uv gère la version reproductible.
 $ErrorActionPreference = "Stop"
 
@@ -77,7 +77,44 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 
-$toolList = & $uvCommand tool list 2>$null
+$toolDirectory = & $uvCommand tool dir
+if ($LASTEXITCODE -ne 0) {
+    throw "Impossible de trouver le dossier des outils uv (code $LASTEXITCODE)."
+}
+
+# uv ne peut pas désinstaller un outil dont le reçu TOML est corrompu. Capture
+# son avertissement puis met de côté uniquement les environnements concernés.
+$previousErrorActionPreference = $ErrorActionPreference
+try {
+    $ErrorActionPreference = "Continue"
+    $toolListOutput = @(& $uvCommand tool list 2>&1 | ForEach-Object { "$($_)" })
+}
+finally {
+    $ErrorActionPreference = $previousErrorActionPreference
+}
+
+$malformedTools = foreach ($line in $toolListOutput) {
+    if ($line -match "Ignoring malformed tool [``'‘](.+?)[``'’]") {
+        $Matches[1]
+    }
+}
+foreach ($toolName in $malformedTools) {
+    if ($toolName -match '^(perfcomparator|benchmark-mac)([-_.].*)?$') {
+        $malformedToolDirectory = Join-Path $toolDirectory $toolName
+        if (Test-Path -LiteralPath $malformedToolDirectory) {
+            $recoveryDirectory = Join-Path ([IO.Path]::GetTempPath()) (
+                "PerfComparator-uv-recovery-$toolName-$([guid]::NewGuid())"
+            )
+            Write-Warning "Reçu uv invalide détecté ; environnement déplacé vers $recoveryDirectory"
+            Move-Item -LiteralPath $malformedToolDirectory -Destination $recoveryDirectory
+        }
+    }
+}
+
+$toolList = @(& $uvCommand tool list 2>&1 | ForEach-Object { "$($_)" })
+if ($LASTEXITCODE -ne 0) {
+    throw "uv n'a pas pu inventorier les outils installés."
+}
 $legacyToolInstalled = $toolList -match "^benchmark-mac v"
 
 if ($legacyToolInstalled) {
@@ -95,18 +132,14 @@ if ($LASTEXITCODE -ne 0) {
 
 $toolBinDirectory = & $uvCommand tool dir --bin
 $perfComparatorCommand = Join-Path $toolBinDirectory "perfcomparator.exe"
-if (Test-Path $perfComparatorCommand) {
-    Write-Host "Preparation de la contribution guidee..."
-    & $perfComparatorCommand setup-contribution --yes
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning "GitHub CLI sera repropose lors de la premiere contribution."
-    }
+if (-not (Test-Path -LiteralPath $perfComparatorCommand)) {
+    throw "La commande PerfComparator attendue est introuvable : $perfComparatorCommand"
 }
+Write-Host "Commande PerfComparator installée : $perfComparatorCommand"
 
 Write-Host ""
 $desktopPath = [Environment]::GetFolderPath("Desktop")
 $shortcutPath = Join-Path $desktopPath "PerfComparator.lnk"
-$toolDirectory = & $uvCommand tool dir
 $pythonwPath = Join-Path $toolDirectory "perfcomparator\Scripts\pythonw.exe"
 $shortcutTarget = $perfComparatorCommand
 $shortcutArguments = "desktop"
@@ -124,9 +157,6 @@ $shortcut.IconLocation = "$shortcutTarget,0"
 $shortcut.Save()
 Write-Host "Icône créée sur le Bureau : $shortcutPath"
 
-if ($shortcutTarget -eq $pythonwPath) {
-    Start-Process -FilePath $shortcutTarget -ArgumentList $shortcutArguments
-}
-else {
-    Start-Process -FilePath $shortcutTarget -ArgumentList $shortcutArguments -WindowStyle Hidden
-}
+Write-Host "PerfComparator $releaseVersion est installé."
+Write-Host "Pour lancer l'interface : utilisez l'icône du Bureau ou perfcomparator desktop"
+Write-Host "Pour configurer une contribution GitHub : perfcomparator setup-contribution"
