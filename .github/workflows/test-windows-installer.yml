@@ -1,0 +1,30 @@
+name: Windows installer tests
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/test-windows-installer.yml
+      - install.bat
+      - install.ps1
+      - tests/windows/**
+  push:
+    branches:
+      - feat/desktop-launcher
+    paths:
+      - .github/workflows/test-windows-installer.yml
+      - install.bat
+      - install.ps1
+      - tests/windows/**
+
+jobs:
+  installer-smoke-test:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run installer smoke test in ${{ matrix.shell }}
+        shell: ${{ matrix.shell }}
+        run: .\tests\windows\test-install.ps1
